@@ -486,6 +486,10 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
         this.frameTimer.setRepeats(false); // Only execute once
         this.frameTimer.start(); // erstes bild zeichnen
+
+        // make window smaller as video material might be full hd which will create a window
+        //larger than common screens
+        this.setSize(this.getSize().width * 800 / this.getSize().height, 800);
     }
 
     public void setHostRecording(EyeTrackerRecording rec) {
