@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class EyeTrackerEyeEvent {
-    
+
     // Attention! Raw Gaze Data points are also stored as EyeTrackerEyeEvent
     // "fixationPointX/Y" as well as "fixationDuration" may be misleading in that instance
     // fixationDuration for raw data points is derived from the sampling frequency of the eye tracker
@@ -27,12 +27,12 @@ public class EyeTrackerEyeEvent {
     public double eyePosRightZ = 0;
     public double fixationDuration = 0;
     public boolean eyesNotFound = false;
-    
+
     public Boolean containedInRecFrame(Point framePoint1, Point framePoint2) {
-        
+
         Point eventPoint = new Point(this.fixationPointX, this.fixationPointY);
         Rectangle frame = new Rectangle(framePoint1.x, framePoint1.y, framePoint2.x - framePoint1.x, framePoint2.y - framePoint1.y);
-        
+
         return frame.contains(eventPoint);
     }
 

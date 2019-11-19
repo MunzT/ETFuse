@@ -115,12 +115,12 @@ public class ImportTask extends SwingWorker implements PropertyChangeListener {
 
         pc.addProgressEventListener(this);
         EyeTrackerRecording rec = pc.parseDataUsingBestParser(fileContents);
-        
+
         fileContents.clear();
         System.gc();
-        
+
         EyeTrackerRecordingCollector.sharedInstance().addRecording(rec);
-        
+
         return rec;
     }
 

@@ -35,7 +35,7 @@ public class Utils {
 
     /*
      * Get the extension of a file.
-     */  
+     */
     public static String getExtension(File f) {
         String ext = null;
         String s = f.getName();
@@ -192,22 +192,22 @@ public class Utils {
 
     public static void resizePanelToRetainAspectRatio(VideoSurfacePanel panel, JPanel panelContainer) {
 
-        double mediaW = (double) panel.getCamera().get(Videoio.CAP_PROP_FRAME_WIDTH);
-        double mediaH = (double) panel.getCamera().get(Videoio.CAP_PROP_FRAME_HEIGHT);
+        double mediaW = panel.getCamera().get(Videoio.CAP_PROP_FRAME_WIDTH);
+        double mediaH = panel.getCamera().get(Videoio.CAP_PROP_FRAME_HEIGHT);
 
         resizePanelToRetainAspectRatio(mediaW, mediaH, panel, panelContainer);
     }
-    
+
     public static void resizePanelToRetainAspectRatio(HeatMapImagePanel panel, JPanel panelContainer) {
 
-        double mediaW = (double) panel.getHeatMap().cols();
-        double mediaH = (double) panel.getHeatMap().rows();
-        
+        double mediaW = panel.getHeatMap().cols();
+        double mediaH = panel.getHeatMap().rows();
+
         resizePanelToRetainAspectRatio(mediaW, mediaH, panel, panelContainer);
     }
-    
+
     private static void resizePanelToRetainAspectRatio(double normalWidth, double normalHeight, JPanel panel, JPanel panelContainer) {
-        
+
         double mediaW = normalWidth;
         double mediaH = normalHeight;
         double mediaWidthPerHeight = mediaW / mediaH;

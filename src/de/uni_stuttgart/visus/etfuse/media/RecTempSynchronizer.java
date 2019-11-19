@@ -20,31 +20,31 @@ import de.uni_stuttgart.visus.etfuse.misc.Utils;
 import de.uni_stuttgart.visus.etfuse.projectio.Project;
 
 public class RecTempSynchronizer {
-    
-    private static class ColorStamp { 
+
+    private static class ColorStamp {
           public final int color;
           public final int frame;
-          public ColorStamp(int color, int frame) { 
-            this.color = color; 
-            this.frame = frame; 
-          } 
+          public ColorStamp(int color, int frame) {
+            this.color = color;
+            this.frame = frame;
+          }
     }
 
     private static long computePreciseOffset_histogram(EyeTrackerRecording host, EyeTrackerRecording guest, VideoCapture hostCam, VideoCapture guestCam, long roughGuess, int orientationFrame) {
 
         Preferences prefs = Project.currentProject().getPreferences();
-        
+
         int histGridSize = prefs.getHistogramGridSize();
         int histCorrelThreshold = prefs.getHistogramCorrelationThreshold();
         int histDeviatingCellsThreshold = prefs.getHistogramDeviatingCellsThreshold();
-        
+
         // Zwischen 16 und 20, da Rechenaufwand mindestens n * quadratisch hierzu zunimmt
         /*int kernelSize = 16;
         double correlationThreshold = 0.4;
         int numDifferThreshold = 1;*/
-        
+
         int kernelSize = histGridSize;
-        double correlationThreshold = ((double) histCorrelThreshold) / 100.0;
+        double correlationThreshold = (histCorrelThreshold) / 100.0;
         int numDifferThreshold = histDeviatingCellsThreshold;
 
         hostCam.set(Videoio.CV_CAP_PROP_POS_FRAMES, 0.0);
@@ -68,14 +68,14 @@ public class RecTempSynchronizer {
         int click = (int) Math.floor((host.getClicks().size() * 0.5));
         long sampleClickTS = (long) Math.floor(host.getClicks().get(click) + (host.getClicks().get(click + 1) - host.getClicks().get(click)) * 0.15);
 
-        long lowerFrameEstimate = (long) Math.floor(((double) sampleClickTS / 1000.0) * hostCam.get(Videoio.CV_CAP_PROP_FPS));
+        long lowerFrameEstimate = (long) Math.floor((sampleClickTS / 1000.0) * hostCam.get(Videoio.CV_CAP_PROP_FPS));
         if (lowerFrameEstimate < 2) lowerFrameEstimate = 2;
         //lowerFrameEstimate = 1920; // DEBUG
         if (orientationFrame != 0)
             lowerFrameEstimate = orientationFrame;
         hostCam.set(Videoio.CV_CAP_PROP_POS_FRAMES, lowerFrameEstimate);
 
-        if (hostCam.read(imageHost)) {                    
+        if (hostCam.read(imageHost)) {
             ArrayList<Mat> imgList = new ArrayList<Mat>();
             Imgproc.cvtColor(imageHost.submat(new Rect(host.getFramePoint1().x, host.getFramePoint1().y, host.getFramePoint2().x - host.getFramePoint1().x, host.getFramePoint2().y - host.getFramePoint1().y)), imageHostPlayingField, Imgproc.COLOR_BGR2HSV);
 
@@ -99,11 +99,11 @@ public class RecTempSynchronizer {
 
 
         // finde erstes �ber x% abweichendes frame
-        
+
         Mat[] histHostCur;
         int firstNewFrameHost = 0;
         int foundCounter = 0;
-        
+
         while (hostCam.read(imageHost)) {
             ArrayList<Mat> imgList = new ArrayList<Mat>();
             Imgproc.cvtColor(imageHost.submat(new Rect(host.getFramePoint1().x, host.getFramePoint1().y, host.getFramePoint2().x - host.getFramePoint1().x, host.getFramePoint2().y - host.getFramePoint1().y)), imageHostPlayingField, Imgproc.COLOR_BGR2HSV);
@@ -126,7 +126,7 @@ public class RecTempSynchronizer {
             for (int i = 0; i < correlation.length; i++) {
 
                 correlation[i] = Imgproc.compareHist(histHostCur[i], histHost[i], Imgproc.CV_COMP_CORREL);
-                
+
                 if (correlation[i] <= correlationThreshold) {
                     firstNewFrameHost = (int) (hostCam.get(Videoio.CV_CAP_PROP_POS_FRAMES) - 1);
                     System.out.println("<RecTempSynchronizer> StartingFrame: " + lowerFrameEstimate + " Host Frame: " + firstNewFrameHost);
@@ -134,11 +134,11 @@ public class RecTempSynchronizer {
                     foundCounter++;
                 }
             }
-            
+
             if (foundCounter >= numDifferThreshold)
                 break;
         }
-        
+
         bufImgHost = Utils.Mat2BufferedImage(imageHostPlayingField);
 
         sampleClickTS = (int) (firstNewFrameHost / hostCam.get(Videoio.CV_CAP_PROP_FPS) * 1000);
@@ -158,7 +158,7 @@ public class RecTempSynchronizer {
         while (guestCam.read(imageGuest)) {
             ArrayList<Mat> imgList = new ArrayList<Mat>();
             Imgproc.cvtColor(imageGuest.submat(new Rect(guest.getFramePoint1().x, guest.getFramePoint1().y, guest.getFramePoint2().x - guest.getFramePoint1().x, guest.getFramePoint2().y - guest.getFramePoint1().y)), imageGuestPlayingField, Imgproc.COLOR_BGR2HSV);
-            
+
             Mat[] splitPlayingField = Utils.splitMatrixIntoCells(imageGuestPlayingField, kernelSize);
             histGuest = new Mat[splitPlayingField.length];
 
@@ -214,7 +214,7 @@ public class RecTempSynchronizer {
 
             ArrayList<Mat> imgList = new ArrayList<Mat>();
             Imgproc.cvtColor(imageGuest.submat(new Rect(guest.getFramePoint1().x, guest.getFramePoint1().y, guest.getFramePoint2().x - guest.getFramePoint1().x, guest.getFramePoint2().y - guest.getFramePoint1().y)), imageGuestPlayingField, Imgproc.COLOR_BGR2HSV);
-            
+
             Mat[] splitPlayingField = Utils.splitMatrixIntoCells(imageGuestPlayingField, kernelSize);
             histGuestCur = new Mat[splitPlayingField.length];
 
@@ -231,17 +231,17 @@ public class RecTempSynchronizer {
             for (int i = 0; i < correlation.length; i++) {
 
                 correlation[i] = Imgproc.compareHist(histGuestCur[i], histGuestBiggest[i], Imgproc.CV_COMP_CORREL);
-                
+
                 if (correlation[i] <= correlationThreshold) {
-                    
+
                     firstNewFrameGuest = (int) (guestCam.get(Videoio.CV_CAP_PROP_POS_FRAMES));
                     System.out.println("<RecTempSynchronizer> StartingFrame: " + biggestCorrelationFrame + " Gesuchtes Guest-Frame: " + firstNewFrameGuest);
                     bufImgGuest = Utils.Mat2BufferedImage(imageGuestPlayingField);
-                    
+
                     foundCounter++;
                 }
             }
-            
+
             if (foundCounter >= numDifferThreshold)
                 break;
         }
@@ -268,7 +268,7 @@ public class RecTempSynchronizer {
         int yHr = 15 + host.getFramePoint1().y + ((host.getFramePoint2().y - host.getFramePoint1().y) / 2);
         int xHl = -15 + host.getFramePoint1().x + ((host.getFramePoint2().x - host.getFramePoint1().x) / 2);
         int yHl = -15 + host.getFramePoint1().y + ((host.getFramePoint2().y - host.getFramePoint1().y) / 2);
-        
+
         if (stoneCoord != null) {
             xHr = 15 + stoneCoord.x;
             yHr = 15 + stoneCoord.y;
@@ -296,14 +296,14 @@ public class RecTempSynchronizer {
         // 17 proben zeitlich um jeden klick herum sammeln
         for (long clickTS : host.getClicks()) {
 
-            long lowerFrameEstimate = (long) Math.floor(((double) clickTS / 1000.0) * hostCam.get(Videoio.CV_CAP_PROP_FPS)) - 8;
+            long lowerFrameEstimate = (long) Math.floor((clickTS / 1000.0) * hostCam.get(Videoio.CV_CAP_PROP_FPS)) - 8;
             hostCam.set(Videoio.CV_CAP_PROP_POS_FRAMES, lowerFrameEstimate);
 
             ArrayList<ColorStamp> colorsAroundClickr = new ArrayList<ColorStamp>();
             ArrayList<ColorStamp> colorsAroundClickl = new ArrayList<ColorStamp>();
 
             for (int i = 0; i < 17; i++) {
-                if (hostCam.read(imageHost)) {                    
+                if (hostCam.read(imageHost)) {
                     bufImgHost = Utils.Mat2BufferedImage(imageHost);
                     int newColorr = bufImgHost.getRGB(xHr, yHr);
                     colorsAroundClickr.add(new ColorStamp(newColorr, (int) (hostCam.get(Videoio.CV_CAP_PROP_POS_FRAMES) - 1.0)));
@@ -327,7 +327,7 @@ public class RecTempSynchronizer {
         // finde letztes vorkommen einer beigen farbe
         //Color beige = new Color(215, 172, 87);
         //Color beige = new Color(148, 123, 82);
-        Color beige = new Color(0xb0, 0x8b, 0x31);            
+        Color beige = new Color(0xb0, 0x8b, 0x31);
 
         Boolean found = false;
         ColorStamp firstStampWithStone = null;
@@ -387,7 +387,7 @@ public class RecTempSynchronizer {
             // samplen...
             for (long clickTS : guest.getClicks()) {
 
-                long lowerFrameEstimate = (long) Math.floor(((double) clickTS / 1000.0) * guestCam.get(Videoio.CV_CAP_PROP_FPS)) - 8;
+                long lowerFrameEstimate = (long) Math.floor((clickTS / 1000.0) * guestCam.get(Videoio.CV_CAP_PROP_FPS)) - 8;
                 guestCam.set(Videoio.CV_CAP_PROP_POS_FRAMES, lowerFrameEstimate);
 
                 ArrayList<ColorStamp> colorsAroundClickr = new ArrayList<ColorStamp>();
@@ -490,7 +490,7 @@ public class RecTempSynchronizer {
                 break;
         }
 
-        int s = histogramPassiver.size() - 1;        
+        int s = histogramPassiver.size() - 1;
         while (s >= 0) {
 
             int colorr = histogramPassiver.get(s).color;
@@ -502,7 +502,7 @@ public class RecTempSynchronizer {
 
             s--;
         }
-        
+
         if (s < 0)
             s = 0;
 
@@ -560,7 +560,7 @@ public class RecTempSynchronizer {
 
         return timeShift;
     }
-    
+
     public static long computeTimeOffsetHistogram(EyeTrackerRecording host, EyeTrackerRecording guest, VideoCapture hostCam, VideoCapture guestCam, int orientationFrame) {
 
         long timeShift = computeTimestampOffset(host, guest);

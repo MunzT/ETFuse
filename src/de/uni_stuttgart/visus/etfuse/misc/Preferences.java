@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Preferences implements Serializable {
 
     private static final long serialVersionUID = -3052803564035377548L;
-    
+
     // Overlay
     private Boolean enableHeatMapOverlay = false;
     private int heatMapOverlayPlayer = 0;
@@ -17,22 +17,22 @@ public class Preferences implements Serializable {
     private int minDistPlotPlayer1 = 0;
     private int minDistPlotPlayer2 = 0;
     private int minDistPlotMinDist = 150;
-    
+
     // Gaze-Filter
     private int filterVelocityThreshold = 20;
     private int filterDistanceThreshold = 35;
-    
+
     // Heatmap-Generator
     private Boolean heatMapGenSkipEvents = false;
     private float heatMapGenSkipPercentage = 0.05f;
     private int heatMapGenHeatRadius = 80;
     private Boolean heatMapGenGenFromFrequencyInstead = false;
-    
+
     // Temp Sync
     private int histogramGridSize = 16;
     private int histogramCorrelationThreshold = 40;
     private int histogramDeviatingCellsThreshold = 1;
-    
+
     public Boolean getEnableHeatMapOverlay() {
         return enableHeatMapOverlay;
     }

@@ -12,38 +12,38 @@ import org.opencv.core.Mat;
 import de.uni_stuttgart.visus.etfuse.misc.Utils;
 
 public class HeatMapImagePanel extends JPanel {
-    
+
     private Mat heatMap = null;
     private BufferedImage bufImgHeatMap = null;
-    
+
     public void setHeatMap(Mat heatMap) {
-        
+
         this.heatMap = heatMap;
         this.bufImgHeatMap = Utils.Mat2BufferedImage(heatMap);
     }
-    
+
     public Mat getHeatMap() {
-        
+
         return this.heatMap;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        
+
         if (bufImgHeatMap == null)
             return;
-        
+
         Graphics2D g2 = (Graphics2D) g;
-        
-        int mediaWidth = (int) this.heatMap.cols();
-        int mediaHeight = (int) this.heatMap.rows();
+
+        int mediaWidth = this.heatMap.cols();
+        int mediaHeight = this.heatMap.rows();
         int panelWidth = (int) this.getPreferredSize().getWidth();
         int panelHeight = this.getHeight();
-                
+
         AffineTransform saveAT = g2.getTransform();
         saveAT.scale((double) panelWidth / (double) mediaWidth, (double) panelHeight / (double) mediaHeight);
         g2.setTransform(saveAT);
-        
+
         g2.drawImage(bufImgHeatMap, null, 0, 0);
     }
 }

@@ -38,16 +38,16 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
 
     @Override
     public void paintTicks(Graphics g) {
-        
+
         if (vidFrame == null)
             return;
-        
+
         if (vidFrame.getHostProjector() == null)
             return;
-        
+
         if (vidFrame.getHostProjector().getRecording() == null)
             return;
-        
+
         Point hostFramePoint1 = vidFrame.getHostProjector().getRecording().getFramePoint1();
         Point hostFramePoint2 = vidFrame.getHostProjector().getRecording().getFramePoint2();
 
@@ -71,64 +71,64 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
 
                 int xPos = x + trackRect.x;
                 double progress = ((double) x) / trackRect.width;
-                long progressTS = (long) Math.round(startTS + (progress * (endTS - startTS)));
-                
+                long progressTS = Math.round(startTS + (progress * (endTS - startTS)));
+
                 // progressStartTS und progressEndTS markieren den Bereich aller Punkte, die am n�chsten an progressTS liegen
                 // .     -----.-----ooooo.ooooo     .     # - bzw. o markiert Bereich, . ist progressTS f�r Pixel des Tracks
                 long progressStartTS = startTS;
                 if (x > 0) {
-                    progressStartTS = (long) Math.round(startTS + ((((double) x - 1) / trackRect.width) * (endTS - startTS)));
-                    progressStartTS = (long) Math.round((progressStartTS + progressTS) * 0.5);
+                    progressStartTS = Math.round(startTS + ((((double) x - 1) / trackRect.width) * (endTS - startTS)));
+                    progressStartTS = Math.round((progressStartTS + progressTS) * 0.5);
                 }
-                
+
                 long progressEndTS = endTS;
                 if (x < trackRect.width - 1) {
-                    progressEndTS = (long) Math.round(startTS + ((((double) x + 1) / trackRect.width) * (endTS - startTS)));
-                    progressEndTS = (long) Math.round((progressEndTS + progressTS) * 0.5);
+                    progressEndTS = Math.round(startTS + ((((double) x + 1) / trackRect.width) * (endTS - startTS)));
+                    progressEndTS = Math.round((progressEndTS + progressTS) * 0.5);
                 }
-                
+
                 ArrayList<EyeTrackerEyeEvent> hostEvents = hostProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
                 ArrayList<EyeTrackerEyeEvent> guestEvents = guestProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
 
                 if (hostEvents == null || hostEvents.size() < 1 || guestEvents == null || guestEvents.size() < 1)
                     g.setColor(Color.darkGray);
                 else {
-                                        
+
                     int belowMinDistanceCounter = 0;
                     int aboveMinDistanceCounter = 0;
                     int notContainedInRectCounter = 0;
                     int guestIndex = 0;
-                    
+
                     for (EyeTrackerEyeEvent hostEvent : hostEvents) {
-                        
+
                         if (!hostEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
                             notContainedInRectCounter++;
                             continue;
                         }
-                        
+
                         long tsHost = hostEvent.timestamp - hostProj.getTimeSyncOffset();
-                        
+
                         while (guestIndex < guestEvents.size()) {
-                            
+
                             EyeTrackerEyeEvent guestEvent = guestEvents.get(guestIndex);
-                            
+
                             // TODO: nicht immer mit allen gast-events vergleichen
                             if ((guestEvent.timestamp - guestProj.getTimeSyncOffset()) < tsHost)
                                 break;
-                            
+
                             if (!guestEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
                                 notContainedInRectCounter++;
                             }
                             else {
                                 Point hostPoint = new Point(hostEvent.fixationPointX, hostEvent.fixationPointY);
                                 Point guestPoint = new Point(guestEvent.fixationPointX, guestEvent.fixationPointY);
-                                
-                                if (hostPoint.distance(guestPoint) > (double) minDistance)
+
+                                if (hostPoint.distance(guestPoint) > minDistance)
                                     aboveMinDistanceCounter++;
                                 else
                                     belowMinDistanceCounter++;
                             }
-                            
+
                             guestIndex++;
                         }
                     }
@@ -154,17 +154,17 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                 int yPos = y + trackRect.x;
                 double progress = ((double) y) / trackRect.height;
                 long progressTS = (long) (startTS + (progress * (endTS - startTS)));
-                
+
                 long progressStartTS = startTS;
                 if (y > 0) {
-                    progressStartTS = (long) Math.round(startTS + ((((double) y - 1) / trackRect.width) * (endTS - startTS)));
-                    progressStartTS = (long) Math.round((progressStartTS + progressTS) * 0.5);
+                    progressStartTS = Math.round(startTS + ((((double) y - 1) / trackRect.width) * (endTS - startTS)));
+                    progressStartTS = Math.round((progressStartTS + progressTS) * 0.5);
                 }
-                
+
                 long progressEndTS = endTS;
                 if (y < trackRect.height - 1) {
-                    progressEndTS = (long) Math.round(startTS + ((((double) y + 1) / trackRect.width) * (endTS - startTS)));
-                    progressEndTS = (long) Math.round((progressEndTS + progressTS) * 0.5);
+                    progressEndTS = Math.round(startTS + ((((double) y + 1) / trackRect.width) * (endTS - startTS)));
+                    progressEndTS = Math.round((progressEndTS + progressTS) * 0.5);
                 }
 
                 ArrayList<EyeTrackerEyeEvent> hostEvents = hostProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
@@ -173,41 +173,41 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                 if (hostEvents == null || hostEvents.size() < 1 || guestEvents == null || guestEvents.size() < 1)
                     g.setColor(Color.darkGray);
                 else {
-                    
+
                     int belowMinDistanceCounter = 0;
                     int aboveMinDistanceCounter = 0;
                     int notContainedInRectCounter = 0;
                     int guestIndex = 0;
-                    
+
                     for (EyeTrackerEyeEvent hostEvent : hostEvents) {
-                        
+
                         if (!hostEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
                             notContainedInRectCounter++;
                             continue;
                         }
-                        
+
                         long tsHost = hostEvent.timestamp - hostProj.getTimeSyncOffset();
-                        
+
                         while (guestIndex < guestEvents.size()) {
-                            
+
                             EyeTrackerEyeEvent guestEvent = guestEvents.get(guestIndex);
-                            
+
                             if ((guestEvent.timestamp - guestProj.getTimeSyncOffset()) < tsHost)
                                 break;
-                            
+
                             if (!guestEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
                                 notContainedInRectCounter++;
                             }
                             else {
                                 Point hostPoint = new Point(hostEvent.fixationPointX, hostEvent.fixationPointY);
                                 Point guestPoint = new Point(guestEvent.fixationPointX, guestEvent.fixationPointY);
-                                
-                                if (hostPoint.distance(guestPoint) > (double) minDistance)
+
+                                if (hostPoint.distance(guestPoint) > minDistance)
                                     aboveMinDistanceCounter++;
                                 else
                                     belowMinDistanceCounter++;
                             }
-                            
+
                             guestIndex++;
                         }
                     }

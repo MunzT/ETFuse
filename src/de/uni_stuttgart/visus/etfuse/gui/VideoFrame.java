@@ -70,31 +70,31 @@ public class VideoFrame extends JFrame implements ChangeListener {
     private JLabel frameCounterLabel;
     public RecordingSlider progressSlider;
     private RangeSlider heatMapSlider;
-    
+
     private QuickSettingsToolbar qsPanel;
-    
+
     private String idleTitle;
     private HashMap<String, Integer> activityProgress;
 
     private static final long serialVersionUID = 3372205698822928813L;
-    
+
     public static VideoFrame lastInstance;
 
     public VideoFrame(String title, String videoFilePath) {
 
         super(title);
-        
+
         idleTitle = title;
-        
+
         lastInstance = this;
-        
+
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 Utils.resizePanelToRetainAspectRatio(panel, panelContainer);
             }
         });
-        
+
         activityProgress = new HashMap<String, Integer>();
 
         this.newMatrix = new Mat();
@@ -120,24 +120,24 @@ public class VideoFrame extends JFrame implements ChangeListener {
         this.menuRecordingOptions.setMnemonic(KeyEvent.VK_P);
         this.menuRecordingOptions.getAccessibleContext().setAccessibleDescription("Gast-Recording darstellen");
         this.menuBar.add(this.menuRecordingOptions);
-        
+
         this.menuCompareHeatMaps = new JMenu("Attention-Maps vergleichen");
         this.menuCompareHeatMaps.setMnemonic(KeyEvent.VK_H);
         this.menuCompareHeatMaps.getAccessibleContext().setAccessibleDescription("Attention-Map-Ansicht");
         this.menuBar.add(this.menuCompareHeatMaps);
-        
+
         this.menuPreferences = new JMenu("Einstellungen");
         this.menuPreferences.setMnemonic(KeyEvent.VK_E);
         this.menuPreferences.getAccessibleContext().setAccessibleDescription("Einstellungen bearbeiten");
         this.menuBar.add(this.menuPreferences);
-        
+
         ActionListener importListener = new DataImporter(this, null);
         this.menuItemTrackerData = new JMenuItem("Host-Trackerdaten laden...", KeyEvent.VK_T);
         this.menuItemTrackerData.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
         this.menuItemTrackerData.getAccessibleContext().setAccessibleDescription("Eyetrackerdaten importieren");
         this.menuItemTrackerData.addActionListener(importListener);
         this.menuImport.add(this.menuItemTrackerData);
-        
+
         this.menuItemSaveProject = new JMenuItem("Projekt speichern unter...", KeyEvent.VK_S);
         this.menuItemSaveProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         this.menuItemSaveProject.getAccessibleContext().setAccessibleDescription("Projekt speichern");
@@ -145,13 +145,13 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+
                 if (hostProjector == null || hostProjector.getRecording() == null) {
 
                     JOptionPane.showMessageDialog(null, "Bitte erst Host-Trackerdaten laden!");
                     return;
                 }
-                
+
                 ProjectIO projIO = new ProjectIO();
                 projIO.saveProject();
             }
@@ -210,7 +210,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
         this.menuItemAddGuest = new JMenuItem("Gast-Recording darstellen");
         this.menuItemAddGuest.getAccessibleContext().setAccessibleDescription("Daten eines anderen Recordings transformieren und darstellen");
-        
+
         this.menuRecordingOptions.addMouseListener(new MouseListener() {
 
             @Override
@@ -240,7 +240,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
             @Override
             public void mouseExited(MouseEvent e) {}
         });
-        
+
         this.menuCompareHeatMaps.addMouseListener(new MouseListener() {
 
             @Override
@@ -251,11 +251,11 @@ public class VideoFrame extends JFrame implements ChangeListener {
                     JOptionPane.showMessageDialog(null, "Bitte erst Host-Trackerdaten laden!");
                     return;
                 }
-                
+
                 for (OverlayGazeProjector p : VideoFrame.this.getPanel().getProjectors()) {
-                    
+
                     if (p.getRawHeatMap() == null || p.isHeatMapBeingGenerated()) {
-                        
+
                         JOptionPane.showMessageDialog(null, "Heatmap-Generierung ist noch nicht abgeschlossen!");
                         return;
                     }
@@ -279,9 +279,9 @@ public class VideoFrame extends JFrame implements ChangeListener {
             @Override
             public void mouseExited(MouseEvent e) {}
         });
-        
+
         this.menuPreferences.addMouseListener(new MouseListener() {
-            
+
             @Override
             public void mouseClicked(MouseEvent e) {
 
@@ -303,12 +303,12 @@ public class VideoFrame extends JFrame implements ChangeListener {
             @Override
             public void mouseExited(MouseEvent e) {}
         });
-        
+
         this.setJMenuBar(this.menuBar);
 
         this.panelContainer = new JPanel(new GridBagLayout());
         this.panelContainer.setBackground(Color.BLACK);
-        
+
         this.panel = new VideoSurfacePanel();
         this.panel.attachCamera(newCamera);
         this.panel.setPaintGazePlot(true);
@@ -350,7 +350,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
         this.progressSlider = new RecordingSlider(JSlider.HORIZONTAL, 0, (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT), 0);
         this.progressSlider.setToolTipText("Zeitleiste mit MinDist-Plot");
-        this.progressSlider.addChangeListener((ChangeListener) this);
+        this.progressSlider.addChangeListener(this);
         this.progressSlider.setFocusable(false);
 
         this.progressUpdate = false;
@@ -368,16 +368,16 @@ public class VideoFrame extends JFrame implements ChangeListener {
         this.frameCounterLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                
+
                 String input = JOptionPane.showInputDialog("Springe zu Frame:");
                 Integer integ = 0;
-                
+
                 try {
                     integ = Integer.parseInt(input);
                 } catch (Exception ex) {
                     return;
                 }
-                
+
                 int min = 0;
                 int max = (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT) - 1;
                 integ = Math.max(0, integ);
@@ -391,7 +391,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
         layout.putConstraint(SpringLayout.NORTH, this.frameCounterLabel, 3, SpringLayout.SOUTH, this.playPauseButton);
         layout.putConstraint(SpringLayout.EAST, this.frameCounterLabel, -5, SpringLayout.WEST, this.progressSlider);
         this.playbackPanel.add(this.frameCounterLabel);
-        
+
         this.heatMapSlider = new RangeSlider(0, (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT), 0, (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT));
         this.heatMapSlider.setToolTipText("Zeitraum, über den die Attention Maps generiert werden");
         this.heatMapSlider.putClientProperty("JSlider.isFilled", false);
@@ -399,11 +399,11 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
             @Override
             public void stateChanged(ChangeEvent e) {
-                
+
                 if (!((RangeSlider) e.getSource()).getValueIsAdjusting()) {
-                    
+
                     HeatMapGenerator.killAllActiveGenerators();
-                    
+
                     for (OverlayGazeProjector proj : VideoFrame.this.getPanel().getProjectors()) {
                         HeatMapGenerator mapGen = new HeatMapGenerator(proj);
                         mapGen.attachVideoFrameForTitleUpdate(VideoFrame.this);
@@ -427,14 +427,14 @@ public class VideoFrame extends JFrame implements ChangeListener {
         layout.putConstraint(SpringLayout.NORTH, this.qsPanel, 3, SpringLayout.SOUTH, this.heatMapSlider);
         layout.putConstraint(SpringLayout.EAST, this.qsPanel, -5, SpringLayout.EAST, this.playbackPanel);
         layout.putConstraint(SpringLayout.SOUTH, this.qsPanel, -5, SpringLayout.SOUTH, this.playbackPanel);
-        
+
         this.add(this.playbackPanel, BorderLayout.PAGE_END);
 
         this.playbackPanel.setPreferredSize(new Dimension(this.panel.getPreferredSize().width, this.playPauseButton.getPreferredSize().height * 3 + 6));
-        
+
         this.setResizable(true);
         this.pack();
-        
+
         Dimension playPauseSize = this.playPauseButton.getSize();
         playPauseSize.width = 50;
         this.playPauseButton.setPreferredSize(playPauseSize);
@@ -463,7 +463,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
                 }
             }
         });
-        
+
         this.frameTimer.setRepeats(false); // Only execute once
         this.frameTimer.start(); // erstes bild zeichnen
     }
@@ -472,7 +472,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
         this.hostProjector = new OverlayGazeProjector(rec);
         this.panel.attachProjector(this.hostProjector);
-        
+
         HeatMapGenerator mapGen = new HeatMapGenerator(this.hostProjector);
         mapGen.attachVideoFrameForTitleUpdate(this);
         mapGen.execute();
@@ -485,62 +485,62 @@ public class VideoFrame extends JFrame implements ChangeListener {
     }
 
     public void pause() {
-        
+
         frameTimer.setRepeats(false);
         playPauseButton.setText(">");
     }
 
     public void play() {
-        
+
         frameTimer.setRepeats(true);
         frameTimer.start();
         playPauseButton.setText("II");
     }
-    
+
     public VideoSurfacePanel getPanel() {
-        
+
         return this.panel;
     }
-    
+
     public int getHeatMapRangeLow() {
-        
+
         return this.heatMapSlider.getLowValue();
     }
-    
+
     public int getHeatMapRangeHigh() {
-        
+
         return this.heatMapSlider.getHighValue();
     }
-    
+
     public void drawSliderMinDistance() {
-        
+
         Preferences prefs = Project.currentProject().getPreferences();
-        
+
         int player1 = prefs.getMinDistPlotPlayer1();
         int player2 = prefs.getMinDistPlotPlayer2();
         int minDist = prefs.getMinDistPlotMinDist();
-        
+
         if (this.panel.getProjectors().size() > player1 && this.panel.getProjectors().size() > player2) {
-            
+
             OverlayGazeProjector proj1 = this.panel.getProjector(player1);
             OverlayGazeProjector proj2 = this.panel.getProjector(player2);
-            
+
             this.progressSlider.drawMinDistanceTicks(this, proj1, proj2, minDist);
             this.progressSlider.repaint();
             this.progressSlider.setPaintTicks(true);
-        }        
+        }
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        
+
         if (!this.progressUpdate) {
 
             JSlider source = (JSlider) e.getSource();
             if (source.getValueIsAdjusting()) {
-                
-                this.newCamera.set(Videoio.CV_CAP_PROP_POS_FRAMES, (double) source.getValue());
-                
+
+                this.newCamera.set(Videoio.CV_CAP_PROP_POS_FRAMES, source.getValue());
+
                 frameCounterLabel.setText(Integer.toString(Math.max(0, (int) newCamera.get(Videoio.CAP_PROP_POS_FRAMES) - 1)));
 
                 if (!this.frameTimer.isRunning()) {
@@ -550,32 +550,32 @@ public class VideoFrame extends JFrame implements ChangeListener {
             }
         }
     }
-    
+
     public OverlayGazeProjector getHostProjector() {
-        
+
         return this.hostProjector;
     }
-    
+
     public void setTitleWithProgress(String activity, int progress) {
-        
+
         if (progress > -1)
             this.activityProgress.put(activity, progress);
         else {
             this.activityProgress.remove(activity);
             panel.repaint();
         }
-        
+
         String compositeTitle = this.idleTitle;
-        
+
         for (String curAct : activityProgress.keySet()) {
             compositeTitle += " [" + curAct + ": " + activityProgress.get(curAct) + "%]";
         }
-        
+
         this.setTitle(compositeTitle);
     }
-    
+
     public void updateQuickSettingsToolbar() {
-        
+
         this.qsPanel.updateSelectableIndicesFromDatasets();
         this.qsPanel.updateSelectedIndicesFromPreferences();
     }

@@ -101,9 +101,9 @@ public class MainFrame extends JFrame {
             }
 
             private void paintPlot(Graphics g, int[] x, int[] y, Color color) {
-                
+
                 Graphics2D g2 = (Graphics2D) g;
-                
+
                 for (int i = x.length - 1; i >= 0; i--) {
 
                     g2.setStroke(new BasicStroke(10));
@@ -174,7 +174,7 @@ public class MainFrame extends JFrame {
 
                     final File chosenFile = fc.getSelectedFile();
 
-                    Project.currentProject().hostVidPath = chosenFile.getAbsolutePath();                    
+                    Project.currentProject().hostVidPath = chosenFile.getAbsolutePath();
                     VideoFrame vidFrame = new VideoFrame(chosenFile.getAbsolutePath(), chosenFile.getAbsolutePath());
                     vidFrame.setLocationRelativeTo(null);
                     vidFrame.setVisible(true);

@@ -31,35 +31,37 @@ package de.uni_stuttgart.visus.etfuse.misc;
     OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
     NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-    
+
  */
 
 public class LAB {
-    
+
     public double L;
     public double a;
     public double b;
     public int c = -1;
     public double[] w;
     public double s = -1;
-    
+
     public LAB(double L, double a, double b) {
         this.L = L;
         this.a = a;
         this.b = b;
     }
-    
+
     private LAB(double L, double a, double b, int c) {
         this.L = L;
         this.a = a;
         this.b = b;
         this.c = c;
     }
-    
+
+    @Override
     public String toString() {
         return ((int)L)+","+((int)a)+","+((int)b);
     }
-    
+
+    @Override
     public boolean equals(Object o) {
         if (o instanceof LAB) {
             LAB y = (LAB) o;
@@ -68,25 +70,26 @@ public class LAB {
             return false;
         }
     }
-    
+
+    @Override
     public int hashCode() {
         int x = (int) L;
         int y = (int) (a + 110);
         int z = (int) (b + 110);
-        return (x<<16) | (y<<8) | z; 
+        return (x<<16) | (y<<8) | z;
     }
-    
+
     public LAB copy() {
         LAB x = new LAB(L, a, b, c);
         if (w != null) x.w = w.clone();
         return x;
     }
-    
+
     public double distance(LAB y) {
         double dL = L - y.L, da = a - y.a, db = b - y.b;
         return Math.sqrt(dL*dL + da*da + db*db);
     }
-    
+
     public int rgb() {
           // first, map CIE L*a*b* to CIE XYZ
           double y = (L + 16) / 116;
@@ -114,7 +117,7 @@ public class LAB {
           int ib = (int)Math.round(255*b); ib = Math.max(0, Math.min(ib, 255));
           return (0xFF0000 & (ir << 16)) | (0x00FF00 & (ig << 8)) | (0xFF & ib);
     }
-    
+
     public String hex() {
         int rgb = this.rgb();
         int r = (0xFF & (rgb >> 16));
@@ -128,7 +131,7 @@ public class LAB {
         if (sb.length() < 2) sb = "0"+sb;
         return "#" + sr + sg + sb;
     }
-    
+
     /**
      * Maps an RGB triple to binned LAB space (D65).
      * Binning is done by <i>flooring</i> LAB values.
@@ -158,7 +161,7 @@ public class LAB {
         double L = 116*y - 16,
                A = 500*(x-y),
                B = 200*(y-z);
-        
+
         if (binSize > 0) {
             L = binSize * Math.floor(L / binSize);
             A = binSize * Math.floor(A / binSize);
@@ -166,7 +169,7 @@ public class LAB {
         }
         return new LAB(L,A,B);
     }
-    
+
     /**
      * Maps an RGB triple to binned LAB space (D65).
      * Binning is done by <i>rounding</i> LAB values.
@@ -196,7 +199,7 @@ public class LAB {
         double L = 116*y - 16,
                A = 500*(x-y),
                B = 200*(y-z);
-        
+
         if (binSize > 0) {
             L = binSize * Math.round(L / binSize);
             A = binSize * Math.round(A / binSize);
@@ -204,7 +207,7 @@ public class LAB {
         }
         return new LAB(L,A,B);
     }
-    
+
     public static boolean isInRGBGamut(double L, double A, double B) {
           // first, map CIE L*a*b* to CIE XYZ
           double y = (L + 16) / 116;
@@ -229,7 +232,7 @@ public class LAB {
           // third, check sRGB values
           return !(r<0 || r>1 || g<0 || g>1 || b<0 || b>1);
     }
-    
+
     public static double ciede2000(LAB x, LAB y) {
         // adapted from Sharma et al's MATLAB implementation at
         //  http://www.ece.rochester.edu/~gsharma/ciede2000/
@@ -274,11 +277,11 @@ public class LAB {
         // This is equivalent to that in the paper but simpler programmatically.
         // Average hue is computed in radians and converted to degrees where needed
         double hp = 0.5 * (hp1 + hp2);
-        // Identify positions for which abs hue diff exceeds 180 degrees 
+        // Identify positions for which abs hue diff exceeds 180 degrees
         if (Math.abs(hp1-hp2) > pi) hp -= pi;
         if (hp < 0) hp += 2*pi;
 
-        // Check if one of the chroma values is zero, in which case set 
+        // Check if one of the chroma values is zero, in which case set
         // mean hue to the sum which is equivalent to other value
         if (Cpp == 0) hp = hp1 + hp2;
 
@@ -302,7 +305,7 @@ public class LAB {
         // The CIE 00 color difference
         return Math.sqrt(dL*dL + dC*dC + dH*dH + RT*dC*dH);
     }
-    
+
     public static double ciede2000_n(LAB x, LAB y) {
         // adapted by adjusting the weighting functions
         // adapted from Sharma et al's MATLAB implementation at
@@ -348,11 +351,11 @@ public class LAB {
         // This is equivalent to that in the paper but simpler programmatically.
         // Average hue is computed in radians and converted to degrees where needed
         double hp = 0.5 * (hp1 + hp2);
-        // Identify positions for which abs hue diff exceeds 180 degrees 
+        // Identify positions for which abs hue diff exceeds 180 degrees
         if (Math.abs(hp1-hp2) > pi) hp -= pi;
         if (hp < 0) hp += 2*pi;
 
-        // Check if one of the chroma values is zero, in which case set 
+        // Check if one of the chroma values is zero, in which case set
         // mean hue to the sum which is equivalent to other value
         if (Cpp == 0) hp = hp1 + hp2;
 

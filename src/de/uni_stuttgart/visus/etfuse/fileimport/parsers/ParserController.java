@@ -32,7 +32,7 @@ public class ParserController implements PropertyChangeListener {
 
         ArrayList<Class<? extends TSVParser>> list = new ArrayList<Class<? extends TSVParser>>();
         list.add(TSVParserSpectrum1200.class);
-        list.add(TSVParserT60XL.class);        
+        list.add(TSVParserT60XL.class);
 
         return list;
     }
@@ -79,15 +79,15 @@ public class ParserController implements PropertyChangeListener {
             System.out.println("<ParserController> parse als " + parserToUse.parserDescription() + " (confidence: " + parserConfidence + ")");
 
             parserToUse.addProgressEventListener(this);
-            
+
             Preferences prefs = Project.currentProject().getPreferences();
             int velocityThreshold = prefs.getFilterVelocityThreshold();
             int distanceThreshold = prefs.getFilterDistanceThreshold();
-            
+
             return IVTFilter.filterRecording(parserToUse.parseData(rawData), velocityThreshold, distanceThreshold);
         }
 
-        System.out.println("<ParserController> es wurde kein kompatibles ParserModul gefunden.");        
+        System.out.println("<ParserController> es wurde kein kompatibles ParserModul gefunden.");
         return null;
     }
 

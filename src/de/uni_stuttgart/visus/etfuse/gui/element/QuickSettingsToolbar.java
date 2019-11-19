@@ -58,6 +58,7 @@ public class QuickSettingsToolbar extends JPanel {
                         RowSpec.decode("default:grow"),}));
 
         ActionListener minDist1SettingChangedListener = new ActionListener () {
+            @Override
             public void actionPerformed(ActionEvent e) {
 
                 Preferences prefs = Project.currentProject().getPreferences();
@@ -70,6 +71,7 @@ public class QuickSettingsToolbar extends JPanel {
         };
 
         ActionListener minDist2SettingChangedListener = new ActionListener () {
+            @Override
             public void actionPerformed(ActionEvent e) {
 
                 Preferences prefs = Project.currentProject().getPreferences();
@@ -82,6 +84,7 @@ public class QuickSettingsToolbar extends JPanel {
         };
 
         ActionListener attentionMapSettingChangedListener = new ActionListener () {
+            @Override
             public void actionPerformed(ActionEvent e) {
 
                 Preferences prefs = Project.currentProject().getPreferences();
@@ -122,6 +125,7 @@ public class QuickSettingsToolbar extends JPanel {
 
         JButton btnInfosZuSpielerfarben = new JButton("Infos zu Spielerfarben");
         btnInfosZuSpielerfarben.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
 
                 ArrayList<String> playerList = new ArrayList<String>();
@@ -139,6 +143,7 @@ public class QuickSettingsToolbar extends JPanel {
 
         JButton btnInfosZuMindistfarben = new JButton("Infos zu MinDist-Farben");
         btnInfosZuMindistfarben.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
 
                 Preferences prefs = Project.currentProject().getPreferences();
@@ -149,7 +154,7 @@ public class QuickSettingsToolbar extends JPanel {
                 for (int i = 0; i < 4; i++) {
 
                     switch (i) {
-                    
+
                         case 0:
                             entityList.add("Abstand zwischen Gaze-Punkten (Rohdaten) der Spieler <= " + minDist + "px");
                             colorList.add(Color.CYAN);
@@ -169,7 +174,7 @@ public class QuickSettingsToolbar extends JPanel {
                             entityList.add("Gaze-Daten fehlen für mindestens einen Spieler");
                             colorList.add(Color.DARK_GRAY);
                             break;
-                            
+
                         default:
                             break;
                     }

@@ -45,9 +45,9 @@ public class DataImporter implements ActionListener, PropertyChangeListener {
         int returnVal = fc.showOpenDialog((Component) e.getSource());
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            
+
             this.parentFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            
+
             // datei ausgewählt; fahre fort
 
             final File chosenFile = fc.getSelectedFile();
@@ -64,18 +64,18 @@ public class DataImporter implements ActionListener, PropertyChangeListener {
 
         if (evt.getPropertyName().contains("state"))
             if (this.importTask.getState() == SwingWorker.StateValue.DONE) {
-                
+
                 EyeTrackerRecording rec = null;
-                
+
                 try {
                     rec = (EyeTrackerRecording) this.importTask.get();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                
+
                 if (rec != null) {
-                    
-                    rec.preferredGazeColor = Color.blue;                    
+
+                    rec.preferredGazeColor = Color.blue;
                     this.parentFrame.setHostRecording(rec);
                     this.parentFrame.setCursor(Cursor.getDefaultCursor());
                     this.parentFrame.updateQuickSettingsToolbar();
@@ -84,7 +84,7 @@ public class DataImporter implements ActionListener, PropertyChangeListener {
             }
 
         if (this.linkedBar != null) {
-            
+
             this.linkedBar.setValue(importTask.getProgress());
 
             if (importTask.getProgress() == 100)
@@ -95,7 +95,7 @@ public class DataImporter implements ActionListener, PropertyChangeListener {
         }
 
         if (this.parentFrame != null) {
-            
+
             if (importTask.getProgress() == 100)
                 this.parentFrame.setTitleWithProgress("Importiere Eye-Tracker-Daten (id " + importTask.hashCode() + ")", -1);
             else

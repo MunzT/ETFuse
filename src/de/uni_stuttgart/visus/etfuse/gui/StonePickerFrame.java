@@ -39,35 +39,35 @@ public class StonePickerFrame extends JDialog implements ChangeListener, MouseLi
     private Boolean progressUpdate;
 
     private Point stoneCoord;
-    
+
     private VideoCapture camera;
     private EyeTrackerRecording rec;
     private NotificationListener callbackTarget;
-    
+
     public StonePickerFrame(JDialog parentFrame, VideoCapture camera, EyeTrackerRecording rec, NotificationListener callbackTarget) {
 
         super(parentFrame, "Mitte eines Steines auswählen", true);
-        
+
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 Utils.resizePanelToRetainAspectRatio(panel, panelContainer);
             }
         });
-        
+
         this.camera = camera;
         this.rec = rec;
         this.callbackTarget = callbackTarget;
-        
+
         this.setSize(0, 0);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         this.panelContainer = new JPanel(new GridBagLayout());
-        
+
         this.panel = new StonePickerSurfacePanel();
         this.panel.setToolTipText("In die Mitte eines Steines klicken");
         this.panel.attachCamera(camera);
-        
+
         OverlayGazeProjector projector = new OverlayGazeProjector(rec);
         this.panel.attachProjector(projector);
 
@@ -77,13 +77,13 @@ public class StonePickerFrame extends JDialog implements ChangeListener, MouseLi
         this.panelContainer.setPreferredSize(this.panel.getPreferredSize());
         this.panelContainer.add(this.panel);
         this.add(this.panelContainer, BorderLayout.CENTER);
-        
+
         this.playbackPanel = new JPanel();
         SpringLayout layout = new SpringLayout();
         this.playbackPanel.setLayout(layout);
-        
+
         this.progressSlider = new RecordingSlider(JSlider.HORIZONTAL, 0, (int) camera.get(Videoio.CAP_PROP_FRAME_COUNT), 0);
-        this.progressSlider.addChangeListener((ChangeListener) this);
+        this.progressSlider.addChangeListener(this);
         this.progressSlider.setPaintTicks(false);
         this.progressSlider.setPaintLabels(false);
         this.playbackPanel.add(this.progressSlider, BorderLayout.CENTER);
@@ -95,21 +95,21 @@ public class StonePickerFrame extends JDialog implements ChangeListener, MouseLi
         this.add(this.playbackPanel, BorderLayout.PAGE_END);
 
         this.playbackPanel.setPreferredSize(new Dimension(this.panel.getPreferredSize().width, 25));
-        
+
         drawFrame();
-        
+
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         this.setResizable(false);
         this.pack();
-        
+
         this.setLocationRelativeTo(null);
     }
-    
+
     public void drawFrame() {
-        
+
         Mat newMatrix = new Mat();
-        
+
         if (camera.read(newMatrix)) {
             panel.setImage(Utils.Mat2BufferedImage(newMatrix));
             panel.repaint();
@@ -118,57 +118,57 @@ public class StonePickerFrame extends JDialog implements ChangeListener, MouseLi
             this.progressUpdate = false;
         }
     }
-    
+
     @Override
     public void stateChanged(ChangeEvent e) {
 
         if (!this.progressUpdate) {
-            
+
             JSlider source = (JSlider) e.getSource();
             if (source.getValueIsAdjusting()) {
-                
-                camera.set(Videoio.CV_CAP_PROP_POS_FRAMES, (double) source.getValue());
+
+                camera.set(Videoio.CV_CAP_PROP_POS_FRAMES, source.getValue());
                 drawFrame();
             }
         }
     }
-    
+
     @Override
     public void mouseClicked(MouseEvent e) {
-        
+
         stoneCoord = e.getPoint();
         Notification notif = new Notification("stonepickerresult", this, 0);
-            
+
         if (callbackTarget != null)
             callbackTarget.handleNotification(notif, stoneCoord);
-            
+
         this.setVisible(false);
         this.dispose();
        }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-    
+
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        
+
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        
+
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        
+
     }
 
     @Override

@@ -29,15 +29,17 @@ public class TSVParserT60XL extends TSVParser {
         }
     }
 
+    @Override
     public String parserDescription() { return "Tobii Pro T60XL"; }
 
+    @Override
     public EyeTrackerRecording parseData(List<String> rawData) {
 
         if (rawData.size() < 1)
             return null;
 
         EyeTrackerRecording rec = new EyeTrackerRecording();
-        
+
         ArrayList<String> map = (ArrayList<String>) rawData;
 
         int dataLinePointer = 0;
@@ -51,20 +53,20 @@ public class TSVParserT60XL extends TSVParser {
         }
 
         dataLinePointer++;
-        
+
         String recordingStartTime = map.get(dataLinePointer).split("\t")[1];
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss.SSS");
         Date recordingStartDate = null;
-        
+
         try {
             recordingStartDate = sdf.parse(recordingStartTime);
         } catch (ParseException e1) {
             e1.printStackTrace();
         }
-        
+
         Calendar timeCal = Calendar.getInstance();
         timeCal.setTime(recordingStartDate);
-        
+
         while (dataLinePointer < map.size()) {
 
             if (map.get(dataLinePointer).split("\t")[Columns.EVENT.i()].contains("ScreenRecStarted"))
@@ -72,24 +74,24 @@ public class TSVParserT60XL extends TSVParser {
 
             dataLinePointer++;
         }
-        
+
         dataLinePointer++;
-        
+
         int screenWidth = 0;
         int screenHeight = 0;
-        
+
         try {
             screenWidth = Integer.parseInt(map.get(dataLinePointer).split("\t")[Columns.SCREENWIDTH.i()]);
         } catch (NumberFormatException e) {}
-        
+
         try {
             screenHeight = Integer.parseInt(map.get(dataLinePointer).split("\t")[Columns.SCREENHEIGHT.i()]);
         } catch (NumberFormatException e) {}
-        
+
         Rectangle2D screenResolution = new Rectangle2D.Double(0, 0, screenWidth, screenHeight);
         rec.setScreenResolution(screenResolution);
         rec.setDisplayPPI(94.34);
-        
+
         rec.setSamplingFrequency(60);
 
         this.setProgress(0);
@@ -107,7 +109,7 @@ public class TSVParserT60XL extends TSVParser {
                     EyeTrackerEyeEvent e = new EyeTrackerEyeEvent();
                     e.number = Integer.parseInt(line[Columns.NUMBER.i()]);
                     e.timestamp = Long.parseLong(line[Columns.TIMESTAMP.i()]);
-                    
+
                     if (line[Columns.POINT_X.i()].length() > 0)
                         e.fixationPointX = Integer.parseInt(line[Columns.POINT_X.i()]);
                     else
@@ -118,14 +120,14 @@ public class TSVParserT60XL extends TSVParser {
                     else
                         e.eyesNotFound = true;
 
-                    if (line[Columns.EYE_DIST_LEFT.i()].length() > 0 && !(((String) line[Columns.EYE_DIST_LEFT.i()]).contains("unendlich"))) {
-                        e.eyePosLeftZ = Double.parseDouble(((String) line[Columns.EYE_DIST_LEFT.i()]).replace(",", "."));
+                    if (line[Columns.EYE_DIST_LEFT.i()].length() > 0 && !(line[Columns.EYE_DIST_LEFT.i()].contains("unendlich"))) {
+                        e.eyePosLeftZ = Double.parseDouble(line[Columns.EYE_DIST_LEFT.i()].replace(",", "."));
                         e.eyePosLeftX = screenResolution.getCenterX();
                         e.eyePosLeftY = screenResolution.getCenterY();
                     }
 
-                    if (line[Columns.EYE_DIST_RIGHT.i()].length() > 0 && !(((String) line[Columns.EYE_DIST_RIGHT.i()]).contains("unendlich"))) {
-                        e.eyePosRightZ = Double.parseDouble(((String) line[Columns.EYE_DIST_RIGHT.i()]).replace(",", "."));
+                    if (line[Columns.EYE_DIST_RIGHT.i()].length() > 0 && !(line[Columns.EYE_DIST_RIGHT.i()].contains("unendlich"))) {
+                        e.eyePosRightZ = Double.parseDouble(line[Columns.EYE_DIST_RIGHT.i()].replace(",", "."));
                         e.eyePosRightX = screenResolution.getCenterX();
                         e.eyePosRightY = screenResolution.getCenterY();
                     }
@@ -134,17 +136,17 @@ public class TSVParserT60XL extends TSVParser {
                         e.fixationPointX = -10000;
                         e.fixationPointY = -10000;
                     }
-                    
+
                     e.realFixationPointX = e.fixationPointX;
                     e.realFixationPointY = e.fixationPointY;
-                    
-                    e.fixationDuration = (double) (1000.0 / rec.getSamplingFrequency());
-                    
+
+                    e.fixationDuration = 1000.0 / rec.getSamplingFrequency();
+
                     rec.addEyeEvent(e);
                 }
             }
             else if (line[Columns.EVENT.i()].contains("LeftMouseClick")) {
-                
+
                 long ts = Long.parseLong(line[Columns.TIMESTAMP.i()]);
                 rec.addClick(ts);
             }
@@ -159,14 +161,15 @@ public class TSVParserT60XL extends TSVParser {
         }
 
         setProgress(100);
-                
+
         rec.recordingStartTS = timeCal.getTimeInMillis();
-        
+
         map = null;
-        
+
         return rec;
     }
 
+    @Override
     public double canParseDataConfidence(List<String> rawData) {
 
         String firstToken = rawData.get(0).split("\t")[0];

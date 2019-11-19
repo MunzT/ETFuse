@@ -41,6 +41,7 @@ public class TextAreaOutputStream extends OutputStream {
         if (b == '\n') {
             final String text = "[" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")) + "]: " + sb.toString();
             SwingUtilities.invokeLater(new Runnable() {
+                @Override
                 public void run() {
                     textArea.append(text);
                 }
