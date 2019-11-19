@@ -76,7 +76,8 @@ public class ParserController implements PropertyChangeListener {
 
         if (parserToUse != null) {
 
-            System.out.println("<ParserController> parse als " + parserToUse.parserDescription() + " (confidence: " + parserConfidence + ")");
+            System.out.println("<ParserController> parse als " + parserToUse.parserDescription()
+                + " (confidence: " + parserConfidence + ")");
 
             parserToUse.addProgressEventListener(this);
 
@@ -84,7 +85,8 @@ public class ParserController implements PropertyChangeListener {
             int velocityThreshold = prefs.getFilterVelocityThreshold();
             int distanceThreshold = prefs.getFilterDistanceThreshold();
 
-            return IVTFilter.filterRecording(parserToUse.parseData(rawData), velocityThreshold, distanceThreshold);
+            return IVTFilter.filterRecording(parserToUse.parseData(rawData), velocityThreshold,
+                                             distanceThreshold);
         }
 
         System.out.println("<ParserController> es wurde kein kompatibles ParserModul gefunden.");

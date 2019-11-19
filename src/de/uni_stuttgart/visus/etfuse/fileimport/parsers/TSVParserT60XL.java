@@ -120,13 +120,15 @@ public class TSVParserT60XL extends TSVParser {
                     else
                         e.eyesNotFound = true;
 
-                    if (line[Columns.EYE_DIST_LEFT.i()].length() > 0 && !(line[Columns.EYE_DIST_LEFT.i()].contains("unendlich"))) {
+                    if (line[Columns.EYE_DIST_LEFT.i()].length() > 0
+                            && !(line[Columns.EYE_DIST_LEFT.i()].contains("unendlich"))) {
                         e.eyePosLeftZ = Double.parseDouble(line[Columns.EYE_DIST_LEFT.i()].replace(",", "."));
                         e.eyePosLeftX = screenResolution.getCenterX();
                         e.eyePosLeftY = screenResolution.getCenterY();
                     }
 
-                    if (line[Columns.EYE_DIST_RIGHT.i()].length() > 0 && !(line[Columns.EYE_DIST_RIGHT.i()].contains("unendlich"))) {
+                    if (line[Columns.EYE_DIST_RIGHT.i()].length() > 0
+                            && !(line[Columns.EYE_DIST_RIGHT.i()].contains("unendlich"))) {
                         e.eyePosRightZ = Double.parseDouble(line[Columns.EYE_DIST_RIGHT.i()].replace(",", "."));
                         e.eyePosRightX = screenResolution.getCenterX();
                         e.eyePosRightY = screenResolution.getCenterY();

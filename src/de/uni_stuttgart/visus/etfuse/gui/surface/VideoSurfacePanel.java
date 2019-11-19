@@ -133,11 +133,13 @@ public class VideoSurfacePanel extends JPanel {
 
         Graphics2D g2 = (Graphics2D) g;
 
-        long currentTime = (long) Math.floor((camera.get(Videoio.CV_CAP_PROP_POS_FRAMES) / camera.get(Videoio.CAP_PROP_FPS)) * 1000);
+        long currentTime = (long) Math.floor((camera.get(Videoio.CV_CAP_PROP_POS_FRAMES)
+                / camera.get(Videoio.CAP_PROP_FPS)) * 1000);
 
         for (OverlayGazeProjector projector : this.projectors) {
 
-            ArrayList<EyeTrackerEyeEvent> lastEvents = projector.xEventsBeforeShiftedTimestamp(1, currentTime, true, false);
+            ArrayList<EyeTrackerEyeEvent> lastEvents =
+                    projector.xEventsBeforeShiftedTimestamp(1, currentTime, true, false);
 
             if (lastEvents == null || lastEvents.size() < 1)
                 continue;
@@ -159,7 +161,8 @@ public class VideoSurfacePanel extends JPanel {
                 if (curEvent == null)
                     continue;
 
-                Ellipse2D ellipse = new Ellipse2D.Double(curEvent.fixationPointX - 5, curEvent.fixationPointY - 5, 10, 10);
+                Ellipse2D ellipse = new Ellipse2D.Double(curEvent.fixationPointX - 5,
+                                                         curEvent.fixationPointY - 5, 10, 10);
                 g2.draw(ellipse);
             }
         }
@@ -178,12 +181,15 @@ public class VideoSurfacePanel extends JPanel {
 
         Graphics2D g2 = (Graphics2D) g;
 
-        long currentTime = (long) Math.floor((camera.get(Videoio.CV_CAP_PROP_POS_FRAMES) / camera.get(Videoio.CAP_PROP_FPS)) * 1000);
+        long currentTime = (long) Math.floor((camera.get(Videoio.CV_CAP_PROP_POS_FRAMES)
+                / camera.get(Videoio.CAP_PROP_FPS)) * 1000);
 
         for (OverlayGazeProjector projector : this.projectors) {
 
 
-            ArrayList<EyeTrackerEyeEvent> lastEvents = projector.eventsBetweenShiftedTimestamps(currentTime - (msRange + fadeDuration), currentTime, false, false);
+            ArrayList<EyeTrackerEyeEvent> lastEvents =
+                    projector.eventsBetweenShiftedTimestamps(currentTime - (msRange + fadeDuration),
+                                                             currentTime, false, false);
 
             if (lastEvents == null || lastEvents.size() < 1) // fallback nach sehr langer fixation
                 lastEvents = projector.xEventsBeforeShiftedTimestamp(10, currentTime, false, false);
@@ -201,14 +207,20 @@ public class VideoSurfacePanel extends JPanel {
                 if (curEvent == null)
                     continue;
 
-                if (i == 0 && currentTime < (curEvent.timestamp - projector.getTimeSyncOffset()) + curEvent.fixationDuration)
+                if (i == 0 && currentTime < (curEvent.timestamp - projector.getTimeSyncOffset())
+                        + curEvent.fixationDuration)
                     g2.setColor(projector.getRecording().preferredGazeColor);
 
-                Ellipse2D ellipse = new Ellipse2D.Double(curEvent.fixationPointX - 15, curEvent.fixationPointY - 15, 30, 30);
-                Ellipse2D outer = new Ellipse2D.Double(curEvent.fixationPointX - 20, curEvent.fixationPointY - 20, 40, 40);
+                Ellipse2D ellipse = new Ellipse2D.Double(curEvent.fixationPointX - 15,
+                        curEvent.fixationPointY - 15, 30, 30);
+                Ellipse2D outer = new Ellipse2D.Double(curEvent.fixationPointX - 20,
+                        curEvent.fixationPointY - 20, 40, 40);
 
                 Composite former = g2.getComposite();
-                g2.setComposite(AlphaComposite.SrcOver.derive(Math.max(0.f, Math.min(1.f, 1.f - ((float) (currentTime - ((curEvent.timestamp - projector.getTimeSyncOffset()) + curEvent.fixationDuration + msRange)) / (fadeDuration))))));
+                g2.setComposite(AlphaComposite.SrcOver.derive(Math.max(0.f, Math.min(1.f,
+                        1.f - ((float) (currentTime - ((curEvent.timestamp
+                                - projector.getTimeSyncOffset()) + curEvent.fixationDuration
+                                + msRange)) / (fadeDuration))))));
                 g2.draw(ellipse);
 
                 g2.setColor(projector.getRecording().preferredGazeColor);
@@ -224,7 +236,8 @@ public class VideoSurfacePanel extends JPanel {
                     if (lastEvent == null)
                         continue;
 
-                    Line2D line = new Line2D.Double(lastEvent.fixationPointX, lastEvent.fixationPointY, curEvent.fixationPointX, curEvent.fixationPointY);
+                    Line2D line = new Line2D.Double(lastEvent.fixationPointX, lastEvent.fixationPointY,
+                                                    curEvent.fixationPointX, curEvent.fixationPointY);
                     g2.setStroke(new BasicStroke(2));
                     g2.draw(line);
                     g2.setStroke(new BasicStroke(10));

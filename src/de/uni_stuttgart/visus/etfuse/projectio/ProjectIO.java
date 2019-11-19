@@ -92,7 +92,8 @@ public class ProjectIO implements PropertyChangeListener {
 
             final JFileChooser fc = new JFileChooser();
 
-            fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi", "mkv", "flv", "mpeg"));
+            fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi",
+                                                                  "mkv", "flv", "mpeg"));
             fc.setAcceptAllFileFilterUsed(false);
 
             int returnVal = fc.showOpenDialog(mainFrame);
@@ -141,7 +142,8 @@ public class ProjectIO implements PropertyChangeListener {
                 if (mainFrame == null)
                     return false;
 
-                JOptionPane.showMessageDialog(mainFrame, "Could not find guest video \"" + guestVidPath + "\"!");
+                JOptionPane.showMessageDialog(mainFrame,
+                        "Could not find guest video \"" + guestVidPath + "\"!");
 
                 final JFileChooser fc = new JFileChooser();
 
@@ -245,7 +247,9 @@ public class ProjectIO implements PropertyChangeListener {
         Project proj = Project.currentProject();
 
         if (proj.hostFrame != null)
-            vidFrame.getHostProjector().getRecording().setFrame(new Point((int) proj.hostFrame.getMinX(), (int) proj.hostFrame.getMinY()), new Point((int) proj.hostFrame.getMaxX(), (int) proj.hostFrame.getMaxY()));
+            vidFrame.getHostProjector().getRecording().setFrame(new Point((int) proj.hostFrame.getMinX(),
+                    (int) proj.hostFrame.getMinY()), new Point((int) proj.hostFrame.getMaxX(),
+                            (int) proj.hostFrame.getMaxY()));
 
         prepareProjectStep3();
     }
@@ -254,7 +258,8 @@ public class ProjectIO implements PropertyChangeListener {
 
         Project proj = Project.currentProject();
 
-        if (proj.guestDatasetPaths.size() <= curGuest || proj.guestFrames.size() <= curGuest || proj.guestTimeShiftOffsets.size() <= curGuest) {
+        if (proj.guestDatasetPaths.size() <= curGuest || proj.guestFrames.size() <= curGuest
+                || proj.guestTimeShiftOffsets.size() <= curGuest) {
             prepareProjectStep5();
             return;
         }
@@ -274,7 +279,8 @@ public class ProjectIO implements PropertyChangeListener {
         Project proj = Project.currentProject();
 
         Rectangle guestFrame = proj.guestFrames.get(curGuest);
-        lastRec.setFrame(new Point((int) guestFrame.getMinX(), (int) guestFrame.getMinY()), new Point((int) guestFrame.getMaxX(), (int) guestFrame.getMaxY()));
+        lastRec.setFrame(new Point((int) guestFrame.getMinX(), (int) guestFrame.getMinY()),
+                new Point((int) guestFrame.getMaxX(), (int) guestFrame.getMaxY()));
         OverlayGazeProjector guestProj = new OverlayGazeProjector(lastRec);
         guestProj.transformRawPointsToTarget(vidFrame.getHostProjector().getRecording());
         guestProj.transformFilteredPointsToTarget(vidFrame.getHostProjector().getRecording());

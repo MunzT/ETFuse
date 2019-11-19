@@ -184,9 +184,12 @@ public class HeatMapGenerator extends SwingWorker {
         Rectangle2D screenRes = hostProj.getRecording().getScreenResolution();
 
         if (vidFrame != null)
-            screenRes = new Rectangle2D.Double(0, 0, vidFrame.getPanel().getCamera().get(Videoio.CAP_PROP_FRAME_WIDTH), vidFrame.getPanel().getCamera().get(Videoio.CAP_PROP_FRAME_HEIGHT));
+            screenRes = new Rectangle2D.Double(0, 0,
+                    vidFrame.getPanel().getCamera().get(Videoio.CAP_PROP_FRAME_WIDTH),
+                    vidFrame.getPanel().getCamera().get(Videoio.CAP_PROP_FRAME_HEIGHT));
 
-        Mat heatMap = new Mat((int) screenRes.getHeight(), (int) screenRes.getWidth(), CvType.CV_64FC1, new Scalar(0));
+        Mat heatMap = new Mat((int) screenRes.getHeight(), (int) screenRes.getWidth(),
+                CvType.CV_64FC1, new Scalar(0));
 
         if (hostProj == null)
             return heatMap;
@@ -208,7 +211,8 @@ public class HeatMapGenerator extends SwingWorker {
                 else if (radius < pointRadius)
                     pixel[0] = 1.f /*255*/;                    // solid
                 else
-                    pixel[0] = /*Math.round(*/(1.f - ((radius - pointRadius) / (heatRadius - pointRadius))) * 1.f /*255)*/; // partial
+                    pixel[0] = /*Math.round(*/(1.f - ((radius - pointRadius)
+                            / (heatRadius - pointRadius))) * 1.f /*255)*/; // partial
 
                 alpha.put(r, c, pixel);
             }
@@ -269,7 +273,8 @@ public class HeatMapGenerator extends SwingWorker {
             Rect roiRect = new Rect(xOrigin, yOrigin, 2 * heatRadius, 2 * heatRadius);
 
             if (skipBorderEvents)
-                if (roiRect.x < 0 || roiRect.y < 0 || roiRect.x + roiRect.width > heatMap.width() || roiRect.y + roiRect.height > heatMap.height())
+                if (roiRect.x < 0 || roiRect.y < 0 || roiRect.x + roiRect.width > heatMap.width()
+                        || roiRect.y + roiRect.height > heatMap.height())
                     continue;
 
             for (int j = 0; j < alpha.rows(); j++) {

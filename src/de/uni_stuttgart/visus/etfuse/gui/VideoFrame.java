@@ -317,7 +317,8 @@ public class VideoFrame extends JFrame implements ChangeListener {
         this.panel.setPaintHeatMap(true);
         this.panel.setParentVideoFrame(this);
 
-        this.panel.setPreferredSize(new Dimension((int) Math.ceil(newCamera.get(Videoio.CAP_PROP_FRAME_WIDTH)), (int) Math.ceil(newCamera.get(Videoio.CAP_PROP_FRAME_HEIGHT))));
+        this.panel.setPreferredSize(new Dimension((int) Math.ceil(newCamera.get(Videoio.CAP_PROP_FRAME_WIDTH)),
+                (int) Math.ceil(newCamera.get(Videoio.CAP_PROP_FRAME_HEIGHT))));
         this.panelContainer.setPreferredSize(this.panel.getPreferredSize());
         this.panelContainer.add(this.panel);
         this.add(this.panelContainer, BorderLayout.CENTER);
@@ -346,10 +347,13 @@ public class VideoFrame extends JFrame implements ChangeListener {
         this.playPauseButton.addActionListener(playPauseListener);
         this.playPauseButton.setFocusable(false);
         this.playbackPanel.add(this.playPauseButton);
-        layout.putConstraint(SpringLayout.WEST, this.playPauseButton, 3, SpringLayout.WEST, this.playbackPanel);
-        layout.putConstraint(SpringLayout.NORTH, this.playPauseButton, 3, SpringLayout.NORTH, this.playbackPanel);
+        layout.putConstraint(SpringLayout.WEST, this.playPauseButton, 3,
+                SpringLayout.WEST, this.playbackPanel);
+        layout.putConstraint(SpringLayout.NORTH, this.playPauseButton, 3,
+                SpringLayout.NORTH, this.playbackPanel);
 
-        this.progressSlider = new RecordingSlider(JSlider.HORIZONTAL, 0, (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT), 0);
+        this.progressSlider = new RecordingSlider(JSlider.HORIZONTAL, 0,
+                (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT), 0);
         this.progressSlider.setToolTipText("Timeline with MinDist plot");
         this.progressSlider.addChangeListener(this);
         this.progressSlider.setFocusable(false);
@@ -360,9 +364,12 @@ public class VideoFrame extends JFrame implements ChangeListener {
         this.progressSlider.setPaintTicks(true);
         this.progressSlider.setPaintLabels(false);
         this.playbackPanel.add(this.progressSlider);
-        layout.putConstraint(SpringLayout.WEST, this.progressSlider, 5, SpringLayout.EAST, this.playPauseButton);
-        layout.putConstraint(SpringLayout.NORTH, this.progressSlider, 3, SpringLayout.NORTH, this.playbackPanel);
-        layout.putConstraint(SpringLayout.EAST, this.progressSlider, -5, SpringLayout.EAST, this.playbackPanel);
+        layout.putConstraint(SpringLayout.WEST, this.progressSlider, 5,
+                SpringLayout.EAST, this.playPauseButton);
+        layout.putConstraint(SpringLayout.NORTH, this.progressSlider, 3,
+                SpringLayout.NORTH, this.playbackPanel);
+        layout.putConstraint(SpringLayout.EAST, this.progressSlider, -5,
+                SpringLayout.EAST, this.playbackPanel);
 
         this.frameCounterLabel = new JLabel("0", SwingConstants.CENTER);
         this.frameCounterLabel.setToolTipText("Frame Counter - click to jump to a specific frame");
@@ -388,12 +395,16 @@ public class VideoFrame extends JFrame implements ChangeListener {
                 progressSlider.setValueIsAdjusting(false);
             }
         });
-        layout.putConstraint(SpringLayout.WEST, this.frameCounterLabel, 3, SpringLayout.WEST, this.playbackPanel);
-        layout.putConstraint(SpringLayout.NORTH, this.frameCounterLabel, 3, SpringLayout.SOUTH, this.playPauseButton);
-        layout.putConstraint(SpringLayout.EAST, this.frameCounterLabel, -5, SpringLayout.WEST, this.progressSlider);
+        layout.putConstraint(SpringLayout.WEST, this.frameCounterLabel, 3,
+                SpringLayout.WEST, this.playbackPanel);
+        layout.putConstraint(SpringLayout.NORTH, this.frameCounterLabel, 3,
+                SpringLayout.SOUTH, this.playPauseButton);
+        layout.putConstraint(SpringLayout.EAST, this.frameCounterLabel, -5,
+                SpringLayout.WEST, this.progressSlider);
         this.playbackPanel.add(this.frameCounterLabel);
 
-        this.heatMapSlider = new RangeSlider(0, (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT), 0, (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT));
+        this.heatMapSlider = new RangeSlider(0, (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT), 0,
+                (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT));
         this.heatMapSlider.setToolTipText("Period of time over which the attention maps are generated.");
         this.heatMapSlider.putClientProperty("JSlider.isFilled", false);
         ChangeListener heatMapChangeListener = new ChangeListener() {
@@ -418,20 +429,28 @@ public class VideoFrame extends JFrame implements ChangeListener {
         this.heatMapSlider.setOrientation(SwingConstants.HORIZONTAL);
         this.heatMapSlider.setRangeDraggable(true);
         this.playbackPanel.add(this.heatMapSlider);
-        layout.putConstraint(SpringLayout.WEST, this.heatMapSlider, 5, SpringLayout.EAST, this.playPauseButton);
-        layout.putConstraint(SpringLayout.NORTH, this.heatMapSlider, 3, SpringLayout.SOUTH, this.playPauseButton);
-        layout.putConstraint(SpringLayout.EAST, this.heatMapSlider, -5, SpringLayout.EAST, this.playbackPanel);
+        layout.putConstraint(SpringLayout.WEST, this.heatMapSlider, 5,
+                SpringLayout.EAST, this.playPauseButton);
+        layout.putConstraint(SpringLayout.NORTH, this.heatMapSlider, 3,
+                SpringLayout.SOUTH, this.playPauseButton);
+        layout.putConstraint(SpringLayout.EAST, this.heatMapSlider, -5,
+                SpringLayout.EAST, this.playbackPanel);
 
         this.qsPanel = new QuickSettingsToolbar(this);
         this.playbackPanel.add(this.qsPanel);
-        layout.putConstraint(SpringLayout.WEST, this.qsPanel, 5, SpringLayout.WEST, this.playbackPanel);
-        layout.putConstraint(SpringLayout.NORTH, this.qsPanel, 3, SpringLayout.SOUTH, this.heatMapSlider);
-        layout.putConstraint(SpringLayout.EAST, this.qsPanel, -5, SpringLayout.EAST, this.playbackPanel);
-        layout.putConstraint(SpringLayout.SOUTH, this.qsPanel, -5, SpringLayout.SOUTH, this.playbackPanel);
+        layout.putConstraint(SpringLayout.WEST, this.qsPanel, 5,
+                SpringLayout.WEST, this.playbackPanel);
+        layout.putConstraint(SpringLayout.NORTH, this.qsPanel, 3,
+                SpringLayout.SOUTH, this.heatMapSlider);
+        layout.putConstraint(SpringLayout.EAST, this.qsPanel, -5,
+                SpringLayout.EAST, this.playbackPanel);
+        layout.putConstraint(SpringLayout.SOUTH, this.qsPanel, -5,
+                SpringLayout.SOUTH, this.playbackPanel);
 
         this.add(this.playbackPanel, BorderLayout.PAGE_END);
 
-        this.playbackPanel.setPreferredSize(new Dimension(this.panel.getPreferredSize().width, this.playPauseButton.getPreferredSize().height * 3 + 6));
+        this.playbackPanel.setPreferredSize(new Dimension(this.panel.getPreferredSize().width,
+                this.playPauseButton.getPreferredSize().height * 3 + 6));
 
         this.setResizable(true);
         this.pack();
@@ -542,7 +561,8 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
                 this.newCamera.set(Videoio.CV_CAP_PROP_POS_FRAMES, source.getValue());
 
-                frameCounterLabel.setText(Integer.toString(Math.max(0, (int) newCamera.get(Videoio.CAP_PROP_POS_FRAMES) - 1)));
+                frameCounterLabel.setText(Integer.toString(Math.max(0,
+                        (int) newCamera.get(Videoio.CAP_PROP_POS_FRAMES) - 1)));
 
                 if (!this.frameTimer.isRunning()) {
                     this.frameTimer.setRepeats(false);

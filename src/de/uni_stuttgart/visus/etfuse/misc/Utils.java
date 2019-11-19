@@ -138,8 +138,10 @@ public class Utils {
 
     public static Point transformCoordinate(Point p, Line2D sourceFrame, Line2D targetFrame) {
 
-        Rectangle2D sourceRect = new Rectangle2D.Double(sourceFrame.getX1(), sourceFrame.getY1(), sourceFrame.getX2() - sourceFrame.getX1(), sourceFrame.getY2() - sourceFrame.getY1());
-        Rectangle2D targetRect = new Rectangle2D.Double(targetFrame.getX1(), targetFrame.getY1(), targetFrame.getX2() - targetFrame.getX1(), targetFrame.getY2() - targetFrame.getY1());
+        Rectangle2D sourceRect = new Rectangle2D.Double(sourceFrame.getX1(), sourceFrame.getY1(),
+                sourceFrame.getX2() - sourceFrame.getX1(), sourceFrame.getY2() - sourceFrame.getY1());
+        Rectangle2D targetRect = new Rectangle2D.Double(targetFrame.getX1(), targetFrame.getY1(),
+                targetFrame.getX2() - targetFrame.getX1(), targetFrame.getY2() - targetFrame.getY1());
 
         double fractionX = (p.x - sourceRect.getCenterX()) / (sourceRect.getWidth() / 2);
         double fractionY = (p.y - sourceRect.getCenterY()) / (sourceRect.getHeight() / 2);
@@ -161,7 +163,8 @@ public class Utils {
             for (int x = 0; x < sideNum; x++) {
 
                 int cellIndex = (y * sideNum) + x;
-                matrices[cellIndex] = matrix.submat(y * cellHeight, (y + 1) * cellHeight, x * cellWidth, (x + 1) * cellWidth);
+                matrices[cellIndex] = matrix.submat(y * cellHeight, (y + 1) * cellHeight,
+                        x * cellWidth, (x + 1) * cellWidth);
             }
         }
 
@@ -206,7 +209,8 @@ public class Utils {
         resizePanelToRetainAspectRatio(mediaW, mediaH, panel, panelContainer);
     }
 
-    private static void resizePanelToRetainAspectRatio(double normalWidth, double normalHeight, JPanel panel, JPanel panelContainer) {
+    private static void resizePanelToRetainAspectRatio(double normalWidth, double normalHeight,
+            JPanel panel, JPanel panelContainer) {
 
         double mediaW = normalWidth;
         double mediaH = normalHeight;

@@ -100,9 +100,11 @@ public class DataImporter implements ActionListener, PropertyChangeListener {
         if (this.parentFrame != null) {
 
             if (importTask.getProgress() == 100)
-                this.parentFrame.setTitleWithProgress("Importiere Eye-Tracker-Daten (id " + importTask.hashCode() + ")", -1);
+                this.parentFrame.setTitleWithProgress("Importiere Eye-Tracker-Daten (id "
+                    + importTask.hashCode() + ")", -1);
             else
-                this.parentFrame.setTitleWithProgress("Importiere Eye-Tracker-Daten (id " + importTask.hashCode() + ")", importTask.getProgress());
+                this.parentFrame.setTitleWithProgress("Importiere Eye-Tracker-Daten (id "
+                    + importTask.hashCode() + ")", importTask.getProgress());
         }
     }
 }

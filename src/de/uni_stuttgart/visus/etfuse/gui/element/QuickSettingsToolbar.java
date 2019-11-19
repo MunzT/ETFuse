@@ -198,9 +198,12 @@ public class QuickSettingsToolbar extends JPanel {
 
         Preferences prefs = Project.currentProject().getPreferences();
 
-        comboBoxOverlayHeatMapSource.setSelectedIndex(Math.min(comboBoxOverlayHeatMapSource.getItemCount() - 1, prefs.getHeatMapOverlayPlayer()));
-        comboBoxMinDistPlotSource1.setSelectedIndex(Math.min(comboBoxMinDistPlotSource1.getItemCount() - 1, prefs.getMinDistPlotPlayer1()));
-        comboBoxMinDistPlotSource2.setSelectedIndex(Math.min(comboBoxMinDistPlotSource2.getItemCount() - 1, prefs.getMinDistPlotPlayer2()));
+        comboBoxOverlayHeatMapSource.setSelectedIndex(Math.min(
+                comboBoxOverlayHeatMapSource.getItemCount() - 1, prefs.getHeatMapOverlayPlayer()));
+        comboBoxMinDistPlotSource1.setSelectedIndex(Math.min(
+                comboBoxMinDistPlotSource1.getItemCount() - 1, prefs.getMinDistPlotPlayer1()));
+        comboBoxMinDistPlotSource2.setSelectedIndex(Math.min(
+                comboBoxMinDistPlotSource2.getItemCount() - 1, prefs.getMinDistPlotPlayer2()));
     }
 
     public void updateSelectableIndicesFromDatasets() {

@@ -20,10 +20,12 @@ public class ColorInfoFrame extends JDialog {
 
     private class StatusColumnCellRenderer extends DefaultTableCellRenderer {
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int col) {
 
             //Cells are by default rendered as a JLabel.
-            JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+            JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected,
+                                                                    hasFocus, row, col);
 
             l.setBackground((Color) value);
             l.setText("");

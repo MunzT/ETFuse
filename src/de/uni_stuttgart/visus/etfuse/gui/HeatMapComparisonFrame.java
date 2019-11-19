@@ -76,18 +76,26 @@ public class HeatMapComparisonFrame extends JFrame {
         heatMapViewContainer = new JPanel();
         getContentPane().add(heatMapViewContainer, "1, 1, fill, fill");
         SpringLayout sl_heatMapViewContainer = new SpringLayout();
-        sl_heatMapViewContainer.putConstraint(SpringLayout.NORTH, singleHeatMapPanelContainer, 3, SpringLayout.NORTH, heatMapViewContainer);
-        sl_heatMapViewContainer.putConstraint(SpringLayout.WEST, singleHeatMapPanelContainer, 3, SpringLayout.WEST, heatMapViewContainer);
-        sl_heatMapViewContainer.putConstraint(SpringLayout.SOUTH, singleHeatMapPanelContainer, -3, SpringLayout.SOUTH, heatMapViewContainer);
-        sl_heatMapViewContainer.putConstraint(SpringLayout.EAST, singleHeatMapPanelContainer, -3, SpringLayout.EAST, heatMapViewContainer);
+        sl_heatMapViewContainer.putConstraint(SpringLayout.NORTH, singleHeatMapPanelContainer, 3,
+                SpringLayout.NORTH, heatMapViewContainer);
+        sl_heatMapViewContainer.putConstraint(SpringLayout.WEST, singleHeatMapPanelContainer, 3,
+                SpringLayout.WEST, heatMapViewContainer);
+        sl_heatMapViewContainer.putConstraint(SpringLayout.SOUTH, singleHeatMapPanelContainer, -3,
+                SpringLayout.SOUTH, heatMapViewContainer);
+        sl_heatMapViewContainer.putConstraint(SpringLayout.EAST, singleHeatMapPanelContainer, -3,
+                SpringLayout.EAST, heatMapViewContainer);
         heatMapViewContainer.setLayout(sl_heatMapViewContainer);
 
         splitHeatMapPanel = new JSplitPane();
         splitHeatMapPanel.setResizeWeight(0.5);
-        sl_heatMapViewContainer.putConstraint(SpringLayout.NORTH, splitHeatMapPanel, 3, SpringLayout.NORTH, heatMapViewContainer);
-        sl_heatMapViewContainer.putConstraint(SpringLayout.WEST, splitHeatMapPanel, 3, SpringLayout.WEST, heatMapViewContainer);
-        sl_heatMapViewContainer.putConstraint(SpringLayout.SOUTH, splitHeatMapPanel, -3, SpringLayout.SOUTH, heatMapViewContainer);
-        sl_heatMapViewContainer.putConstraint(SpringLayout.EAST, splitHeatMapPanel, -3, SpringLayout.EAST, heatMapViewContainer);
+        sl_heatMapViewContainer.putConstraint(SpringLayout.NORTH, splitHeatMapPanel, 3,
+                SpringLayout.NORTH, heatMapViewContainer);
+        sl_heatMapViewContainer.putConstraint(SpringLayout.WEST, splitHeatMapPanel, 3,
+                SpringLayout.WEST, heatMapViewContainer);
+        sl_heatMapViewContainer.putConstraint(SpringLayout.SOUTH, splitHeatMapPanel, -3,
+                SpringLayout.SOUTH, heatMapViewContainer);
+        sl_heatMapViewContainer.putConstraint(SpringLayout.EAST, splitHeatMapPanel, -3,
+                SpringLayout.EAST, heatMapViewContainer);
         heatMapViewContainer.add(splitHeatMapPanel);
 
         leftHeatMapPanelContainer = new JPanel();
@@ -134,10 +142,14 @@ public class HeatMapComparisonFrame extends JFrame {
         singleHeatMapPanel = new HeatMapImagePanel();
         singleHeatMapPanel.setHeatMap(new Mat(1, 1, CvType.CV_8UC1));
         singleHeatMapPanelContainer.add(singleHeatMapPanel);
-        sl_heatMapViewContainer.putConstraint(SpringLayout.NORTH, singleHeatMapPanel, 3, SpringLayout.NORTH, heatMapViewContainer);
-        sl_heatMapViewContainer.putConstraint(SpringLayout.WEST, singleHeatMapPanel, 3, SpringLayout.WEST, heatMapViewContainer);
-        sl_heatMapViewContainer.putConstraint(SpringLayout.SOUTH, singleHeatMapPanel, -3, SpringLayout.SOUTH, heatMapViewContainer);
-        sl_heatMapViewContainer.putConstraint(SpringLayout.EAST, singleHeatMapPanel, -3, SpringLayout.EAST, heatMapViewContainer);
+        sl_heatMapViewContainer.putConstraint(SpringLayout.NORTH, singleHeatMapPanel, 3,
+                SpringLayout.NORTH, heatMapViewContainer);
+        sl_heatMapViewContainer.putConstraint(SpringLayout.WEST, singleHeatMapPanel, 3,
+                SpringLayout.WEST, heatMapViewContainer);
+        sl_heatMapViewContainer.putConstraint(SpringLayout.SOUTH, singleHeatMapPanel, -3,
+                SpringLayout.SOUTH, heatMapViewContainer);
+        sl_heatMapViewContainer.putConstraint(SpringLayout.EAST, singleHeatMapPanel, -3,
+                SpringLayout.EAST, heatMapViewContainer);
 
         controlPanel = new JPanel();
         getContentPane().add(controlPanel, "1, 2, fill, bottom");
@@ -314,7 +326,8 @@ public class HeatMapComparisonFrame extends JFrame {
             chckbxNurSpielfeldbereich.setEnabled(false);
 
         this.pack();
-        this.setMinimumSize(new Dimension((int) Math.max(873, this.getSize().getWidth()), (int) Math.max(500, this.getSize().getHeight())));
+        this.setMinimumSize(new Dimension((int) Math.max(873, this.getSize().getWidth()),
+                (int) Math.max(500, this.getSize().getHeight())));
         setLocationRelativeTo(null);
     }
 

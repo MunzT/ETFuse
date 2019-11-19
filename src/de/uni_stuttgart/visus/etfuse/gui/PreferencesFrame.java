@@ -78,7 +78,8 @@ public class PreferencesFrame extends JDialog {
                 RowSpec.decode("fill:default"),}));
 
         JPanel fixationPrefsPanel = new JPanel();
-        fixationPrefsPanel.setBorder(new TitledBorder(null, "Fixations", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        fixationPrefsPanel.setBorder(new TitledBorder(null, "Fixations", TitledBorder.LEADING,
+                TitledBorder.TOP, null, null));
         panelOverlayPrefs.add(fixationPrefsPanel, "1, 1, fill, center");
         fixationPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -98,7 +99,8 @@ public class PreferencesFrame extends JDialog {
         chckbxEnableFixationPlot.setAlignmentY(Component.TOP_ALIGNMENT);
         fixationPrefsPanel.add(chckbxEnableFixationPlot, "2, 2, left, top");
 
-        JLabel labelVisibilityDuration = new JLabel("Visibility of completed fixations (in ms, default: 500):");
+        JLabel labelVisibilityDuration = new JLabel(
+                "Visibility of completed fixations (in ms, default: 500):");
         fixationPrefsPanel.add(labelVisibilityDuration, "2, 4, fill, fill");
 
         txtVisibilityDuration = new JTextField();
@@ -107,7 +109,8 @@ public class PreferencesFrame extends JDialog {
         txtVisibilityDuration.setColumns(10);
 
         JPanel rawDataPrefsPanel = new JPanel();
-        rawDataPrefsPanel.setBorder(new TitledBorder(null, "Raw Data", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        rawDataPrefsPanel.setBorder(new TitledBorder(null, "Raw Data", TitledBorder.LEADING,
+                TitledBorder.TOP, null, null));
         panelOverlayPrefs.add(rawDataPrefsPanel, "1, 2, fill, center");
         rawDataPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -123,7 +126,8 @@ public class PreferencesFrame extends JDialog {
         rawDataPrefsPanel.add(chckbxEnableRawDataPlot, "2, 2, fill, top");
 
         JPanel heatMapPrefsPanel = new JPanel();
-        heatMapPrefsPanel.setBorder(new TitledBorder(null, "Attention Map", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        heatMapPrefsPanel.setBorder(new TitledBorder(null, "Attention Map", TitledBorder.LEADING,
+                TitledBorder.TOP, null, null));
         panelOverlayPrefs.add(heatMapPrefsPanel, "1, 3, fill, center");
         heatMapPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -169,7 +173,9 @@ public class PreferencesFrame extends JDialog {
                 RowSpec.decode("default:grow"),}));
 
         JPanel minDistPrefsPanel = new JPanel();
-        minDistPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(128, 128, 128)), "Minimum Distance Plot Parameters", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        minDistPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED,
+                new Color(255, 255, 255), new Color(128, 128, 128)), "Minimum Distance Plot Parameters",
+                TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         panelMinDistPrefs.add(minDistPrefsPanel, "2, 2, fill, fill");
         minDistPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -220,7 +226,9 @@ public class PreferencesFrame extends JDialog {
                 RowSpec.decode("4dlu:grow"),}));
 
         JPanel filterParameterPrefsPanel = new JPanel();
-        filterParameterPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(128, 128, 128)), "Filter Parameters", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        filterParameterPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED,
+                new Color(255, 255, 255), new Color(128, 128, 128)), "Filter Parameters",
+                TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         panelGazeFilterPrefs.add(filterParameterPrefsPanel, "2, 2, fill, fill");
         filterParameterPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -261,7 +269,9 @@ public class PreferencesFrame extends JDialog {
                 RowSpec.decode("default:grow"),}));
 
         JPanel heatMapGeneratorPrefsPanel = new JPanel();
-        heatMapGeneratorPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(128, 128, 128)), "Generator Parameters", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        heatMapGeneratorPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED,
+                new Color(255, 255, 255), new Color(128, 128, 128)), "Generator Parameters",
+                TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         panelHeatMapGeneratorPrefs.add(heatMapGeneratorPrefsPanel, "2, 2, fill, fill");
         heatMapGeneratorPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -320,7 +330,10 @@ public class PreferencesFrame extends JDialog {
                 RowSpec.decode("fill:default:grow"),}));
 
         JPanel histogramCompPrefsPanel = new JPanel();
-        histogramCompPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(128, 128, 128)), "Temporal Synchronization via Histogram Comparison", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        histogramCompPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED,
+                new Color(255, 255, 255), new Color(128, 128, 128)),
+                "Temporal Synchronization via Histogram Comparison", TitledBorder.LEADING,
+                TitledBorder.TOP, null, new Color(0, 0, 0)));
         panelTempSyncPrefs.add(histogramCompPrefsPanel, "2, 2, fill, fill");
         histogramCompPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -408,7 +421,8 @@ public class PreferencesFrame extends JDialog {
         readPrefsIntoElements();
 
         this.pack();
-        this.setMinimumSize(new Dimension((int) Math.max(500, this.getSize().getWidth()), (int) Math.max(380, this.getSize().getHeight())));
+        this.setMinimumSize(new Dimension((int) Math.max(500, this.getSize().getWidth()),
+                (int) Math.max(380, this.getSize().getHeight())));
         setLocationRelativeTo(null);
     }
 
@@ -423,12 +437,15 @@ public class PreferencesFrame extends JDialog {
         txtHeatMapGeneratorSkipPercentage.setText(Float.toString(prefs.getHeatMapGenSkipPercentage()));
         txtHeatMapGeneratorHeatRadius.setText(Integer.toString(prefs.getHeatMapGenHeatRadius()));
         chckbxHeatMapGeneratorSkipPercentage.setSelected(prefs.getHeatMapGenSkipEvents());
-        comboBoxOverlayHeatMapSource.setSelectedIndex(Math.min(comboBoxOverlayHeatMapSource.getItemCount() - 1, prefs.getHeatMapOverlayPlayer()));
+        comboBoxOverlayHeatMapSource.setSelectedIndex(Math.min(comboBoxOverlayHeatMapSource.getItemCount() - 1,
+                prefs.getHeatMapOverlayPlayer()));
         chckbxEnableHeatMapPlot.setSelected(prefs.getEnableHeatMapOverlay());
         chckbxEnableRawDataPlot.setSelected(prefs.getEnableRawDataOverlay());
         chckbxEnableFixationPlot.setSelected(prefs.getEnableFixationOverlay());
-        comboBoxMinDistPlotSource1.setSelectedIndex(Math.min(comboBoxMinDistPlotSource1.getItemCount() - 1, prefs.getMinDistPlotPlayer1()));
-        comboBoxMinDistPlotSource2.setSelectedIndex(Math.min(comboBoxMinDistPlotSource2.getItemCount() - 1, prefs.getMinDistPlotPlayer2()));
+        comboBoxMinDistPlotSource1.setSelectedIndex(Math.min(comboBoxMinDistPlotSource1.getItemCount() - 1,
+                prefs.getMinDistPlotPlayer1()));
+        comboBoxMinDistPlotSource2.setSelectedIndex(Math.min(comboBoxMinDistPlotSource2.getItemCount() - 1,
+                prefs.getMinDistPlotPlayer2()));
         chckbxHeatMapGeneratorGenFromFrequencyInstead.setSelected(prefs.getHeatMapGenGenFromFrequencyInstead());
         txtHistogramCorrelationThreshold.setText(Integer.toString(prefs.getHistogramCorrelationThreshold()));
         txtHistogramDeviatingCellsThreshold.setText(Integer.toString(prefs.getHistogramDeviatingCellsThreshold()));
@@ -470,7 +487,8 @@ public class PreferencesFrame extends JDialog {
 
 
         for (OverlayGazeProjector p : vidFrame.getPanel().getProjectors()) {
-            IVTFilter.filterRecording(p.getRecording(), prefs.getFilterVelocityThreshold(), prefs.getFilterDistanceThreshold());
+            IVTFilter.filterRecording(p.getRecording(), prefs.getFilterVelocityThreshold(),
+                    prefs.getFilterDistanceThreshold());
             p.transformFilteredPointsToTarget(vidFrame.getHostProjector().getRecording());
         }
 

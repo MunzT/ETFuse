@@ -44,7 +44,8 @@ public class StonePickerFrame extends JDialog implements ChangeListener, MouseLi
     private EyeTrackerRecording rec;
     private NotificationListener callbackTarget;
 
-    public StonePickerFrame(JDialog parentFrame, VideoCapture camera, EyeTrackerRecording rec, NotificationListener callbackTarget) {
+    public StonePickerFrame(JDialog parentFrame, VideoCapture camera, EyeTrackerRecording rec,
+            NotificationListener callbackTarget) {
 
         super(parentFrame, "Select the center of a brick", true);
 
@@ -73,7 +74,8 @@ public class StonePickerFrame extends JDialog implements ChangeListener, MouseLi
 
         this.panel.addMouseListener(this);
         this.panel.addMouseMotionListener(this);
-        this.panel.setPreferredSize(new Dimension((int) Math.ceil(camera.get(Videoio.CAP_PROP_FRAME_WIDTH)), (int) Math.ceil(camera.get(Videoio.CAP_PROP_FRAME_HEIGHT))));
+        this.panel.setPreferredSize(new Dimension((int) Math.ceil(camera.get(Videoio.CAP_PROP_FRAME_WIDTH)),
+                (int) Math.ceil(camera.get(Videoio.CAP_PROP_FRAME_HEIGHT))));
         this.panelContainer.setPreferredSize(this.panel.getPreferredSize());
         this.panelContainer.add(this.panel);
         this.add(this.panelContainer, BorderLayout.CENTER);
@@ -82,15 +84,20 @@ public class StonePickerFrame extends JDialog implements ChangeListener, MouseLi
         SpringLayout layout = new SpringLayout();
         this.playbackPanel.setLayout(layout);
 
-        this.progressSlider = new RecordingSlider(JSlider.HORIZONTAL, 0, (int) camera.get(Videoio.CAP_PROP_FRAME_COUNT), 0);
+        this.progressSlider = new RecordingSlider(JSlider.HORIZONTAL, 0,
+                (int) camera.get(Videoio.CAP_PROP_FRAME_COUNT), 0);
         this.progressSlider.addChangeListener(this);
         this.progressSlider.setPaintTicks(false);
         this.progressSlider.setPaintLabels(false);
         this.playbackPanel.add(this.progressSlider, BorderLayout.CENTER);
-        layout.putConstraint(SpringLayout.WEST, this.progressSlider, 5, SpringLayout.WEST, this.playbackPanel);
-        layout.putConstraint(SpringLayout.NORTH, this.progressSlider, 3, SpringLayout.NORTH, this.playbackPanel);
-        layout.putConstraint(SpringLayout.SOUTH, this.progressSlider, 3, SpringLayout.SOUTH, this.playbackPanel);
-        layout.putConstraint(SpringLayout.EAST, this.progressSlider, -5, SpringLayout.EAST, this.playbackPanel);
+        layout.putConstraint(SpringLayout.WEST, this.progressSlider, 5,
+                SpringLayout.WEST, this.playbackPanel);
+        layout.putConstraint(SpringLayout.NORTH, this.progressSlider, 3,
+                SpringLayout.NORTH, this.playbackPanel);
+        layout.putConstraint(SpringLayout.SOUTH, this.progressSlider, 3,
+                SpringLayout.SOUTH, this.playbackPanel);
+        layout.putConstraint(SpringLayout.EAST, this.progressSlider, -5,
+                SpringLayout.EAST, this.playbackPanel);
 
         this.add(this.playbackPanel, BorderLayout.PAGE_END);
 

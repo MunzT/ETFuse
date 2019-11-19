@@ -163,7 +163,8 @@ public class MainFrame extends JFrame {
                 //Create a file chooser
                 final JFileChooser fc = new JFileChooser();
 
-                fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi", "mkv", "flv", "mpeg"));
+                fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4",
+                                                                      "avi", "mkv", "flv", "mpeg"));
                 fc.setAcceptAllFileFilterUsed(false);
 
                 //In response to a button click:
@@ -175,7 +176,8 @@ public class MainFrame extends JFrame {
                     final File chosenFile = fc.getSelectedFile();
 
                     Project.currentProject().hostVidPath = chosenFile.getAbsolutePath();
-                    VideoFrame vidFrame = new VideoFrame(chosenFile.getAbsolutePath(), chosenFile.getAbsolutePath());
+                    VideoFrame vidFrame = new VideoFrame(chosenFile.getAbsolutePath(),
+                                                         chosenFile.getAbsolutePath());
                     vidFrame.setLocationRelativeTo(null);
                     vidFrame.setVisible(true);
 

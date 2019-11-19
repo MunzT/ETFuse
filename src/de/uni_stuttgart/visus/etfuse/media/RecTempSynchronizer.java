@@ -98,7 +98,7 @@ public class RecTempSynchronizer {
         bufImgHost = Utils.Mat2BufferedImage(imageHostPlayingField);
 
 
-        // finde erstes ï¿½ber x% abweichendes frame
+        // finde erstes über x% abweichendes frame
 
         Mat[] histHostCur;
         int firstNewFrameHost = 0;
@@ -197,7 +197,7 @@ public class RecTempSynchronizer {
                 break;
         }
 
-        // finde erstes vorhergehendes ï¿½ber 9% abweichendes frame
+        // finde erstes vorhergehendes über 9% abweichendes frame
 
         Mat[] histGuestCur;
         int firstNewFrameGuest = 0;
@@ -340,7 +340,7 @@ public class RecTempSynchronizer {
         int xPl = 0;
         int yPl = 0;
 
-        // schauen, ob host-cam den stein setzt (bzw der stein in der nï¿½he eines klicks auftaucht)
+        // schauen, ob host-cam den stein setzt (bzw der stein in der nähe eines klicks auftaucht)
 
         for (int i = 0; i < historyHostr.size(); i++) {
 
@@ -526,15 +526,20 @@ public class RecTempSynchronizer {
         int firstFrameWithStonePassive = (int) ((passivePlayer.get(Videoio.CV_CAP_PROP_POS_FRAMES) - 1.0));
         long timeStampPassive = (int) (firstFrameWithStonePassive / passivePlayer.get(Videoio.CV_CAP_PROP_FPS) * 1000);
 
-        System.out.println("<RecTempSynchronizer> Active (" + firstStampWithStone.frame + ") | Color: " + firstStampWithStone.color + " distance: " + Utils.computeSRGBDistance(beige.getRGB(), firstStampWithStone.color) + " frame: " + firstStampWithStone.frame);
-        System.out.println("<RecTempSynchronizer> Passive | Color: " + firstBlackColorPassive + " distance: " + Utils.computeSRGBDistance(beige.getRGB(), firstBlackColorPassive) + " frame: " + firstFrameWithStonePassive);
+        System.out.println("<RecTempSynchronizer> Active (" + firstStampWithStone.frame + ") | Color: "
+                + firstStampWithStone.color + " distance: "
+                + Utils.computeSRGBDistance(beige.getRGB(), firstStampWithStone.color)
+                + " frame: " + firstStampWithStone.frame);
+        System.out.println("<RecTempSynchronizer> Passive | Color: " + firstBlackColorPassive
+                + " distance: " + Utils.computeSRGBDistance(beige.getRGB(), firstBlackColorPassive)
+                + " frame: " + firstFrameWithStonePassive);
 
         int activeTS = (int) (firstStampWithStone.frame / activePlayer.get(Videoio.CV_CAP_PROP_FPS) * 1000);
         int passiveTS = (int) (firstFrameWithStonePassive / passivePlayer.get(Videoio.CV_CAP_PROP_FPS) * 1000);
 
         timeShift = passiveTS - activeTS;
 
-        if (activePlayer.equals(guestCam)) { // zurï¿½ckdrehen
+        if (activePlayer.equals(guestCam)) { // zurückdrehen
             roughGuess *= -1;
             timeShift *= -1;
         }
@@ -549,7 +554,8 @@ public class RecTempSynchronizer {
         return host.recordingStartTS - guest.recordingStartTS;
     }
 
-    public static long computeTimeOffsetCustom(EyeTrackerRecording host, EyeTrackerRecording guest, VideoCapture hostCam, VideoCapture guestCam, Point stoneCoord) {
+    public static long computeTimeOffsetCustom(EyeTrackerRecording host, EyeTrackerRecording guest,
+            VideoCapture hostCam, VideoCapture guestCam, Point stoneCoord) {
 
         long timeShift = computeTimestampOffset(host, guest);
 
@@ -561,14 +567,16 @@ public class RecTempSynchronizer {
         return timeShift;
     }
 
-    public static long computeTimeOffsetHistogram(EyeTrackerRecording host, EyeTrackerRecording guest, VideoCapture hostCam, VideoCapture guestCam, int orientationFrame) {
+    public static long computeTimeOffsetHistogram(EyeTrackerRecording host, EyeTrackerRecording guest,
+            VideoCapture hostCam, VideoCapture guestCam, int orientationFrame) {
 
         long timeShift = computeTimestampOffset(host, guest);
 
         if (guestCam == null)
             return timeShift;
 
-        timeShift = computePreciseOffset_histogram(host, guest, hostCam, guestCam, timeShift, orientationFrame);
+        timeShift = computePreciseOffset_histogram(host, guest, hostCam, guestCam, timeShift,
+                orientationFrame);
 
         return timeShift;
     }

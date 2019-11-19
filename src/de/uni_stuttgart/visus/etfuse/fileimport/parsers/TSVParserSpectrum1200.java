@@ -15,9 +15,9 @@ public class TSVParserSpectrum1200 extends TSVParser {
 
     private enum Columns {
 
-        TIMESTAMP(0), SCREENHEIGHT(11), SCREENWIDTH(12), EVENT(21), EVENTVALUE(22), POINT_X(23), POINT_Y(24), EYE_POS_LEFT_X(39),
-        EYE_POS_LEFT_Y(40), EYE_POS_LEFT_Z(41), EYE_POS_RIGHT_X(42), EYE_POS_RIGHT_Y(43),
-        EYE_POS_RIGHT_Z(44), EYE_MOVEMENT_TYPE(63);
+        TIMESTAMP(0), SCREENHEIGHT(11), SCREENWIDTH(12), EVENT(21), EVENTVALUE(22), POINT_X(23),
+        POINT_Y(24), EYE_POS_LEFT_X(39), EYE_POS_LEFT_Y(40), EYE_POS_LEFT_Z(41), EYE_POS_RIGHT_X(42),
+        EYE_POS_RIGHT_Y(43), EYE_POS_RIGHT_Z(44), EYE_MOVEMENT_TYPE(63);
 
         private int index;
 
@@ -70,7 +70,9 @@ public class TSVParserSpectrum1200 extends TSVParser {
         if (!(map.size() > dataLinePointer + 2))
             return rec;
 
-        long timeStampDiv = 1; // 1: Datei enthält Timestamps in Millisekunden-Auflösung; 1000: Datei enthält Timestamps in Mikrosekunden-Auflösung
+        // 1: Datei enthält Timestamps in Millisekunden-Auflösung; 1000: Datei enthält Timestamps
+        // in Mikrosekunden-Auflösung
+        long timeStampDiv = 1;
         if (Long.parseLong(map.get(dataLinePointer + 2).split("\t")[Columns.TIMESTAMP.i()]) > 10000)
             timeStampDiv = 1000;
 
@@ -162,7 +164,8 @@ public class TSVParserSpectrum1200 extends TSVParser {
                     number++;
                 }
             }
-            else if (line[Columns.EVENT.i()].contains("MouseEvent") && line[Columns.EVENTVALUE.i()].contains("Up, Left")) {
+            else if (line[Columns.EVENT.i()].contains("MouseEvent")
+                    && line[Columns.EVENTVALUE.i()].contains("Up, Left")) {
 
                 long ts = (Long.parseLong(line[Columns.TIMESTAMP.i()]) / timeStampDiv) - baseTimeStamp;
                 rec.addClick(ts);

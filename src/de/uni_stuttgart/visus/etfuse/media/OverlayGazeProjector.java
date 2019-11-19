@@ -51,8 +51,11 @@ public class OverlayGazeProjector {
         if (target == null || target == this.recording)
             return -1;
 
-        Line2D sourceFrame = new Line2D.Double(this.recording.getFramePoint1().x, this.recording.getFramePoint1().y, this.recording.getFramePoint2().x, this.recording.getFramePoint2().y);
-        Line2D targetFrame = new Line2D.Double(target.getFramePoint1().x, target.getFramePoint1().y, target.getFramePoint2().x, target.getFramePoint2().y);
+        Line2D sourceFrame = new Line2D.Double(this.recording.getFramePoint1().x,
+                this.recording.getFramePoint1().y, this.recording.getFramePoint2().x,
+                this.recording.getFramePoint2().y);
+        Line2D targetFrame = new Line2D.Double(target.getFramePoint1().x, target.getFramePoint1().y,
+                target.getFramePoint2().x, target.getFramePoint2().y);
 
         for (EyeTrackerEyeEvent event : this.recording.getRawEyeEvents()) {
 
@@ -73,8 +76,11 @@ public class OverlayGazeProjector {
         if (target == null || target == this.recording)
             return -1;
 
-        Line2D sourceFrame = new Line2D.Double(this.recording.getFramePoint1().x, this.recording.getFramePoint1().y, this.recording.getFramePoint2().x, this.recording.getFramePoint2().y);
-        Line2D targetFrame = new Line2D.Double(target.getFramePoint1().x, target.getFramePoint1().y, target.getFramePoint2().x, target.getFramePoint2().y);
+        Line2D sourceFrame = new Line2D.Double(this.recording.getFramePoint1().x,
+                this.recording.getFramePoint1().y, this.recording.getFramePoint2().x,
+                this.recording.getFramePoint2().y);
+        Line2D targetFrame = new Line2D.Double(target.getFramePoint1().x, target.getFramePoint1().y,
+                target.getFramePoint2().x, target.getFramePoint2().y);
 
         for (EyeTrackerEyeEvent event : this.recording.getFilteredEyeEvents()) {
 
@@ -90,18 +96,22 @@ public class OverlayGazeProjector {
         return 0;
     }
 
-    public ArrayList<EyeTrackerEyeEvent> xEventsBeforeShiftedTimestamp(int amount, long timestamp, Boolean fromRawData, Boolean includeEyesNotFound) {
+    public ArrayList<EyeTrackerEyeEvent> xEventsBeforeShiftedTimestamp(int amount, long timestamp,
+            Boolean fromRawData, Boolean includeEyesNotFound) {
 
         long projectedTime = timestamp + this.timeSyncOffset;
-        return this.getRecording().xEventsBeforeTimestamp(amount, projectedTime, fromRawData, includeEyesNotFound);
+        return this.getRecording().xEventsBeforeTimestamp(amount, projectedTime, fromRawData,
+                includeEyesNotFound);
     }
 
-    public ArrayList<EyeTrackerEyeEvent> eventsBetweenShiftedTimestamps(long timestampStart, long timestampEnd, Boolean fromRawData, Boolean includeEyesNotFound) {
+    public ArrayList<EyeTrackerEyeEvent> eventsBetweenShiftedTimestamps(long timestampStart,
+            long timestampEnd, Boolean fromRawData, Boolean includeEyesNotFound) {
 
         long projectedStart = timestampStart + this.timeSyncOffset;
         long projectedEnd = timestampEnd + this.timeSyncOffset;
 
-        return this.getRecording().eventsBetweenTimestamps(projectedStart, projectedEnd, fromRawData, includeEyesNotFound);
+        return this.getRecording().eventsBetweenTimestamps(projectedStart, projectedEnd,
+                fromRawData, includeEyesNotFound);
     }
 
     public void setRawHeatMap(Mat heatMap) {

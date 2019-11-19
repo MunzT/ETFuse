@@ -151,7 +151,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                 //Create a file chooser
                 final JFileChooser fc = new JFileChooser();
 
-                fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi", "mkv", "flv", "mpeg"));
+                fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi",
+                                                                      "mkv", "flv", "mpeg"));
                 fc.setAcceptAllFileFilterUsed(false);
 
                 //In response to a button click:
@@ -165,7 +166,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                     Project.currentProject().guestVidPaths.add(chosenFile.getAbsolutePath());
                     VideoCapture sourceCamera = new VideoCapture(chosenFile.getAbsolutePath());
                     sourceVideo = sourceCamera;
-                    BoxPickerFrame sourceBpf = new BoxPickerFrame(SyncWizardFrame.this, sourceCamera, sourceData, SyncWizardFrame.this);
+                    BoxPickerFrame sourceBpf = new BoxPickerFrame(SyncWizardFrame.this,
+                            sourceCamera, sourceData, SyncWizardFrame.this);
                     childFrames.add(sourceBpf);
                     sourceBpf.setVisible(true);
                 }
@@ -247,7 +249,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                 VideoCapture targetCamera = parentFrame.getPanel().getCamera();
                 EyeTrackerRecording targetData = parentFrame.hostProjector.getRecording();
 
-                BoxPickerFrame targetBpf = new BoxPickerFrame(SyncWizardFrame.this, targetCamera, targetData, SyncWizardFrame.this);
+                BoxPickerFrame targetBpf = new BoxPickerFrame(SyncWizardFrame.this, targetCamera,
+                        targetData, SyncWizardFrame.this);
                 childFrames.add(targetBpf);
                 targetBpf.setVisible(true);
             }
@@ -262,7 +265,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                     if (sourceVideo == null) {
 
                         //System.out.println("Gast-Video öffnen");
-                        JOptionPane.showMessageDialog(SyncWizardFrame.this, "A screen recording of the guest data is required!");
+                        JOptionPane.showMessageDialog(SyncWizardFrame.this,
+                                "A screen recording of the guest data is required!");
 
                         File chosenFile = null;
 
@@ -270,7 +274,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                         //Create a file chooser
                         final JFileChooser fc = new JFileChooser();
 
-                        fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi", "mkv", "flv", "mpeg"));
+                        fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4",
+                                                                              "avi", "mkv", "flv", "mpeg"));
                         fc.setAcceptAllFileFilterUsed(false);
 
                         //In response to a button click:
@@ -294,7 +299,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                     VideoCapture targetCamera = parentFrame.getPanel().getCamera();
                     EyeTrackerRecording targetData = parentFrame.hostProjector.getRecording();
 
-                    StonePickerFrame stonePicker = new StonePickerFrame(SyncWizardFrame.this, targetCamera, targetData, SyncWizardFrame.this);
+                    StonePickerFrame stonePicker = new StonePickerFrame(SyncWizardFrame.this,
+                            targetCamera, targetData, SyncWizardFrame.this);
                     stonePicker.setVisible(true);
                 }
             }
@@ -308,7 +314,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
 
                     if (sourceVideo == null) {
 
-                        JOptionPane.showMessageDialog(SyncWizardFrame.this, "A screen recording of the guest data is required!");
+                        JOptionPane.showMessageDialog(SyncWizardFrame.this,
+                                "A screen recording of the guest data is required!");
 
                         File chosenFile = null;
 
@@ -316,7 +323,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                         //Create a file chooser
                         final JFileChooser fc = new JFileChooser();
 
-                        fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi", "mkv", "flv", "mpeg"));
+                        fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4",
+                                                                              "avi", "mkv", "flv", "mpeg"));
                         fc.setAcceptAllFileFilterUsed(false);
 
                         //In response to a button click:
@@ -340,7 +348,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                     VideoCapture targetCamera = parentFrame.getPanel().getCamera();
                     EyeTrackerRecording targetData = parentFrame.hostProjector.getRecording();
 
-                    FramePickerFrame framePicker = new FramePickerFrame(SyncWizardFrame.this, targetCamera, targetData, SyncWizardFrame.this);
+                    FramePickerFrame framePicker = new FramePickerFrame(SyncWizardFrame.this,
+                            targetCamera, targetData, SyncWizardFrame.this);
                     framePicker.setVisible(true);
                 }
             }
@@ -480,13 +489,17 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
 
             if (customTimeSyncRadio.isSelected()) {
                 if (this.customSyncStoneCoord != null)
-                    timeShift = RecTempSynchronizer.computeTimeOffsetCustom(targetData, sourceData, this.parentFrame.getPanel().getCamera(), this.sourceVideo, this.customSyncStoneCoord);
+                    timeShift = RecTempSynchronizer.computeTimeOffsetCustom(targetData, sourceData,
+                            this.parentFrame.getPanel().getCamera(), this.sourceVideo,
+                            this.customSyncStoneCoord);
                 else
                     timeShift = RecTempSynchronizer.computeTimestampOffset(targetData, sourceData);
             }
             else if (histogramTimeSyncRadio.isSelected()) {
                 if (this.histogramOrientationFrame != 0)
-                    timeShift = RecTempSynchronizer.computeTimeOffsetHistogram(targetData, sourceData, this.parentFrame.getPanel().getCamera(), this.sourceVideo, this.histogramOrientationFrame);
+                    timeShift = RecTempSynchronizer.computeTimeOffsetHistogram(targetData, sourceData,
+                            this.parentFrame.getPanel().getCamera(), this.sourceVideo,
+                            this.histogramOrientationFrame);
                 else
                     timeShift = RecTempSynchronizer.computeTimestampOffset(targetData, sourceData);
             }
@@ -496,8 +509,14 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
 
             Project proj = Project.currentProject();
             proj.guestTimeShiftOffsets.add(timeShift);
-            proj.guestFrames.add(new Rectangle(sourceData.getFramePoint1().x, sourceData.getFramePoint1().y, (sourceData.getFramePoint2().x - sourceData.getFramePoint1().x), (sourceData.getFramePoint2().y - sourceData.getFramePoint1().y)));
-            proj.hostFrame = new Rectangle(targetData.getFramePoint1().x, targetData.getFramePoint1().y, (targetData.getFramePoint2().x - targetData.getFramePoint1().x), (targetData.getFramePoint2().y - targetData.getFramePoint1().y));
+            proj.guestFrames.add(new Rectangle(sourceData.getFramePoint1().x,
+                    sourceData.getFramePoint1().y,
+                    (sourceData.getFramePoint2().x - sourceData.getFramePoint1().x),
+                    (sourceData.getFramePoint2().y - sourceData.getFramePoint1().y)));
+            proj.hostFrame = new Rectangle(targetData.getFramePoint1().x,
+                    targetData.getFramePoint1().y,
+                    (targetData.getFramePoint2().x - targetData.getFramePoint1().x),
+                    (targetData.getFramePoint2().y - targetData.getFramePoint1().y));
 
             newProjector.setTimeSyncShift(timeShift);
 
@@ -647,7 +666,9 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                     sourceData = rec;
                     setCursor(Cursor.getDefaultCursor());
 
-                    JOptionPane.showMessageDialog(this, "Done. " + rec.getRawEyeEvents().size() + " eye tracking events were read and " + rec.getFilteredEyeEvents().size() + " fixations determined.");
+                    JOptionPane.showMessageDialog(this, "Done. " + rec.getRawEyeEvents().size()
+                            + " eye tracking events were read and "
+                            + rec.getFilteredEyeEvents().size() + " fixations determined.");
 
                     nextStep();
                 }

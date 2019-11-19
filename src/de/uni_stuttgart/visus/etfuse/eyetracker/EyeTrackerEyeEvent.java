@@ -31,7 +31,9 @@ public class EyeTrackerEyeEvent {
     public Boolean containedInRecFrame(Point framePoint1, Point framePoint2) {
 
         Point eventPoint = new Point(this.fixationPointX, this.fixationPointY);
-        Rectangle frame = new Rectangle(framePoint1.x, framePoint1.y, framePoint2.x - framePoint1.x, framePoint2.y - framePoint1.y);
+        Rectangle frame = new Rectangle(framePoint1.x, framePoint1.y,
+                                        framePoint2.x - framePoint1.x,
+                                        framePoint2.y - framePoint1.y);
 
         return frame.contains(eventPoint);
     }
@@ -43,6 +45,8 @@ public class EyeTrackerEyeEvent {
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         String dateFormatted = formatter.format(date);
 
-        System.out.println("<" + this.number + "@" + dateFormatted + "> " + "(" + this.fixationPointX + ", " + this.fixationPointY + "), eyes found: " + !this.eyesNotFound);
+        System.out.println("<" + this.number + "@" + dateFormatted + "> " + "("
+                           + this.fixationPointX + ", " + this.fixationPointY + "), eyes found: "
+                           + !this.eyesNotFound);
     }
 }

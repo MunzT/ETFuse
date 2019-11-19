@@ -41,7 +41,8 @@ public class HeatMapImagePanel extends JPanel {
         int panelHeight = this.getHeight();
 
         AffineTransform saveAT = g2.getTransform();
-        saveAT.scale((double) panelWidth / (double) mediaWidth, (double) panelHeight / (double) mediaHeight);
+        saveAT.scale((double) panelWidth / (double) mediaWidth,
+                     (double) panelHeight / (double) mediaHeight);
         g2.setTransform(saveAT);
 
         g2.drawImage(bufImgHeatMap, null, 0, 0);

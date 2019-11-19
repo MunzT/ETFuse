@@ -44,7 +44,8 @@ public class RecordingSlider extends JSlider {
         this.setUI(this.ui);
     }
 
-    public void drawMinDistanceTicks(VideoFrame vidFrame, OverlayGazeProjector hostProjector, OverlayGazeProjector guestProjector, int minDistance) {
+    public void drawMinDistanceTicks(VideoFrame vidFrame, OverlayGazeProjector hostProjector,
+                                     OverlayGazeProjector guestProjector, int minDistance) {
 
         this.ui.setMinDistanceRecordingsToDraw(vidFrame, hostProjector, guestProjector, minDistance);
     }

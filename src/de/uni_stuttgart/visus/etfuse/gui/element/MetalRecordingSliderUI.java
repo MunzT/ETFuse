@@ -28,7 +28,8 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
         this.safeLength = ((Integer) UIManager.get( "Slider.majorTickLength" )).intValue();
     }
 
-    protected void setMinDistanceRecordingsToDraw(VideoFrame vidFrame, OverlayGazeProjector hostProjector, OverlayGazeProjector guestProjector, int minDistance) {
+    protected void setMinDistanceRecordingsToDraw(VideoFrame vidFrame,
+            OverlayGazeProjector hostProjector, OverlayGazeProjector guestProjector, int minDistance) {
 
         this.vidFrame = vidFrame;
         this.hostProj = hostProjector;
@@ -60,7 +61,8 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
             return;
 
         long startTS = vidFrame.getHostProjector().getRecording().getRawEyeEvents().get(0).timestamp;
-        long endTS =  vidFrame.getHostProjector().getRecording().getRawEyeEvents().get(vidFrame.getHostProjector().getRecording().getRawEyeEvents().size() - 1).timestamp;
+        long endTS =  vidFrame.getHostProjector().getRecording().getRawEyeEvents().get(
+                vidFrame.getHostProjector().getRecording().getRawEyeEvents().size() - 1).timestamp;
 
         Rectangle tickBounds = tickRect;
 
@@ -73,22 +75,26 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                 double progress = ((double) x) / trackRect.width;
                 long progressTS = Math.round(startTS + (progress * (endTS - startTS)));
 
-                // progressStartTS und progressEndTS markieren den Bereich aller Punkte, die am nï¿½chsten an progressTS liegen
-                // .     -----.-----ooooo.ooooo     .     # - bzw. o markiert Bereich, . ist progressTS fï¿½r Pixel des Tracks
+                // progressStartTS und progressEndTS markieren den Bereich aller Punkte, die am nächsten an progressTS liegen
+                // .     -----.-----ooooo.ooooo     .     # - bzw. o markiert Bereich, . ist progressTS für Pixel des Tracks
                 long progressStartTS = startTS;
                 if (x > 0) {
-                    progressStartTS = Math.round(startTS + ((((double) x - 1) / trackRect.width) * (endTS - startTS)));
+                    progressStartTS = Math.round(startTS + ((((double) x - 1) / trackRect.width)
+                            * (endTS - startTS)));
                     progressStartTS = Math.round((progressStartTS + progressTS) * 0.5);
                 }
 
                 long progressEndTS = endTS;
                 if (x < trackRect.width - 1) {
-                    progressEndTS = Math.round(startTS + ((((double) x + 1) / trackRect.width) * (endTS - startTS)));
+                    progressEndTS = Math.round(startTS + ((((double) x + 1) / trackRect.width)
+                            * (endTS - startTS)));
                     progressEndTS = Math.round((progressEndTS + progressTS) * 0.5);
                 }
 
-                ArrayList<EyeTrackerEyeEvent> hostEvents = hostProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
-                ArrayList<EyeTrackerEyeEvent> guestEvents = guestProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
+                ArrayList<EyeTrackerEyeEvent> hostEvents =
+                        hostProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
+                ArrayList<EyeTrackerEyeEvent> guestEvents =
+                        guestProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
 
                 if (hostEvents == null || hostEvents.size() < 1 || guestEvents == null || guestEvents.size() < 1)
                     g.setColor(Color.darkGray);
@@ -133,11 +139,14 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                         }
                     }
 
-                    if (notContainedInRectCounter > belowMinDistanceCounter && notContainedInRectCounter > aboveMinDistanceCounter)
+                    if (notContainedInRectCounter > belowMinDistanceCounter
+                            && notContainedInRectCounter > aboveMinDistanceCounter)
                         g.setColor(Color.yellow);
-                    else if (belowMinDistanceCounter > aboveMinDistanceCounter && belowMinDistanceCounter > notContainedInRectCounter)
+                    else if (belowMinDistanceCounter > aboveMinDistanceCounter
+                            && belowMinDistanceCounter > notContainedInRectCounter)
                         g.setColor(Color.cyan);
-                    else if (aboveMinDistanceCounter > belowMinDistanceCounter && aboveMinDistanceCounter > notContainedInRectCounter)
+                    else if (aboveMinDistanceCounter > belowMinDistanceCounter
+                            && aboveMinDistanceCounter > notContainedInRectCounter)
                         g.setColor(Color.red);
                 }
 
@@ -157,18 +166,22 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
 
                 long progressStartTS = startTS;
                 if (y > 0) {
-                    progressStartTS = Math.round(startTS + ((((double) y - 1) / trackRect.width) * (endTS - startTS)));
+                    progressStartTS = Math.round(startTS + ((((double) y - 1) / trackRect.width)
+                            * (endTS - startTS)));
                     progressStartTS = Math.round((progressStartTS + progressTS) * 0.5);
                 }
 
                 long progressEndTS = endTS;
                 if (y < trackRect.height - 1) {
-                    progressEndTS = Math.round(startTS + ((((double) y + 1) / trackRect.width) * (endTS - startTS)));
+                    progressEndTS = Math.round(startTS + ((((double) y + 1) / trackRect.width)
+                            * (endTS - startTS)));
                     progressEndTS = Math.round((progressEndTS + progressTS) * 0.5);
                 }
 
-                ArrayList<EyeTrackerEyeEvent> hostEvents = hostProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
-                ArrayList<EyeTrackerEyeEvent> guestEvents = guestProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
+                ArrayList<EyeTrackerEyeEvent> hostEvents =
+                        hostProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
+                ArrayList<EyeTrackerEyeEvent> guestEvents =
+                        guestProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
 
                 if (hostEvents == null || hostEvents.size() < 1 || guestEvents == null || guestEvents.size() < 1)
                     g.setColor(Color.darkGray);
@@ -212,11 +225,14 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                         }
                     }
 
-                    if (notContainedInRectCounter > belowMinDistanceCounter && notContainedInRectCounter > aboveMinDistanceCounter)
+                    if (notContainedInRectCounter > belowMinDistanceCounter
+                            && notContainedInRectCounter > aboveMinDistanceCounter)
                         g.setColor(Color.yellow);
-                    else if (belowMinDistanceCounter > aboveMinDistanceCounter && belowMinDistanceCounter > notContainedInRectCounter)
+                    else if (belowMinDistanceCounter > aboveMinDistanceCounter
+                            && belowMinDistanceCounter > notContainedInRectCounter)
                         g.setColor(Color.cyan);
-                    else if (aboveMinDistanceCounter > belowMinDistanceCounter && aboveMinDistanceCounter > notContainedInRectCounter)
+                    else if (aboveMinDistanceCounter > belowMinDistanceCounter
+                            && aboveMinDistanceCounter > notContainedInRectCounter)
                         g.setColor(Color.red);
                 }
 

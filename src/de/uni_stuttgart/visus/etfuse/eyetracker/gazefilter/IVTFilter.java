@@ -21,7 +21,9 @@ public class IVTFilter {
         double y;
     }
 
-    public static EyeTrackerRecording filterRecording(EyeTrackerRecording rec, double velocityThreshold, int distanceThreshold) {
+    public static EyeTrackerRecording filterRecording(EyeTrackerRecording rec,
+                                                      double velocityThreshold,
+                                                      int distanceThreshold) {
 
         ArrayList<EyeTrackerEyeEvent> events = rec.getRawEyeEvents();
 
@@ -38,8 +40,10 @@ public class IVTFilter {
             EyeTrackerEyeEvent e1 = events.get(i);
             EyeTrackerEyeEvent e2 = events.get(i + 1);
 
-            double angleVelocitye0e1 = calculateInterPointVelocity(e0, e1, rec.getDisplayPPI(), rec.getSamplingFrequency());
-            double angleVelocitye1e2 = calculateInterPointVelocity(e1, e2, rec.getDisplayPPI(), rec.getSamplingFrequency());
+            double angleVelocitye0e1 = calculateInterPointVelocity(e0, e1, rec.getDisplayPPI(),
+                                                                   rec.getSamplingFrequency());
+            double angleVelocitye1e2 = calculateInterPointVelocity(e1, e2, rec.getDisplayPPI(),
+                                                                   rec.getSamplingFrequency());
 
             double pointToPointVelocity = (angleVelocitye0e1 + angleVelocitye1e2) / 2.0;
 
@@ -55,7 +59,10 @@ public class IVTFilter {
         last.velocity = 0.0;
         p2pvs.add(last);
 
-        ArrayList<EyeTrackerEyeEvent> fixations = generateFixationEvents(events, filterByDistanceThreshold(mapFixationGroupsToCentroid(generateFixationGroups(events, p2pvs)), distanceThreshold));
+        ArrayList<EyeTrackerEyeEvent> fixations =
+                generateFixationEvents(events, filterByDistanceThreshold(
+                        mapFixationGroupsToCentroid(generateFixationGroups(events, p2pvs)),
+                        distanceThreshold));
 
         rec.setFilteredEyeEvents(fixations);
 
@@ -75,12 +82,14 @@ public class IVTFilter {
 
         double eventBaseDist = eventPoint.distance(basePoint);
 
-        double eyeEventDist = Math.sqrt(Math.pow(observerBaseDist, 2) + Math.pow(eventBaseDist, 2) - 2 * observerBaseDist * eventBaseDist * Math.cos(Math.toRadians(90)));
+        double eyeEventDist = Math.sqrt(Math.pow(observerBaseDist, 2) + Math.pow(eventBaseDist, 2) -
+                              2 * observerBaseDist * eventBaseDist * Math.cos(Math.toRadians(90)));
 
         return eyeEventDist;
     }
 
-    private static double calculateInterPointVelocity(EyeTrackerEyeEvent e1, EyeTrackerEyeEvent e2, double displayPPI, double samplingFrequency) {
+    private static double calculateInterPointVelocity(EyeTrackerEyeEvent e1, EyeTrackerEyeEvent e2,
+                                                      double displayPPI, double samplingFrequency) {
 
         double averageEyeDist1_b = IVTFilter.calculateEventEyeDistAverage(e1);
         double averageEyeDist2_a = IVTFilter.calculateEventEyeDistAverage(e2);
@@ -92,13 +101,17 @@ public class IVTFilter {
         double eventPointDist_c = e1P_A.distance(e2P_B);
         double eventPointDist_mm = pixelDistanceToMillimeters(eventPointDist_c, displayPPI);
 
-        double gazeAngle_gamma = Math.acos((Math.pow(eventPointDist_mm, 2) - Math.pow(averageEyeDistBetweenEvents, 2) - Math.pow(averageEyeDistBetweenEvents, 2)) / (-2 * averageEyeDistBetweenEvents * averageEyeDistBetweenEvents));
+        double gazeAngle_gamma = Math.acos((Math.pow(eventPointDist_mm, 2)
+                - Math.pow(averageEyeDistBetweenEvents, 2)
+                - Math.pow(averageEyeDistBetweenEvents, 2))
+                / (-2 * averageEyeDistBetweenEvents * averageEyeDistBetweenEvents));
 
         gazeAngle_gamma = Math.toDegrees(gazeAngle_gamma);
 
         if (Double.isNaN(gazeAngle_gamma)) {
             System.out.println("NaN :(");
-            System.out.println("b: " + averageEyeDist1_b + " a: " + averageEyeDist2_a + " c: " + eventPointDist_c + " e1: " + e1P_A + " e2: " + e2P_B);
+            System.out.println("b: " + averageEyeDist1_b + " a: " + averageEyeDist2_a + " c: "
+                               + eventPointDist_c + " e1: " + e1P_A + " e2: " + e2P_B);
         }
 
         double eventAngleSeconds = gazeAngle_gamma / (1.0 / samplingFrequency);
@@ -106,7 +119,8 @@ public class IVTFilter {
         return eventAngleSeconds;
     }
 
-    private static ArrayList<EyeTrackerEyeEvent> filterOutEventsWithoutEyes(ArrayList<EyeTrackerEyeEvent> events) {
+    private static ArrayList<EyeTrackerEyeEvent>
+        filterOutEventsWithoutEyes(ArrayList<EyeTrackerEyeEvent> events) {
 
         ArrayList<EyeTrackerEyeEvent> filtered = new ArrayList<EyeTrackerEyeEvent>();
 
@@ -128,7 +142,9 @@ public class IVTFilter {
         return mm;
     }
 
-    private static ArrayList<ArrayList<Fixation>> generateFixationGroups(ArrayList<EyeTrackerEyeEvent> events, ArrayList<PointToPointVelocity> protocol) {
+    private static ArrayList<ArrayList<Fixation>>
+        generateFixationGroups(ArrayList<EyeTrackerEyeEvent> events,
+                               ArrayList<PointToPointVelocity> protocol) {
 
         ArrayList<ArrayList<Fixation>> fixationGroups = new ArrayList<ArrayList<Fixation>>();
         ArrayList<Fixation> currentFixationGroup = new ArrayList<Fixation>();
@@ -154,7 +170,8 @@ public class IVTFilter {
         return fixationGroups;
     }
 
-    private static ArrayList<Fixation> mapFixationGroupsToCentroid(ArrayList<ArrayList<Fixation>> fixationGroups) {
+    private static ArrayList<Fixation>
+        mapFixationGroupsToCentroid(ArrayList<ArrayList<Fixation>> fixationGroups) {
 
         ArrayList<Fixation> fixations = new ArrayList<Fixation>();
 
@@ -183,7 +200,8 @@ public class IVTFilter {
         return fixations;
     }
 
-    private static ArrayList<Fixation> filterByDistanceThreshold(ArrayList<Fixation> fixations, int distanceThreshold) {
+    private static ArrayList<Fixation> filterByDistanceThreshold(ArrayList<Fixation> fixations,
+                                                                 int distanceThreshold) {
 
         ArrayList<Fixation> filteredFixations = fixations;
         ArrayList<Fixation> newFixations = new ArrayList<Fixation>();
@@ -231,7 +249,9 @@ public class IVTFilter {
         return filteredFixations;
     }
 
-    private static ArrayList<EyeTrackerEyeEvent> generateFixationEvents(ArrayList<EyeTrackerEyeEvent> allEvents, ArrayList<Fixation> fixations) {
+    private static ArrayList<EyeTrackerEyeEvent>
+        generateFixationEvents(ArrayList<EyeTrackerEyeEvent> allEvents,
+                               ArrayList<Fixation> fixations) {
 
         ArrayList<EyeTrackerEyeEvent> fixationEvents = new ArrayList<EyeTrackerEyeEvent>();
 

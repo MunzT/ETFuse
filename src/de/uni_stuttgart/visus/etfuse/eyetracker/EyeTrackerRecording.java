@@ -104,11 +104,13 @@ public class EyeTrackerRecording {
         this.displayPPI = displayPPI;
     }
 
-    public ArrayList<EyeTrackerEyeEvent> xEventsBeforeTimestamp(int amount, long timestamp, Boolean fromRawData, Boolean includeEyesNotFound) {
+    public ArrayList<EyeTrackerEyeEvent> xEventsBeforeTimestamp(int amount, long timestamp,
+                                                 Boolean fromRawData, Boolean includeEyesNotFound) {
 
         ArrayList<EyeTrackerEyeEvent> eventList = new ArrayList<EyeTrackerEyeEvent>();
 
-        if ((fromRawData && this.getRawEyeEvents().size() < 1) || (!fromRawData && this.getFilteredEyeEvents().size() < 1))
+        if ((fromRawData && this.getRawEyeEvents().size() < 1)
+                || (!fromRawData && this.getFilteredEyeEvents().size() < 1))
             return eventList;
 
         long firstTS = this.getRawEyeEvents().get(0).timestamp;
@@ -183,11 +185,13 @@ public class EyeTrackerRecording {
         return eventList;
     }
 
-    public ArrayList<EyeTrackerEyeEvent> eventsBetweenTimestamps(long timestampBegin, long timestampEnd, Boolean fromRawData, Boolean includeEyesNotFound) {
+    public ArrayList<EyeTrackerEyeEvent> eventsBetweenTimestamps(long timestampBegin, long timestampEnd,
+                                                 Boolean fromRawData, Boolean includeEyesNotFound) {
 
         ArrayList<EyeTrackerEyeEvent> eventList = new ArrayList<EyeTrackerEyeEvent>();
 
-        if ((fromRawData && this.getRawEyeEvents().size() < 1) || (!fromRawData && this.getFilteredEyeEvents().size() < 1))
+        if ((fromRawData && this.getRawEyeEvents().size() < 1)
+                || (!fromRawData && this.getFilteredEyeEvents().size() < 1))
             return eventList;
 
         ArrayList<EyeTrackerEyeEvent> events = null;

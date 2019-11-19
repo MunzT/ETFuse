@@ -99,20 +99,28 @@ public class FramePickerFrame extends JDialog implements ChangeListener {
 
         });
         this.playbackPanel.add(this.acceptButton, BorderLayout.EAST);
-        layout.putConstraint(SpringLayout.NORTH, this.acceptButton, 3, SpringLayout.NORTH, this.playbackPanel);
-        layout.putConstraint(SpringLayout.SOUTH, this.acceptButton, -3, SpringLayout.SOUTH, this.playbackPanel);
-        layout.putConstraint(SpringLayout.EAST, this.acceptButton, -5, SpringLayout.EAST, this.playbackPanel);
+        layout.putConstraint(SpringLayout.NORTH, this.acceptButton, 3,
+                SpringLayout.NORTH, this.playbackPanel);
+        layout.putConstraint(SpringLayout.SOUTH, this.acceptButton, -3,
+                SpringLayout.SOUTH, this.playbackPanel);
+        layout.putConstraint(SpringLayout.EAST, this.acceptButton, -5,
+                SpringLayout.EAST, this.playbackPanel);
 
-        this.progressSlider = new RecordingSlider(JSlider.HORIZONTAL, 0, (int) camera.get(Videoio.CAP_PROP_FRAME_COUNT), 0);
+        this.progressSlider = new RecordingSlider(JSlider.HORIZONTAL, 0,
+                (int) camera.get(Videoio.CAP_PROP_FRAME_COUNT), 0);
         this.progressSlider.setToolTipText("Use to select a frame that shows a move during the game");
         this.progressSlider.addChangeListener(this);
         this.progressSlider.setPaintTicks(false);
         this.progressSlider.setPaintLabels(false);
         this.playbackPanel.add(this.progressSlider, BorderLayout.CENTER);
-        layout.putConstraint(SpringLayout.WEST, this.progressSlider, 5, SpringLayout.WEST, this.playbackPanel);
-        layout.putConstraint(SpringLayout.NORTH, this.progressSlider, 3, SpringLayout.NORTH, this.playbackPanel);
-        layout.putConstraint(SpringLayout.SOUTH, this.progressSlider, 3, SpringLayout.SOUTH, this.playbackPanel);
-        layout.putConstraint(SpringLayout.EAST, this.progressSlider, -5, SpringLayout.WEST, this.acceptButton);
+        layout.putConstraint(SpringLayout.WEST, this.progressSlider, 5,
+                SpringLayout.WEST, this.playbackPanel);
+        layout.putConstraint(SpringLayout.NORTH, this.progressSlider, 3,
+                SpringLayout.NORTH, this.playbackPanel);
+        layout.putConstraint(SpringLayout.SOUTH, this.progressSlider, 3,
+                SpringLayout.SOUTH, this.playbackPanel);
+        layout.putConstraint(SpringLayout.EAST, this.progressSlider, -5,
+                SpringLayout.WEST, this.acceptButton);
 
         this.add(this.playbackPanel, BorderLayout.PAGE_END);
 
