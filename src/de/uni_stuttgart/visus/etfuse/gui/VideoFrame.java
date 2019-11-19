@@ -106,41 +106,41 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
         this.menuBar = new JMenuBar();
 
-        this.menuImport = new JMenu("Datei");
+        this.menuImport = new JMenu("File");
         this.menuImport.setMnemonic(KeyEvent.VK_I);
-        this.menuImport.getAccessibleContext().setAccessibleDescription("Dateiimport");
+        this.menuImport.getAccessibleContext().setAccessibleDescription("File import");
         this.menuBar.add(this.menuImport);
 
-        this.menuPlayback = new JMenu("Playback-Speed");
+        this.menuPlayback = new JMenu("Playback speed");
         this.menuPlayback.setMnemonic(KeyEvent.VK_P);
-        this.menuPlayback.getAccessibleContext().setAccessibleDescription("Video-Playback-Geschwindigkeit festlegen");
+        this.menuPlayback.getAccessibleContext().setAccessibleDescription("Specify video playback speed");
         this.menuBar.add(this.menuPlayback);
 
-        this.menuRecordingOptions = new JMenu("Gast-Recording darstellen");
+        this.menuRecordingOptions = new JMenu("Show guest recording");
         this.menuRecordingOptions.setMnemonic(KeyEvent.VK_P);
-        this.menuRecordingOptions.getAccessibleContext().setAccessibleDescription("Gast-Recording darstellen");
+        this.menuRecordingOptions.getAccessibleContext().setAccessibleDescription("Show guest recording");
         this.menuBar.add(this.menuRecordingOptions);
 
-        this.menuCompareHeatMaps = new JMenu("Attention-Maps vergleichen");
+        this.menuCompareHeatMaps = new JMenu("Compare attention maps");
         this.menuCompareHeatMaps.setMnemonic(KeyEvent.VK_H);
-        this.menuCompareHeatMaps.getAccessibleContext().setAccessibleDescription("Attention-Map-Ansicht");
+        this.menuCompareHeatMaps.getAccessibleContext().setAccessibleDescription("Attention map view");
         this.menuBar.add(this.menuCompareHeatMaps);
 
-        this.menuPreferences = new JMenu("Einstellungen");
+        this.menuPreferences = new JMenu("Settings");
         this.menuPreferences.setMnemonic(KeyEvent.VK_E);
-        this.menuPreferences.getAccessibleContext().setAccessibleDescription("Einstellungen bearbeiten");
+        this.menuPreferences.getAccessibleContext().setAccessibleDescription("Change settings");
         this.menuBar.add(this.menuPreferences);
 
         ActionListener importListener = new DataImporter(this, null);
-        this.menuItemTrackerData = new JMenuItem("Host-Trackerdaten laden...", KeyEvent.VK_T);
+        this.menuItemTrackerData = new JMenuItem("Load host eye tracking data...", KeyEvent.VK_T);
         this.menuItemTrackerData.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
-        this.menuItemTrackerData.getAccessibleContext().setAccessibleDescription("Eyetrackerdaten importieren");
+        this.menuItemTrackerData.getAccessibleContext().setAccessibleDescription("Import eye tracking data for the host recording");
         this.menuItemTrackerData.addActionListener(importListener);
         this.menuImport.add(this.menuItemTrackerData);
 
-        this.menuItemSaveProject = new JMenuItem("Projekt speichern unter...", KeyEvent.VK_S);
+        this.menuItemSaveProject = new JMenuItem("Save project as...", KeyEvent.VK_S);
         this.menuItemSaveProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
-        this.menuItemSaveProject.getAccessibleContext().setAccessibleDescription("Projekt speichern");
+        this.menuItemSaveProject.getAccessibleContext().setAccessibleDescription("Save project");
         this.menuItemSaveProject.addActionListener(new ActionListener() {
 
             @Override
@@ -148,7 +148,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
                 if (hostProjector == null || hostProjector.getRecording() == null) {
 
-                    JOptionPane.showMessageDialog(null, "Bitte erst Host-Trackerdaten laden!");
+                    JOptionPane.showMessageDialog(null, "Please load host eye tracking data first!");
                     return;
                 }
 
@@ -158,8 +158,8 @@ public class VideoFrame extends JFrame implements ChangeListener {
         });
         this.menuImport.add(this.menuItemSaveProject);
 
-        this.menuItemQuarterSpeed = new JMenuItem("x0.25 Speed");
-        this.menuItemQuarterSpeed.getAccessibleContext().setAccessibleDescription("Bei 1/4 Geschwindigkeit abspielen");
+        this.menuItemQuarterSpeed = new JMenuItem("x0.25 speed");
+        this.menuItemQuarterSpeed.getAccessibleContext().setAccessibleDescription("Play at 1/4 speed");
         this.menuItemQuarterSpeed.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -168,8 +168,8 @@ public class VideoFrame extends JFrame implements ChangeListener {
         });
         this.menuPlayback.add(this.menuItemQuarterSpeed);
 
-        this.menuItemHalfSpeed = new JMenuItem("x0.5 Speed");
-        this.menuItemHalfSpeed.getAccessibleContext().setAccessibleDescription("Bei halber Geschwindigkeit abspielen");
+        this.menuItemHalfSpeed = new JMenuItem("x0.5 speed");
+        this.menuItemHalfSpeed.getAccessibleContext().setAccessibleDescription("Play at half speed");
         this.menuItemHalfSpeed.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -178,8 +178,8 @@ public class VideoFrame extends JFrame implements ChangeListener {
         });
         this.menuPlayback.add(this.menuItemHalfSpeed);
 
-        this.menuItemNormalSpeed = new JMenuItem("x1.0 Speed");
-        this.menuItemNormalSpeed.getAccessibleContext().setAccessibleDescription("Bei normaler Geschwindigkeit abspielen");
+        this.menuItemNormalSpeed = new JMenuItem("x1.0 speed");
+        this.menuItemNormalSpeed.getAccessibleContext().setAccessibleDescription("Play at normal speed");
         this.menuItemNormalSpeed.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -188,8 +188,8 @@ public class VideoFrame extends JFrame implements ChangeListener {
         });
         this.menuPlayback.add(this.menuItemNormalSpeed);
 
-        this.menuItemDoubleSpeed = new JMenuItem("x2.0 Speed", KeyEvent.VK_Y);
-        this.menuItemDoubleSpeed.getAccessibleContext().setAccessibleDescription("Bei doppelter Geschwindigkeit abspielen");
+        this.menuItemDoubleSpeed = new JMenuItem("x2.0 speed", KeyEvent.VK_Y);
+        this.menuItemDoubleSpeed.getAccessibleContext().setAccessibleDescription("Play at double speed");
         this.menuItemDoubleSpeed.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -198,8 +198,8 @@ public class VideoFrame extends JFrame implements ChangeListener {
         });
         this.menuPlayback.add(this.menuItemDoubleSpeed);
 
-        this.menuItemQuadrupleSpeed = new JMenuItem("x4.0 Speed");
-        this.menuItemQuadrupleSpeed.getAccessibleContext().setAccessibleDescription("Bei vierfacher Geschwindigkeit abspielen");
+        this.menuItemQuadrupleSpeed = new JMenuItem("x4.0 speed");
+        this.menuItemQuadrupleSpeed.getAccessibleContext().setAccessibleDescription("Play at four times the speed");
         this.menuItemQuadrupleSpeed.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -208,8 +208,8 @@ public class VideoFrame extends JFrame implements ChangeListener {
         });
         this.menuPlayback.add(this.menuItemQuadrupleSpeed);
 
-        this.menuItemAddGuest = new JMenuItem("Gast-Recording darstellen");
-        this.menuItemAddGuest.getAccessibleContext().setAccessibleDescription("Daten eines anderen Recordings transformieren und darstellen");
+        this.menuItemAddGuest = new JMenuItem("Show guest recording");
+        this.menuItemAddGuest.getAccessibleContext().setAccessibleDescription("Transform and show data from another recording");
 
         this.menuRecordingOptions.addMouseListener(new MouseListener() {
 
@@ -218,7 +218,8 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
                 if (hostProjector == null || hostProjector.getRecording() == null) {
 
-                    JOptionPane.showMessageDialog(null, "Bitte erst Host-Trackerdaten laden!");
+                    // System.out.println("Kein Recording geladen!");
+                    JOptionPane.showMessageDialog(null, "Please load host eye tracking data first!");
                     return;
                 }
 
@@ -248,7 +249,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
                 if (hostProjector == null || hostProjector.getRecording() == null) {
 
-                    JOptionPane.showMessageDialog(null, "Bitte erst Host-Trackerdaten laden!");
+                    JOptionPane.showMessageDialog(null, "Please load host eye tracking data first!");
                     return;
                 }
 
@@ -256,7 +257,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
                     if (p.getRawHeatMap() == null || p.isHeatMapBeingGenerated()) {
 
-                        JOptionPane.showMessageDialog(null, "Heatmap-Generierung ist noch nicht abgeschlossen!");
+                        JOptionPane.showMessageDialog(null, "Heatmap generation is not yet completed!");
                         return;
                     }
                 }
@@ -326,7 +327,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
         this.playbackPanel.setLayout(layout);
 
         this.playPauseButton = new JButton(">");
-        this.playPauseButton.setToolTipText("Video abspielen / pausieren");
+        this.playPauseButton.setToolTipText("Play / pause video");
 
         ActionListener playPauseListener = new ActionListener() {
             @Override
@@ -349,7 +350,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
         layout.putConstraint(SpringLayout.NORTH, this.playPauseButton, 3, SpringLayout.NORTH, this.playbackPanel);
 
         this.progressSlider = new RecordingSlider(JSlider.HORIZONTAL, 0, (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT), 0);
-        this.progressSlider.setToolTipText("Zeitleiste mit MinDist-Plot");
+        this.progressSlider.setToolTipText("Timeline with MinDist plot");
         this.progressSlider.addChangeListener(this);
         this.progressSlider.setFocusable(false);
 
@@ -364,12 +365,12 @@ public class VideoFrame extends JFrame implements ChangeListener {
         layout.putConstraint(SpringLayout.EAST, this.progressSlider, -5, SpringLayout.EAST, this.playbackPanel);
 
         this.frameCounterLabel = new JLabel("0", SwingConstants.CENTER);
-        this.frameCounterLabel.setToolTipText("Frame Counter - klicken, um zu spezifischem Frame zu springen");
+        this.frameCounterLabel.setToolTipText("Frame Counter - click to jump to a specific frame");
         this.frameCounterLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                String input = JOptionPane.showInputDialog("Springe zu Frame:");
+                String input = JOptionPane.showInputDialog("jump to frame:");
                 Integer integ = 0;
 
                 try {
@@ -393,7 +394,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
         this.playbackPanel.add(this.frameCounterLabel);
 
         this.heatMapSlider = new RangeSlider(0, (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT), 0, (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT));
-        this.heatMapSlider.setToolTipText("Zeitraum, über den die Attention Maps generiert werden");
+        this.heatMapSlider.setToolTipText("Period of time over which the attention maps are generated.");
         this.heatMapSlider.putClientProperty("JSlider.isFilled", false);
         ChangeListener heatMapChangeListener = new ChangeListener() {
 

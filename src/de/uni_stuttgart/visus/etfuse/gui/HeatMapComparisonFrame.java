@@ -60,7 +60,7 @@ public class HeatMapComparisonFrame extends JFrame {
     public HeatMapComparisonFrame(VideoSurfacePanel pane) {
 
         this.pane = pane;
-        setTitle("Attention-Map-Vergleich");
+        setTitle("Attention map comparison");
 
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -70,8 +70,8 @@ public class HeatMapComparisonFrame extends JFrame {
                         RowSpec.decode("default:grow"),
                         FormSpecs.MIN_ROWSPEC,}));
 
-        chckbxNurSpielfeldbereich = new JCheckBox("Nur Spielfeld-Bereich");
-        chckbxGetrenntNormalisieren = new JCheckBox("Getrennt normalisieren");
+        chckbxNurSpielfeldbereich = new JCheckBox("Board area only");
+        chckbxGetrenntNormalisieren = new JCheckBox("Normalize separately");
 
         heatMapViewContainer = new JPanel();
         getContentPane().add(heatMapViewContainer, "1, 1, fill, fill");
@@ -163,18 +163,18 @@ public class HeatMapComparisonFrame extends JFrame {
                         RowSpec.decode("116px:grow"),
                         FormSpecs.UNRELATED_GAP_ROWSPEC,}));
 
-        JLabel lblHeatmapLinks = new JLabel("Heatmap links:");
+        JLabel lblHeatmapLinks = new JLabel("Left heatmap:");
         controlPanel.add(lblHeatmapLinks, "2, 2, default, bottom");
 
-        JLabel lblDarstellung = new JLabel("Darstellung:");
+        JLabel lblDarstellung = new JLabel("Representation:");
         controlPanel.add(lblDarstellung, "4, 2");
 
-        JLabel lblHeatmapRechts = new JLabel("Heatmap rechts:");
+        JLabel lblHeatmapRechts = new JLabel("Right heatmap:");
         controlPanel.add(lblHeatmapRechts, "12, 2, right, bottom");
 
         ArrayList<String> valuesList = new ArrayList<String>();
         for (int i = 1; i <= this.pane.getProjectors().size(); i++) {
-            valuesList.add("Spieler " + i);
+            valuesList.add("Player " + i);
         }
 
         heatMapRightList = new JList();
@@ -205,7 +205,7 @@ public class HeatMapComparisonFrame extends JFrame {
         prefContainer.add(chckbxNurSpielfeldbereich, "1, 1, default, center");
         prefContainer.add(chckbxGetrenntNormalisieren, "1, 2, default, center");
 
-        JButton btnLinksRechts = new JButton("Differenz links minus rechts");
+        JButton btnLinksRechts = new JButton("Difference left minus right");
         btnLinksRechts.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -221,7 +221,7 @@ public class HeatMapComparisonFrame extends JFrame {
         });
         controlPanel.add(btnLinksRechts, "6, 4, center, top");
 
-        JButton btnStandardansicht = new JButton("Standardansicht");
+        JButton btnStandardansicht = new JButton("Default view");
         btnStandardansicht.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -237,7 +237,7 @@ public class HeatMapComparisonFrame extends JFrame {
         });
         controlPanel.add(btnStandardansicht, "8, 4, center, top");
 
-        JButton btnRechtsLinks = new JButton("Differenz rechts minus links");
+        JButton btnRechtsLinks = new JButton("Difference right minus left");
         btnRechtsLinks.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

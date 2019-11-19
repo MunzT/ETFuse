@@ -79,7 +79,10 @@ public class DataImporter implements ActionListener, PropertyChangeListener {
                     this.parentFrame.setHostRecording(rec);
                     this.parentFrame.setCursor(Cursor.getDefaultCursor());
                     this.parentFrame.updateQuickSettingsToolbar();
-                    JOptionPane.showMessageDialog(this.parentFrame, "Fertig. Es wurden " + rec.getRawEyeEvents().size() + " EyeTracker-Events eingelesen und " + rec.getFilteredEyeEvents().size() + " Fixationen ermittelt.");
+                    JOptionPane.showMessageDialog(this.parentFrame,
+                            "Finished. " + rec.getRawEyeEvents().size()
+                            + " eye tracking events were read and "
+                                    + rec.getFilteredEyeEvents().size() + " fixations determined.");
                 }
             }
 

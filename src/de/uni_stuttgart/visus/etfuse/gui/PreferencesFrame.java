@@ -59,7 +59,7 @@ public class PreferencesFrame extends JDialog {
 
     public PreferencesFrame(VideoFrame vidFrame) {
 
-        super(vidFrame, "Einstellungen", true);
+        super(vidFrame, "Settings", true);
 
         this.vidFrame = vidFrame;
 
@@ -78,7 +78,7 @@ public class PreferencesFrame extends JDialog {
                 RowSpec.decode("fill:default"),}));
 
         JPanel fixationPrefsPanel = new JPanel();
-        fixationPrefsPanel.setBorder(new TitledBorder(null, "Fixationen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        fixationPrefsPanel.setBorder(new TitledBorder(null, "Fixations", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelOverlayPrefs.add(fixationPrefsPanel, "1, 1, fill, center");
         fixationPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -93,12 +93,12 @@ public class PreferencesFrame extends JDialog {
                 FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,}));
 
-        chckbxEnableFixationPlot = new JCheckBox("Plot aktivieren");
+        chckbxEnableFixationPlot = new JCheckBox("Activate plot");
         chckbxEnableFixationPlot.setBorder(null);
         chckbxEnableFixationPlot.setAlignmentY(Component.TOP_ALIGNMENT);
         fixationPrefsPanel.add(chckbxEnableFixationPlot, "2, 2, left, top");
 
-        JLabel labelVisibilityDuration = new JLabel("Sichtbarkeit vollendeter Fixationen (in ms, default: 500):");
+        JLabel labelVisibilityDuration = new JLabel("Visibility of completed fixations (in ms, default: 500):");
         fixationPrefsPanel.add(labelVisibilityDuration, "2, 4, fill, fill");
 
         txtVisibilityDuration = new JTextField();
@@ -107,7 +107,7 @@ public class PreferencesFrame extends JDialog {
         txtVisibilityDuration.setColumns(10);
 
         JPanel rawDataPrefsPanel = new JPanel();
-        rawDataPrefsPanel.setBorder(new TitledBorder(null, "Rohdaten", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        rawDataPrefsPanel.setBorder(new TitledBorder(null, "Raw Data", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelOverlayPrefs.add(rawDataPrefsPanel, "1, 2, fill, center");
         rawDataPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -118,7 +118,7 @@ public class PreferencesFrame extends JDialog {
                 FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,}));
 
-        chckbxEnableRawDataPlot = new JCheckBox("Plot aktivieren");
+        chckbxEnableRawDataPlot = new JCheckBox("Activate plot");
         chckbxEnableRawDataPlot.setBorder(null);
         rawDataPrefsPanel.add(chckbxEnableRawDataPlot, "2, 2, fill, top");
 
@@ -138,27 +138,27 @@ public class PreferencesFrame extends JDialog {
                 RowSpec.decode("default:grow"),
                 FormSpecs.RELATED_GAP_ROWSPEC,}));
 
-        chckbxEnableHeatMapPlot = new JCheckBox("Plot aktivieren");
+        chckbxEnableHeatMapPlot = new JCheckBox("Activate plot");
         chckbxEnableHeatMapPlot.setBorder(null);
         heatMapPrefsPanel.add(chckbxEnableHeatMapPlot, "2, 2, fill, top");
 
-        JLabel lblQuelldatensatz = new JLabel("Quelldatensatz:");
+        JLabel lblQuelldatensatz = new JLabel("Source data set:");
         heatMapPrefsPanel.add(lblQuelldatensatz, "2, 4, right, default");
 
         ArrayList<String> playerList = new ArrayList<String>();
         for (int i = 1; i <= vidFrame.getPanel().getProjectors().size(); i++) {
-            playerList.add("Spieler " + i);
+            playerList.add("Player " + i);
         }
 
         if (playerList.size() < 1)
-            playerList.add("Keine Daten geladen");
+            playerList.add("No data loaded");
 
         comboBoxOverlayHeatMapSource = new JComboBox();
         comboBoxOverlayHeatMapSource.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
         heatMapPrefsPanel.add(comboBoxOverlayHeatMapSource, "4, 4, fill, default");
 
         JPanel panelMinDistPrefs = new JPanel();
-        tabbedPane.addTab("Mindestdistanz-Plot", null, panelMinDistPrefs, null);
+        tabbedPane.addTab("Minimum Distance Plot", null, panelMinDistPrefs, null);
         panelMinDistPrefs.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
                 ColumnSpec.decode("default:grow"),
@@ -169,7 +169,7 @@ public class PreferencesFrame extends JDialog {
                 RowSpec.decode("default:grow"),}));
 
         JPanel minDistPrefsPanel = new JPanel();
-        minDistPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(128, 128, 128)), "Mindestdistanz-Plot-Parameter", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        minDistPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(128, 128, 128)), "Minimum Distance Plot Parameters", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         panelMinDistPrefs.add(minDistPrefsPanel, "2, 2, fill, fill");
         minDistPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -186,7 +186,7 @@ public class PreferencesFrame extends JDialog {
                 FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,}));
 
-        JLabel label = new JLabel("Mindestdistanz (in px; default: 150):");
+        JLabel label = new JLabel("Minimum distance (in px; default: 150):");
         minDistPrefsPanel.add(label, "2, 2, right, default");
 
         txtMinDistPlotDist = new JTextField();
@@ -194,14 +194,14 @@ public class PreferencesFrame extends JDialog {
         txtMinDistPlotDist.setColumns(10);
         minDistPrefsPanel.add(txtMinDistPlotDist, "4, 2, fill, default");
 
-        JLabel lblQuelldatensatz_1 = new JLabel("Quelldatensatz 1:");
+        JLabel lblQuelldatensatz_1 = new JLabel("Source data set 1:");
         minDistPrefsPanel.add(lblQuelldatensatz_1, "2, 4, right, default");
 
         comboBoxMinDistPlotSource1 = new JComboBox();
         comboBoxMinDistPlotSource1.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
         minDistPrefsPanel.add(comboBoxMinDistPlotSource1, "4, 4, fill, default");
 
-        JLabel lblQuelldatensatz_2 = new JLabel("Quelldatensatz 2:");
+        JLabel lblQuelldatensatz_2 = new JLabel("Source data set 2:");
         minDistPrefsPanel.add(lblQuelldatensatz_2, "2, 6, right, default");
 
         comboBoxMinDistPlotSource2 = new JComboBox();
@@ -220,7 +220,7 @@ public class PreferencesFrame extends JDialog {
                 RowSpec.decode("4dlu:grow"),}));
 
         JPanel filterParameterPrefsPanel = new JPanel();
-        filterParameterPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(128, 128, 128)), "Filter-Parameter", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        filterParameterPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(128, 128, 128)), "Filter Parameters", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         panelGazeFilterPrefs.add(filterParameterPrefsPanel, "2, 2, fill, fill");
         filterParameterPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -250,7 +250,7 @@ public class PreferencesFrame extends JDialog {
         txtGazeFilterDistanceThreshold.setColumns(10);
 
         JPanel panelHeatMapGeneratorPrefs = new JPanel();
-        tabbedPane.addTab("Heatmap-Generator", null, panelHeatMapGeneratorPrefs, null);
+        tabbedPane.addTab("Heatmap Generator", null, panelHeatMapGeneratorPrefs, null);
         panelHeatMapGeneratorPrefs.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
                 ColumnSpec.decode("default:grow"),
@@ -261,7 +261,7 @@ public class PreferencesFrame extends JDialog {
                 RowSpec.decode("default:grow"),}));
 
         JPanel heatMapGeneratorPrefsPanel = new JPanel();
-        heatMapGeneratorPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(128, 128, 128)), "Generator-Parameter", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        heatMapGeneratorPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(128, 128, 128)), "Generator Parameters", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         panelHeatMapGeneratorPrefs.add(heatMapGeneratorPrefsPanel, "2, 2, fill, fill");
         heatMapGeneratorPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -280,36 +280,36 @@ public class PreferencesFrame extends JDialog {
                 FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,}));
 
-        chckbxHeatMapGeneratorSkipPercentage = new JCheckBox("\u00DCberspringe Prozentsatz der Events");
+        chckbxHeatMapGeneratorSkipPercentage = new JCheckBox("Skip percentage of events");
         chckbxHeatMapGeneratorSkipPercentage.setBorder(null);
         heatMapGeneratorPrefsPanel.add(chckbxHeatMapGeneratorSkipPercentage, "2, 2");
 
-        JLabel lblDieseOptionBeschleunigt = new JLabel("(Schnellere Generierung bei gro\u00DFen Datens\u00E4tzen. Verringert Genauigkeit.)");
+        JLabel lblDieseOptionBeschleunigt = new JLabel("(Faster generation of large datasets. Decreases accuracy.)");
         heatMapGeneratorPrefsPanel.add(lblDieseOptionBeschleunigt, "4, 2, left, default");
 
-        JLabel lblProzentsatzin = new JLabel("Prozentsatz (in %; default: 0.05):");
+        JLabel lblProzentsatzin = new JLabel("Percentage (in %; default: 0.05):");
         heatMapGeneratorPrefsPanel.add(lblProzentsatzin, "2, 4, right, default");
 
         txtHeatMapGeneratorSkipPercentage = new JTextField();
         heatMapGeneratorPrefsPanel.add(txtHeatMapGeneratorSkipPercentage, "4, 4, fill, default");
         txtHeatMapGeneratorSkipPercentage.setColumns(10);
 
-        JLabel lblHitzeradiusinPx = new JLabel("Hitzeradius (in px; default: 80):");
+        JLabel lblHitzeradiusinPx = new JLabel("Heat radius (in px; default: 80):");
         heatMapGeneratorPrefsPanel.add(lblHitzeradiusinPx, "2, 6, right, default");
 
         txtHeatMapGeneratorHeatRadius = new JTextField();
         heatMapGeneratorPrefsPanel.add(txtHeatMapGeneratorHeatRadius, "4, 6, fill, default");
         txtHeatMapGeneratorHeatRadius.setColumns(10);
 
-        chckbxHeatMapGeneratorGenFromFrequencyInstead = new JCheckBox("Aggregiere nach H\u00E4ufung statt Dauer");
+        chckbxHeatMapGeneratorGenFromFrequencyInstead = new JCheckBox("Aggregate by frequency instead of duration");
         chckbxHeatMapGeneratorGenFromFrequencyInstead.setBorder(null);
         heatMapGeneratorPrefsPanel.add(chckbxHeatMapGeneratorGenFromFrequencyInstead, "2, 8");
 
-        JLabel lblnderungenTretenErst = new JLabel("\u00C4nderungen werden erst bei der n\u00E4chsten (manuellen) Generierung wirksam.");
+        JLabel lblnderungenTretenErst = new JLabel("Changes are effective only with the next (manual) generation.");
         panelHeatMapGeneratorPrefs.add(lblnderungenTretenErst, "2, 3, center, default");
 
         JPanel panelTempSyncPrefs = new JPanel();
-        tabbedPane.addTab("Datensatz-Synchronisation", null, panelTempSyncPrefs, null);
+        tabbedPane.addTab("Data Set Synchronisation", null, panelTempSyncPrefs, null);
         panelTempSyncPrefs.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
                 ColumnSpec.decode("default:grow"),
@@ -320,7 +320,7 @@ public class PreferencesFrame extends JDialog {
                 RowSpec.decode("fill:default:grow"),}));
 
         JPanel histogramCompPrefsPanel = new JPanel();
-        histogramCompPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(128, 128, 128)), "Zeitliche Synchronisation \u00FCber Histogramm-Vergleich", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+        histogramCompPrefsPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(255, 255, 255), new Color(128, 128, 128)), "Temporal Synchronization via Histogram Comparison", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
         panelTempSyncPrefs.add(histogramCompPrefsPanel, "2, 2, fill, fill");
         histogramCompPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
                 FormSpecs.RELATED_GAP_COLSPEC,
@@ -341,7 +341,7 @@ public class PreferencesFrame extends JDialog {
                 FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,}));
 
-        JLabel lblGittergre = new JLabel("Gittergr\u00F6\u00DFe (x * x; default: 16; 16 <= x <= 20):");
+        JLabel lblGittergre = new JLabel("Grid size (x * x; default: 16; 16 <= x <= 20):");
         histogramCompPrefsPanel.add(lblGittergre, "2, 2, right, default");
 
         spinnerHistogramGridSize = new JSpinner();
@@ -353,27 +353,27 @@ public class PreferencesFrame extends JDialog {
         }
         histogramCompPrefsPanel.add(spinnerHistogramGridSize, "4, 2, fill, default");
 
-        JLabel lblDeviationThreshold = new JLabel("Correlation Threshold (in %; default: 40):");
+        JLabel lblDeviationThreshold = new JLabel("Correlation threshold (in %; default: 40):");
         histogramCompPrefsPanel.add(lblDeviationThreshold, "2, 4, right, default");
 
         txtHistogramCorrelationThreshold = new JTextField();
         histogramCompPrefsPanel.add(txtHistogramCorrelationThreshold, "4, 4, fill, default");
         txtHistogramCorrelationThreshold.setColumns(10);
 
-        JLabel lblAmountThreshold = new JLabel("Anzahl abweichender Zellen Threshold (default: 1):");
+        JLabel lblAmountThreshold = new JLabel("Number of deviating cells threshold (default: 1):");
         histogramCompPrefsPanel.add(lblAmountThreshold, "2, 6, right, default");
 
         txtHistogramDeviatingCellsThreshold = new JTextField();
         histogramCompPrefsPanel.add(txtHistogramDeviatingCellsThreshold, "4, 6, fill, default");
         txtHistogramDeviatingCellsThreshold.setColumns(10);
 
-        JLabel lblMetrik = new JLabel("Metrik:");
+        JLabel lblMetrik = new JLabel("Metric:");
         histogramCompPrefsPanel.add(lblMetrik, "2, 8, right, default");
 
-        JLabel lblZweiBilderSind = new JLabel("Zwei Bilder sind ungleich, wenn die Korrelation von mindestens X Zellen <= Y% betr\u00E4gt.");
+        JLabel lblZweiBilderSind = new JLabel("Two images are unequal if the correlation of at least X cells is <= Y%.");
         histogramCompPrefsPanel.add(lblZweiBilderSind, "4, 8");
 
-        JLabel lblberDieseMetrik = new JLabel("\u00DCber diese Metrik wird der erste Frame eines gegebenen Zustandes / Zuges gesucht.");
+        JLabel lblberDieseMetrik = new JLabel("This metric is used to search for the first frame of a given state / move.");
         histogramCompPrefsPanel.add(lblberDieseMetrik, "4, 10");
 
         JPanel buttonPanel = new JPanel();
@@ -394,7 +394,7 @@ public class PreferencesFrame extends JDialog {
         });
         buttonPanel.add(btnOKButton);
 
-        JButton btnCancelButton = new JButton("Abbrechen");
+        JButton btnCancelButton = new JButton("Abort");
         btnCancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

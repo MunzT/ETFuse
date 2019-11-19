@@ -67,7 +67,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
 
     public SyncWizardFrame(VideoFrame parentFrame) {
 
-        super(parentFrame, "Gast-Recording einbinden", true);
+        super(parentFrame, "Add guest recording", true);
 
         childFrames = new ArrayList<JDialog>();
 
@@ -75,18 +75,18 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
 
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        cancelButton = new JButton("Abbrechen");
-        cancelButton.setToolTipText("Vorgang abbrechen und Wizard schließen");
-        nextButton = new JButton("Weiter");
-        nextButton.setToolTipText("Zum nächsten Schritt fortfahren");
-        backButton = new JButton("Zurück");
-        backButton.setToolTipText("Zum vorherigen Schritt zurückkehren");
-        loadSourceDataButton = new JButton("Quell-Daten laden");
-        loadSourceDataButton.setToolTipText("Datensatz des einzubindenden Recordings auswählen");
-        loadSourceVideoButton = new JButton("Video-Datei öffnen");
-        loadSourceVideoButton.setToolTipText("Screen-Recording zum einzubindenden Datensatz auswählen");
+        cancelButton = new JButton("Abort");
+        cancelButton.setToolTipText("Cancel process and close wizard");
+        nextButton = new JButton("Continue");
+        nextButton.setToolTipText("Proceed to next step");
+        backButton = new JButton("Back");
+        backButton.setToolTipText("Return to the previous step");
+        loadSourceDataButton = new JButton("Load source data");
+        loadSourceDataButton.setToolTipText("Select data set of the recording to be added");
+        loadSourceVideoButton = new JButton("Open video file");
+        loadSourceVideoButton.setToolTipText("Select Screen-Recording for the dataset which should be added");
         helpButton = new JButton("?");
-        helpButton.setToolTipText("Hilfe anzeigen");
+        helpButton.setToolTipText("Show help");
 
         cancelButton.addActionListener(new ActionListener() {
             @Override
@@ -119,7 +119,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                 //Create a file chooser
                 final JFileChooser fc = new JFileChooser();
 
-                fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV-Datei", "tsv"));
+                fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV file", "tsv"));
                 fc.setAcceptAllFileFilterUsed(false);
 
                 //In response to a button click:
@@ -151,7 +151,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                 //Create a file chooser
                 final JFileChooser fc = new JFileChooser();
 
-                fc.addChoosableFileFilter(new FileNameExtensionFilter("Video-Datei", "mp4", "avi", "mkv", "flv", "mpeg"));
+                fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi", "mkv", "flv", "mpeg"));
                 fc.setAcceptAllFileFilterUsed(false);
 
                 //In response to a button click:
@@ -181,30 +181,30 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
             }
         });
 
-        String predefinedSourceFramesArray[] = {"Win10 1920x1080", "Win7+Taskbar 1920x1200"};
+        String predefinedSourceFramesArray[] = {"Win10 1920x1080", "Win7+taskbar 1920x1200"};
         predefinedSourceFrameCombo = new JComboBox<String>(predefinedSourceFramesArray);
         predefinedSourceFrameCombo.setSelectedIndex(1);
-        String predefinedTargetFramesArray[] = {"Win10 1920x1080", "Win7+Taskbar 1920x1200"};
+        String predefinedTargetFramesArray[] = {"Win10 1920x1080", "Win7+taskbar 1920x1200"};
         predefinedTargetFrameCombo = new JComboBox<String>(predefinedTargetFramesArray);
         predefinedTargetFrameCombo.setSelectedIndex(0);
 
-        stepOneLabel = new JLabel("1. Quell-Daten laden:");
-        stepTwoLabel = new JLabel("2. Quell-Frame festlegen:");
-        stepThreeLabel = new JLabel("3. Ziel-Frame festlegen:");
-        stepFourLabel = new JLabel("4. Zeitliche Synchronisierung:");
+        stepOneLabel = new JLabel("1. Load source data:");
+        stepTwoLabel = new JLabel("2. Define source area:");
+        stepThreeLabel = new JLabel("3. Define target area:");
+        stepFourLabel = new JLabel("4. Temporal synchronization:");
 
-        predefinedSourceCheckBox = new JCheckBox("Preset nutzen:");
-        videoSourceLabel = new JLabel("Oder im Video manuell festlegen:");
-        predefinedTargetCheckBox = new JCheckBox("Preset nutzen:");
-        videoTargetLabel = new JLabel("Oder im Video manuell festlegen:");
-        videoTargetButton = new JButton("Manuell auswählen");
-        videoTargetButton.setToolTipText("Spielfeldbereich manuell im Screen-Recording bestimmen");
+        predefinedSourceCheckBox = new JCheckBox("Use preset:");
+        videoSourceLabel = new JLabel("Or set it manually in the video:");
+        predefinedTargetCheckBox = new JCheckBox("Use preset:");
+        videoTargetLabel = new JLabel("Or set it manually in the video");
+        videoTargetButton = new JButton("Select manually");
+        videoTargetButton.setToolTipText("Determining the board area manually in the screen recording");
 
         timeSyncGroup = new ButtonGroup();
 
-        customTimeSyncRadio = new JRadioButton("Präziserer Time-Sync (experimentell; nur GO-Spiel)");
-        histogramTimeSyncRadio = new JRadioButton("Präziserer Time-Sync über Histogramme (empfohlen)");
-        estimatedTimeSyncRadio = new JRadioButton("Nutze Schätzwert für Time-Sync (ungenau)");
+        customTimeSyncRadio = new JRadioButton("More precise time sync (experimental; GO game only)");
+        histogramTimeSyncRadio = new JRadioButton("More precise time sync using histograms (recommended)");
+        estimatedTimeSyncRadio = new JRadioButton("Use estimate for time sync (inaccurate)");
 
         timeSyncGroup.add(customTimeSyncRadio);
         timeSyncGroup.add(histogramTimeSyncRadio);
@@ -261,7 +261,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
 
                     if (sourceVideo == null) {
 
-                        JOptionPane.showMessageDialog(SyncWizardFrame.this, "Ein Screen-Recording der Gast-Daten wird hierfür benötigt!");
+                        //System.out.println("Gast-Video öffnen");
+                        JOptionPane.showMessageDialog(SyncWizardFrame.this, "A screen recording of the guest data is required!");
 
                         File chosenFile = null;
 
@@ -269,7 +270,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                         //Create a file chooser
                         final JFileChooser fc = new JFileChooser();
 
-                        fc.addChoosableFileFilter(new FileNameExtensionFilter("Video-Datei", "mp4", "avi", "mkv", "flv", "mpeg"));
+                        fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi", "mkv", "flv", "mpeg"));
                         fc.setAcceptAllFileFilterUsed(false);
 
                         //In response to a button click:
@@ -307,7 +308,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
 
                     if (sourceVideo == null) {
 
-                        JOptionPane.showMessageDialog(SyncWizardFrame.this, "Ein Screen-Recording der Gast-Daten wird hierfür benötigt!");
+                        JOptionPane.showMessageDialog(SyncWizardFrame.this, "A screen recording of the guest data is required!");
 
                         File chosenFile = null;
 
@@ -315,7 +316,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                         //Create a file chooser
                         final JFileChooser fc = new JFileChooser();
 
-                        fc.addChoosableFileFilter(new FileNameExtensionFilter("Video-Datei", "mp4", "avi", "mkv", "flv", "mpeg"));
+                        fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi", "mkv", "flv", "mpeg"));
                         fc.setAcceptAllFileFilterUsed(false);
 
                         //In response to a button click:
@@ -566,7 +567,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
         histogramTimeSyncRadio.setEnabled(false);
         estimatedTimeSyncRadio.setEnabled(false);
 
-        nextButton.setText("Weiter");
+        nextButton.setText("Continue");
 
         switch (state) {
 
@@ -603,7 +604,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                 break;
 
             case 4:
-                nextButton.setText("Fertig");
+                nextButton.setText("Finish");
                 nextButton.setEnabled(true);
                 backButton.setEnabled(true);
                 break;
@@ -646,7 +647,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                     sourceData = rec;
                     setCursor(Cursor.getDefaultCursor());
 
-                    JOptionPane.showMessageDialog(this, "Fertig. Es wurden " + rec.getRawEyeEvents().size() + " EyeTracker-Events eingelesen und " + rec.getFilteredEyeEvents().size() + " Fixationen ermittelt.");
+                    JOptionPane.showMessageDialog(this, "Done. " + rec.getRawEyeEvents().size() + " eye tracking events were read and " + rec.getFilteredEyeEvents().size() + " fixations determined.");
 
                     nextStep();
                 }
@@ -663,11 +664,11 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                 /* */
             }
             else if (notification.getType().contains("stonepickerresult")) {
-                System.out.println("<SyncWizardFrame> StonePickerResult erhalten");
+                System.out.println("<SyncWizardFrame> got StonePickerResult");
                 this.customSyncStoneCoord = (Point) handback;
             }
             else if (notification.getType().contains("framepickerresult")) {
-                System.out.println("<SyncWizardFrame> FramePickerResult erhalten");
+                System.out.println("<SyncWizardFrame> got FramePickerResult");
                 this.histogramOrientationFrame = (int) handback;
             }
         }

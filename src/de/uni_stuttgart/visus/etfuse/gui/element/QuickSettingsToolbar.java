@@ -96,34 +96,34 @@ public class QuickSettingsToolbar extends JPanel {
             }
         };
 
-        JLabel lblAttentionmapoverlayQuelle = new JLabel("Attention-Map-Overlay Quelle:");
+        JLabel lblAttentionmapoverlayQuelle = new JLabel("Attention map overlay source:");
         add(lblAttentionmapoverlayQuelle, "2, 1, right, default");
 
         comboBoxOverlayHeatMapSource = new JComboBox();
-        comboBoxOverlayHeatMapSource.setToolTipText("Quelle f\u00FCr das Attention-Map-Overlay ausw\u00E4hlen");
+        comboBoxOverlayHeatMapSource.setToolTipText("Select the source for the attention map overlay.");
         add(comboBoxOverlayHeatMapSource, "4, 1, fill, default");
 
-        JLabel lblMindistplotQuellen = new JLabel("MinDist-Plot Quellen:");
+        JLabel lblMindistplotQuellen = new JLabel("MinDist-Plot source:");
         add(lblMindistplotQuellen, "6, 1");
 
         JLabel label = new JLabel("1:");
         add(label, "8, 1, right, default");
 
         comboBoxMinDistPlotSource1 = new JComboBox();
-        comboBoxMinDistPlotSource1.setToolTipText("Erste Quelle f\u00FCr den MinDist-Plot ausw\u00E4hlen");
+        comboBoxMinDistPlotSource1.setToolTipText("Select first source for the MinDist plot");
         add(comboBoxMinDistPlotSource1, "10, 1, fill, default");
 
         JLabel label_1 = new JLabel("2:");
         add(label_1, "12, 1, right, default");
 
         comboBoxMinDistPlotSource2 = new JComboBox();
-        comboBoxMinDistPlotSource2.setToolTipText("Zweite Quelle f\u00FCr den MinDist-Plot ausw\u00E4hlen");
+        comboBoxMinDistPlotSource2.setToolTipText("Select second source for the MinDist plot");
         add(comboBoxMinDistPlotSource2, "14, 1, fill, default");
 
         JLabel lblFarben = new JLabel("Farben:");
         add(lblFarben, "16, 1");
 
-        JButton btnInfosZuSpielerfarben = new JButton("Infos zu Spielerfarben");
+        JButton btnInfosZuSpielerfarben = new JButton("Information on player colors");
         btnInfosZuSpielerfarben.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -131,7 +131,7 @@ public class QuickSettingsToolbar extends JPanel {
                 ArrayList<String> playerList = new ArrayList<String>();
                 ArrayList<Color> colorList = new ArrayList<Color>();
                 for (int i = 0; i < parentFrame.getPanel().getProjectors().size(); i++) {
-                    playerList.add("Spieler " + (i + 1));
+                    playerList.add("Player " + (i + 1));
                     colorList.add(parentFrame.getPanel().getProjector(i).getRecording().preferredGazeColor);
                 }
 
@@ -141,7 +141,7 @@ public class QuickSettingsToolbar extends JPanel {
         });
         add(btnInfosZuSpielerfarben, "18, 1");
 
-        JButton btnInfosZuMindistfarben = new JButton("Infos zu MinDist-Farben");
+        JButton btnInfosZuMindistfarben = new JButton("Information on MinDist colors");
         btnInfosZuMindistfarben.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -156,22 +156,22 @@ public class QuickSettingsToolbar extends JPanel {
                     switch (i) {
 
                         case 0:
-                            entityList.add("Abstand zwischen Gaze-Punkten (Rohdaten) der Spieler <= " + minDist + "px");
+                            entityList.add("Distance between gaze points (raw data) of the players <= " + minDist + "px");
                             colorList.add(Color.CYAN);
                             break;
 
                         case 1:
-                            entityList.add("Abstand zwischen Gaze-Punkten (Rohdaten) der Spieler > " + minDist + "px");
+                            entityList.add("Distance between gaze points (raw data) of the players > " + minDist + "px");
                             colorList.add(Color.RED);
                             break;
 
                         case 2:
-                            entityList.add("Gaze-Punkt (Rohdaten) mindestens eines Spielers ist außerhalb des Spielfeldes");
+                            entityList.add("Gaze point (raw data) of at least one player is outside the board");
                             colorList.add(Color.YELLOW);
                             break;
 
                         case 3:
-                            entityList.add("Gaze-Daten fehlen für mindestens einen Spieler");
+                            entityList.add("Gaze data missing for at least one player");
                             colorList.add(Color.DARK_GRAY);
                             break;
 
@@ -207,7 +207,7 @@ public class QuickSettingsToolbar extends JPanel {
 
         ArrayList<String> playerList = new ArrayList<String>();
         for (int i = 1; i <= parentFrame.getPanel().getProjectors().size(); i++) {
-            playerList.add("Spieler " + i);
+            playerList.add("Player " + i);
         }
 
         if (playerList.size() < 1)

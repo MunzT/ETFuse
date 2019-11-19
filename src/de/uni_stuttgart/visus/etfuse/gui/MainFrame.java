@@ -62,7 +62,7 @@ public class MainFrame extends JFrame {
                 RowSpec.decode("14dlu"),
                 RowSpec.decode("default:grow"),}));
 
-        lblEtfuse = new JLabel("Willkommen!");
+        lblEtfuse = new JLabel("Welcome!");
         lblEtfuse.setFont(new Font("Tahoma", Font.PLAIN, 25));
         getContentPane().add(lblEtfuse, "4, 2, center, default");
 
@@ -75,12 +75,12 @@ public class MainFrame extends JFrame {
                         FormSpecs.PARAGRAPH_GAP_ROWSPEC,
                         FormSpecs.DEFAULT_ROWSPEC,}));
 
-        openVideoButton = new JButton("Neues Projekt");
-        openVideoButton.setToolTipText("Ein neues Projekt erstellen");
+        openVideoButton = new JButton("New Project");
+        openVideoButton.setToolTipText("Create a new project");
         buttonContainer.add(openVideoButton, "1, 1, fill, default");
 
-        openProjButton = new JButton("Projekt laden");
-        openProjButton.setToolTipText("Ein vorhandenes Projekt laden");
+        openProjButton = new JButton("Load Project");
+        openProjButton.setToolTipText("Load an existing project");
         buttonContainer.add(openProjButton, "1, 3, fill, default");
 
         hiThereGazePlot = new JPanel() {
@@ -150,9 +150,9 @@ public class MainFrame extends JFrame {
         menuBar = new JMenuBar();
 
         //Build the first menu.
-        menu = new JMenu("Datei");
+        menu = new JMenu("File");
         menu.setMnemonic(KeyEvent.VK_D);
-        menu.getAccessibleContext().setAccessibleDescription("Dateikontext");
+        menu.getAccessibleContext().setAccessibleDescription("File context");
         menuBar.add(menu);
 
         ActionListener openVideoListener = new ActionListener() {
@@ -163,7 +163,7 @@ public class MainFrame extends JFrame {
                 //Create a file chooser
                 final JFileChooser fc = new JFileChooser();
 
-                fc.addChoosableFileFilter(new FileNameExtensionFilter("Video-Datei", "mp4", "avi", "mkv", "flv", "mpeg"));
+                fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi", "mkv", "flv", "mpeg"));
                 fc.setAcceptAllFileFilterUsed(false);
 
                 //In response to a button click:
@@ -197,10 +197,10 @@ public class MainFrame extends JFrame {
         openVideoButton.addActionListener(openVideoListener);
 
         //file menu item
-        menuItemVideo = new JMenuItem("Video öffnen...", KeyEvent.VK_V);
+        menuItemVideo = new JMenuItem("Open video...", KeyEvent.VK_V);
 
         menuItemVideo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
-        menuItemVideo.getAccessibleContext().setAccessibleDescription("Video öffnen");
+        menuItemVideo.getAccessibleContext().setAccessibleDescription("Open video");
         menuItemVideo.addActionListener(openVideoListener);
         menu.add(menuItemVideo);
 

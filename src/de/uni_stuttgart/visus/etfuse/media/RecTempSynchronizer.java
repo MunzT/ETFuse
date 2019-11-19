@@ -129,7 +129,7 @@ public class RecTempSynchronizer {
 
                 if (correlation[i] <= correlationThreshold) {
                     firstNewFrameHost = (int) (hostCam.get(Videoio.CV_CAP_PROP_POS_FRAMES) - 1);
-                    System.out.println("<RecTempSynchronizer> StartingFrame: " + lowerFrameEstimate + " Host Frame: " + firstNewFrameHost);
+                    System.out.println("<RecTempSynchronizer> Starting frame: " + lowerFrameEstimate + " Host frame: " + firstNewFrameHost);
                     histHost = histHostCur;
                     foundCounter++;
                 }
@@ -235,7 +235,7 @@ public class RecTempSynchronizer {
                 if (correlation[i] <= correlationThreshold) {
 
                     firstNewFrameGuest = (int) (guestCam.get(Videoio.CV_CAP_PROP_POS_FRAMES));
-                    System.out.println("<RecTempSynchronizer> StartingFrame: " + biggestCorrelationFrame + " Gesuchtes Guest-Frame: " + firstNewFrameGuest);
+                    System.out.println("<RecTempSynchronizer> Starting frame: " + biggestCorrelationFrame + " Wanted guest frame: " + firstNewFrameGuest);
                     bufImgGuest = Utils.Mat2BufferedImage(imageGuestPlayingField);
 
                     foundCounter++;
@@ -371,7 +371,7 @@ public class RecTempSynchronizer {
 
                     found = true;
 
-                    System.out.println("<RecTempSynchronizer> Host setzt Stein.");
+                    System.out.println("<RecTempSynchronizer> Host places brick.");
 
                     break;
                 }
@@ -411,7 +411,7 @@ public class RecTempSynchronizer {
             }
 
             if (historyGuestr.size() != historyGuestl.size()) {
-                System.out.println("<RecTempSynchronizer> Ungleiche Anzahl der Samples. Breche ab.");
+                System.out.println("<RecTempSynchronizer> Unequal number of samples. Abort.");
                 return timeShift;
             }
 
@@ -445,7 +445,7 @@ public class RecTempSynchronizer {
 
                         roughGuess *= -1;
 
-                        System.out.println("<RecTempSynchronizer> Gast setzt Stein.");
+                        System.out.println("<RecTempSynchronizer> Guest places brick.");
 
                         break;
                     }
@@ -457,7 +457,7 @@ public class RecTempSynchronizer {
         }
 
         if (!found) {
-            System.out.println("<RecTempSynchronizer> Keiner der beiden Spieler scheint den Stein zu setzen. Nutze Sch�tzwert.");
+            System.out.println("<RecTempSynchronizer> Neither player seems to be placing the brick. Use estimated value.");
             return timeShift;
         }
 

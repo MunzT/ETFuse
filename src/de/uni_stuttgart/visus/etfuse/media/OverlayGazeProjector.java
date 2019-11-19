@@ -63,7 +63,7 @@ public class OverlayGazeProjector {
             event.fixationPointY = eventPoint.y;
         }
 
-        System.out.println("<OverlayGazeProjector> Rohdaten-Koordinaten transformiert");
+        System.out.println("<OverlayGazeProjector> Raw data coordinates transformed");
 
         return 0;
     }
@@ -85,7 +85,7 @@ public class OverlayGazeProjector {
             event.fixationPointY = eventPoint.y;
         }
 
-        System.out.println("<OverlayGazeProjector> Fixationen-Koordinaten transformiert");
+        System.out.println("<OverlayGazeProjector> fixation coordinates transformed");
 
         return 0;
     }

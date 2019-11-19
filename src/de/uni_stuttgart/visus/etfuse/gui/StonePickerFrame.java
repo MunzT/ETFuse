@@ -46,7 +46,7 @@ public class StonePickerFrame extends JDialog implements ChangeListener, MouseLi
 
     public StonePickerFrame(JDialog parentFrame, VideoCapture camera, EyeTrackerRecording rec, NotificationListener callbackTarget) {
 
-        super(parentFrame, "Mitte eines Steines auswählen", true);
+        super(parentFrame, "Select the center of a brick", true);
 
         this.addComponentListener(new ComponentAdapter() {
             @Override
@@ -65,7 +65,7 @@ public class StonePickerFrame extends JDialog implements ChangeListener, MouseLi
         this.panelContainer = new JPanel(new GridBagLayout());
 
         this.panel = new StonePickerSurfacePanel();
-        this.panel.setToolTipText("In die Mitte eines Steines klicken");
+        this.panel.setToolTipText("Click in the center  of a brick");
         this.panel.attachCamera(camera);
 
         OverlayGazeProjector projector = new OverlayGazeProjector(rec);

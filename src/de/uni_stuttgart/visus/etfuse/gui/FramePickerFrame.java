@@ -44,7 +44,7 @@ public class FramePickerFrame extends JDialog implements ChangeListener {
 
     public FramePickerFrame(JDialog parentFrame, VideoCapture camera, EyeTrackerRecording rec, NotificationListener callbackTarget) {
 
-        super(parentFrame, "Frame auswählen", true);
+        super(parentFrame, "Select frame", true);
 
         this.addComponentListener(new ComponentAdapter() {
             @Override
@@ -65,7 +65,7 @@ public class FramePickerFrame extends JDialog implements ChangeListener {
         this.panelContainer = new JPanel(new GridBagLayout());
 
         this.panel = new VideoSurfacePanel();
-        this.panel.setToolTipText("Aktuelles Frame. Wird über \"Dieses Frame wählen\" ausgewählt.");
+        this.panel.setToolTipText("Current frame. Can be selected via \\\"Select this frame\\\".");
         this.panel.attachCamera(camera);
 
         OverlayGazeProjector projector = new OverlayGazeProjector(rec);
@@ -80,8 +80,8 @@ public class FramePickerFrame extends JDialog implements ChangeListener {
         SpringLayout layout = new SpringLayout();
         this.playbackPanel.setLayout(layout);
 
-        this.acceptButton = new JButton("Dieses Frame wählen");
-        this.acceptButton.setToolTipText("Aktuell angezeigtes Frame auswählen");
+        this.acceptButton = new JButton("Select this frame");
+        this.acceptButton.setToolTipText("Select currently visible frame");
         this.acceptButton.addActionListener(new ActionListener() {
 
             @Override
@@ -104,7 +104,7 @@ public class FramePickerFrame extends JDialog implements ChangeListener {
         layout.putConstraint(SpringLayout.EAST, this.acceptButton, -5, SpringLayout.EAST, this.playbackPanel);
 
         this.progressSlider = new RecordingSlider(JSlider.HORIZONTAL, 0, (int) camera.get(Videoio.CAP_PROP_FRAME_COUNT), 0);
-        this.progressSlider.setToolTipText("Nutzen, um ein Frame auszuwählen, das einen Zug während des Spiels zeigt");
+        this.progressSlider.setToolTipText("Use to select a frame that shows a move during the game");
         this.progressSlider.addChangeListener(this);
         this.progressSlider.setPaintTicks(false);
         this.progressSlider.setPaintLabels(false);

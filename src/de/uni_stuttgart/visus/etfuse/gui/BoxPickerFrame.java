@@ -46,7 +46,7 @@ public class BoxPickerFrame extends JDialog implements ChangeListener, MouseList
 
     public BoxPickerFrame(JDialog parentFrame, VideoCapture camera, EyeTrackerRecording rec, NotificationListener callbackTarget) {
 
-        super(parentFrame, "Bereich auswählen", true);
+        super(parentFrame, "Select area", true);
 
         this.addComponentListener(new ComponentAdapter() {
             @Override
@@ -65,7 +65,7 @@ public class BoxPickerFrame extends JDialog implements ChangeListener, MouseList
         this.panelContainer = new JPanel(new GridBagLayout());
 
         this.panel = new BoxPickerSurfacePanel();
-        this.panel.setToolTipText("Klicken, um obere linke und untere rechte Ecke des Spielfeldes festzulegen");
+        this.panel.setToolTipText("Click to define upper left and lower right corner of the board");
         this.panel.attachCamera(camera);
         this.panel.setPaintGazePlot(true);
 

@@ -14,7 +14,10 @@ public class ETFuseMain {
             System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
             System.loadLibrary("opencv_ffmpeg346_64");
         } catch (UnsatisfiedLinkError e) {
-            JOptionPane.showMessageDialog(null, "Konnte nötige Programmbibliotheken (opencv_java346.dll, opencv_ffmpeg346_64.dll) nicht im aktuellen Arbeitsverzeichnis (" + System.getProperty("user.dir") + ") finden. Programm wird geschlossen.");
+            JOptionPane.showMessageDialog(null,
+                    "Could not find required program libraries (opencv_java346.dll, " +
+                    "opencv_ffmpeg346_64.dll) in current working directory (\" + " +
+                    "System.getProperty(\"user.dir\") + \"). Close program.");
             return;
         }
 

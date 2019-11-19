@@ -42,7 +42,7 @@ public class ProjectIO implements PropertyChangeListener {
 
         final JFileChooser fc = new JFileChooser();
 
-        fc.addChoosableFileFilter(new FileNameExtensionFilter("Eye-Tracker-Projekt", "etproj"));
+        fc.addChoosableFileFilter(new FileNameExtensionFilter("Eye Tracker Project", "etproj"));
         fc.setAcceptAllFileFilterUsed(false);
 
         //In response to a button click:
@@ -54,7 +54,8 @@ public class ProjectIO implements PropertyChangeListener {
             Project.loadProjectFromFile(chosenFile);
 
             if (Project.curProj == null) {
-                JOptionPane.showMessageDialog(mainFrame, "Laden fehlgeschlagen. Datei inkompatibel mit dieser Programmversion.");
+                JOptionPane.showMessageDialog(mainFrame,
+                        "Loading project failed. File incompatible with this software version.");
                 mainFrame.setButtonEnabled(true);
                 return;
             }
@@ -77,7 +78,7 @@ public class ProjectIO implements PropertyChangeListener {
             if (mainFrame == null)
                 return false;
 
-            JOptionPane.showMessageDialog(mainFrame, "Daten zu Gast-Recordings sind besch�digt. Breche ab...");
+            JOptionPane.showMessageDialog(mainFrame, "Guest recordings data is corrupted. Abort...");
             return false;
         }
 
@@ -87,11 +88,11 @@ public class ProjectIO implements PropertyChangeListener {
             if (mainFrame == null)
                 return false;
 
-            JOptionPane.showMessageDialog(mainFrame, "Konnte Host-Video \"" + proj.hostVidPath + "\" nicht finden!");
+            JOptionPane.showMessageDialog(mainFrame, "Could not find host video \"" + proj.hostVidPath + "\"!");
 
             final JFileChooser fc = new JFileChooser();
 
-            fc.addChoosableFileFilter(new FileNameExtensionFilter("Video-Datei", "mp4", "avi", "mkv", "flv", "mpeg"));
+            fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi", "mkv", "flv", "mpeg"));
             fc.setAcceptAllFileFilterUsed(false);
 
             int returnVal = fc.showOpenDialog(mainFrame);
@@ -111,11 +112,12 @@ public class ProjectIO implements PropertyChangeListener {
             if (mainFrame == null)
                 return false;
 
-            JOptionPane.showMessageDialog(mainFrame, "Konnte Host-Eye-Tracking-Datensatz \"" + proj.hostDatasetPath + "\" nicht finden!");
+            JOptionPane.showMessageDialog(mainFrame,
+                    "Could not find host eye tracking data set \"" + proj.hostDatasetPath + "\"!");
 
             final JFileChooser fc = new JFileChooser();
 
-            fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV-Datei", "tsv"));
+            fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV file", "tsv"));
             fc.setAcceptAllFileFilterUsed(false);
 
             int returnVal = fc.showOpenDialog(mainFrame);
@@ -139,11 +141,12 @@ public class ProjectIO implements PropertyChangeListener {
                 if (mainFrame == null)
                     return false;
 
-                JOptionPane.showMessageDialog(mainFrame, "Konnte Gast-Video \"" + guestVidPath + "\" nicht finden!");
+                JOptionPane.showMessageDialog(mainFrame, "Could not find guest video \"" + guestVidPath + "\"!");
 
                 final JFileChooser fc = new JFileChooser();
 
-                fc.addChoosableFileFilter(new FileNameExtensionFilter("Video-Datei", "mp4", "avi", "mkv", "flv", "mpeg"));
+                fc.addChoosableFileFilter(
+                        new FileNameExtensionFilter("Video file", "mp4", "avi", "mkv", "flv", "mpeg"));
                 fc.setAcceptAllFileFilterUsed(false);
 
                 int returnVal = fc.showOpenDialog(mainFrame);
@@ -168,11 +171,12 @@ public class ProjectIO implements PropertyChangeListener {
                 if (mainFrame == null)
                     return false;
 
-                JOptionPane.showMessageDialog(mainFrame, "Konnte Gast-Eye-Tracking-Datensatz \"" + guestDatasetPath + "\" nicht finden!");
+                JOptionPane.showMessageDialog(mainFrame,
+                        "Could not find guest eye tracking data set \"" + guestDatasetPath + "\"!");
 
                 final JFileChooser fc = new JFileChooser();
 
-                fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV-Datei", "tsv"));
+                fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV file", "tsv"));
                 fc.setAcceptAllFileFilterUsed(false);
 
                 int returnVal = fc.showOpenDialog(mainFrame);
@@ -303,7 +307,7 @@ public class ProjectIO implements PropertyChangeListener {
 
         final JFileChooser fc = new JFileChooser();
 
-        fc.addChoosableFileFilter(new FileNameExtensionFilter("Eye-Tracker-Projekt (.etproj)", "etproj"));
+        fc.addChoosableFileFilter(new FileNameExtensionFilter("Eye tracker project (.etproj)", "etproj"));
         fc.setAcceptAllFileFilterUsed(false);
 
         int returnVal = fc.showSaveDialog(fc);

@@ -36,7 +36,7 @@ public class ColorInfoFrame extends JDialog {
     private JTable table;
     public ColorInfoFrame(VideoFrame parentFrame, ArrayList<String> entity, ArrayList<Color> color) {
 
-        super(parentFrame, "Farb-Legende", true);
+        super(parentFrame, "Color legend", true);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
         getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
@@ -53,7 +53,7 @@ public class ColorInfoFrame extends JDialog {
 
         table = new JTable();
         table.setFillsViewportHeight(true);
-        table.setToolTipText("Links: Entit\u00E4t / Voraussetzung, Rechts: Zugeh\u00F6rige Farbe");
+        table.setToolTipText("Left: Entity / Prerequisite, Right: Corresponding color");
         table.setEnabled(false);
         table.setShowVerticalLines(false);
         table.setRowSelectionAllowed(false);

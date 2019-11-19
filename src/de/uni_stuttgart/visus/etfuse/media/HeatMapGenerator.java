@@ -65,7 +65,7 @@ public class HeatMapGenerator extends SwingWorker {
             HeatMapGenerator.allActiveGenerators.remove(this);
 
             if (vidFrame != null)
-                vidFrame.setTitleWithProgress("Generiere HeatMap (id " + this.hashCode() + ")", -1);
+                vidFrame.setTitleWithProgress("Generate heatmap (id " + this.hashCode() + ")", -1);
         }
 
         return heatMap;
@@ -77,7 +77,7 @@ public class HeatMapGenerator extends SwingWorker {
         this.proj.setIsHeatMapBeingGenerated(false);
 
         if (vidFrame != null)
-            vidFrame.setTitleWithProgress("Generiere HeatMap (id " + this.hashCode() + ")", -1);
+            vidFrame.setTitleWithProgress("Generate heatmap (id " + this.hashCode() + ")", -1);
     }
 
     public void attachVideoFrameForTitleUpdate(VideoFrame vidFrame) {
@@ -179,7 +179,7 @@ public class HeatMapGenerator extends SwingWorker {
         final Boolean skipRepeateds = false;
         final Boolean skipBorderEvents = false;
 
-        System.out.println("<HeatMapGenerator> Generiere HeatMap");
+        System.out.println("<HeatMapGenerator> Generate heatmap");
 
         Rectangle2D screenRes = hostProj.getRecording().getScreenResolution();
 
@@ -245,7 +245,7 @@ public class HeatMapGenerator extends SwingWorker {
             if (count % 100 == 0) {
                 progress = (int) (((double) count / (double) numEvents) * 100);
                 if (vidFrame != null)
-                    vidFrame.setTitleWithProgress("Generiere HeatMap (id " + this.hashCode() + ")", progress);
+                    vidFrame.setTitleWithProgress("Generate heatmap (id " + this.hashCode() + ")", progress);
             }
 
             if (skipPercentage && eventsToSkip > 1)
@@ -291,7 +291,7 @@ public class HeatMapGenerator extends SwingWorker {
                             if (!prefs.getHeatMapGenGenFromFrequencyInstead())
                                 add *= e.fixationDuration;
                             num += add;
-                            //num += /*((int) fgCell[0]) **/ alphaCell[0] * e.fixationDuration; // "* e.fixationDuration" auskommentieren, um nach h‰ufigkeit und nicht nach dauer zu generieren
+                            //num += /*((int) fgCell[0]) **/ alphaCell[0] * e.fixationDuration; // "* e.fixationDuration" auskommentieren, um nach h√§ufigkeit und nicht nach dauer zu generieren
                             bgCell[0] = num;
                         //}
 
@@ -302,7 +302,7 @@ public class HeatMapGenerator extends SwingWorker {
         }
 
         if (vidFrame != null)
-            vidFrame.setTitleWithProgress("Generiere HeatMap (id " + this.hashCode() + ")", 99);
+            vidFrame.setTitleWithProgress("Generate heatmap (id " + this.hashCode() + ")", 99);
 
         return heatMap;
     }
