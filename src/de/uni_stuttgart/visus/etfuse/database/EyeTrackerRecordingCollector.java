@@ -6,24 +6,24 @@ import de.uni_stuttgart.visus.etfuse.eyetracker.EyeTrackerRecording;
 
 public class EyeTrackerRecordingCollector {
 
-	static private EyeTrackerRecordingCollector sharedInstance;
-	private ArrayList<EyeTrackerRecording> collection;
+    static private EyeTrackerRecordingCollector sharedInstance;
+    private ArrayList<EyeTrackerRecording> collection;
 
-	static public EyeTrackerRecordingCollector sharedInstance() {
+    static public EyeTrackerRecordingCollector sharedInstance() {
 
-		if (sharedInstance == null)
-			sharedInstance = new EyeTrackerRecordingCollector();
+        if (sharedInstance == null)
+            sharedInstance = new EyeTrackerRecordingCollector();
 
-		return sharedInstance;
-	}
+        return sharedInstance;
+    }
 
-	public EyeTrackerRecordingCollector() {
+    public EyeTrackerRecordingCollector() {
 
-		collection = new ArrayList<EyeTrackerRecording>();
-	}
+        collection = new ArrayList<EyeTrackerRecording>();
+    }
 
-	public void addRecording(EyeTrackerRecording recording) {
+    public void addRecording(EyeTrackerRecording recording) {
 
-		collection.add(recording);
-	}
+        collection.add(recording);
+    }
 }

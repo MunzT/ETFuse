@@ -13,88 +13,88 @@ import de.uni_stuttgart.visus.etfuse.projectio.Project;
 
 public class ParserController implements PropertyChangeListener {
 
-	private int progress = 0;
-	private PropertyChangeSupport changeSupp = null;
+    private int progress = 0;
+    private PropertyChangeSupport changeSupp = null;
 
-	public ParserController() {
+    public ParserController() {
 
-		super();
+        super();
 
-		this.changeSupp = new PropertyChangeSupport(this);
-	}
+        this.changeSupp = new PropertyChangeSupport(this);
+    }
 
-	public void addProgressEventListener(PropertyChangeListener listener) {
+    public void addProgressEventListener(PropertyChangeListener listener) {
 
-		this.changeSupp.addPropertyChangeListener(listener);
-	}
+        this.changeSupp.addPropertyChangeListener(listener);
+    }
 
-	static public List<Class<? extends TSVParser>> allParsers() {
+    static public List<Class<? extends TSVParser>> allParsers() {
 
-		ArrayList<Class<? extends TSVParser>> list = new ArrayList<Class<? extends TSVParser>>();
-		list.add(TSVParserSpectrum1200.class);
-		list.add(TSVParserT60XL.class);		
+        ArrayList<Class<? extends TSVParser>> list = new ArrayList<Class<? extends TSVParser>>();
+        list.add(TSVParserSpectrum1200.class);
+        list.add(TSVParserT60XL.class);        
 
-		return list;
-	}
+        return list;
+    }
 
-	public int getProgress() {
+    public int getProgress() {
 
-		return this.progress;
-	}
+        return this.progress;
+    }
 
-	public EyeTrackerRecording parseDataUsingBestParser(List<String> rawData) {
+    public EyeTrackerRecording parseDataUsingBestParser(List<String> rawData) {
 
-		//...
+        //...
 
-		TSVParser parserToUse = null;
-		double parserConfidence = 0.0;
+        TSVParser parserToUse = null;
+        double parserConfidence = 0.0;
 
-		for (Class parserClass : ParserController.allParsers()) {
+        for (Class parserClass : ParserController.allParsers()) {
 
-			TSVParser p = null;
+            TSVParser p = null;
 
-			try {
+            try {
 
-				p = (TSVParser) parserClass.getConstructor(null).newInstance(null);
+                p = (TSVParser) parserClass.getConstructor(null).newInstance(null);
 
-			} catch (Exception e) {
+            } catch (Exception e) {
 
-				e.printStackTrace();
-			}
+                e.printStackTrace();
+            }
 
-			if (p != null) {
+            if (p != null) {
 
-				double confidence = p.canParseDataConfidence(rawData);
+                double confidence = p.canParseDataConfidence(rawData);
 
-				if (confidence > parserConfidence) {
+                if (confidence > parserConfidence) {
 
-					parserConfidence = confidence;
-					parserToUse = p;
-				}
-			}
-		}
+                    parserConfidence = confidence;
+                    parserToUse = p;
+                }
+            }
+        }
 
-		if (parserToUse != null) {
+        if (parserToUse != null) {
 
-			System.out.println("<ParserController> parse als " + parserToUse.parserDescription() + " (confidence: " + parserConfidence + ")");
+            System.out.println("<ParserController> parse als " + parserToUse.parserDescription() + " (confidence: " + parserConfidence + ")");
 
-			parserToUse.addProgressEventListener(this);
-			
-			Preferences prefs = Project.currentProject().getPreferences();
-			int velocityThreshold = prefs.getFilterVelocityThreshold();
-			int distanceThreshold = prefs.getFilterDistanceThreshold();
-			
-			return IVTFilter.filterRecording(parserToUse.parseData(rawData), velocityThreshold, distanceThreshold);
-		}
+            parserToUse.addProgressEventListener(this);
+            
+            Preferences prefs = Project.currentProject().getPreferences();
+            int velocityThreshold = prefs.getFilterVelocityThreshold();
+            int distanceThreshold = prefs.getFilterDistanceThreshold();
+            
+            return IVTFilter.filterRecording(parserToUse.parseData(rawData), velocityThreshold, distanceThreshold);
+        }
 
-		System.out.println("<ParserController> es wurde kein kompatibles ParserModul gefunden.");		
-		return null;
-	}
+        System.out.println("<ParserController> es wurde kein kompatibles ParserModul gefunden.");        
+        return null;
+    }
 
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
 
-		this.progress = ((TSVParser) evt.getSource()).getProgress();
-		this.changeSupp.firePropertyChange("progress", 1, 2);
-	}
+        this.progress = ((TSVParser) evt.getSource()).getProgress();
+        this.changeSupp.firePropertyChange("progress", 1, 2);
+    }
 }

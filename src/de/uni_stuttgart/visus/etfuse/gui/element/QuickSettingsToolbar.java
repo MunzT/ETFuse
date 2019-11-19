@@ -23,193 +23,193 @@ import de.uni_stuttgart.visus.etfuse.projectio.Project;
 
 public class QuickSettingsToolbar extends JPanel {
 
-	private VideoFrame parentFrame;
-	private JComboBox comboBoxOverlayHeatMapSource;
-	private JComboBox comboBoxMinDistPlotSource1;
-	private JComboBox comboBoxMinDistPlotSource2;
+    private VideoFrame parentFrame;
+    private JComboBox comboBoxOverlayHeatMapSource;
+    private JComboBox comboBoxMinDistPlotSource1;
+    private JComboBox comboBoxMinDistPlotSource2;
 
-	public QuickSettingsToolbar(VideoFrame parentFrame) {
+    public QuickSettingsToolbar(VideoFrame parentFrame) {
 
-		this.parentFrame = parentFrame;
+        this.parentFrame = parentFrame;
 
-		setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.UNRELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				ColumnSpec.decode("default:grow"),},
-				new RowSpec[] {
-						RowSpec.decode("default:grow"),}));
+        setLayout(new FormLayout(new ColumnSpec[] {
+                FormSpecs.UNRELATED_GAP_COLSPEC,
+                FormSpecs.DEFAULT_COLSPEC,
+                FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                ColumnSpec.decode("default:grow"),
+                FormSpecs.RELATED_GAP_COLSPEC,
+                FormSpecs.DEFAULT_COLSPEC,
+                FormSpecs.RELATED_GAP_COLSPEC,
+                FormSpecs.DEFAULT_COLSPEC,
+                FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                ColumnSpec.decode("default:grow"),
+                FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                FormSpecs.DEFAULT_COLSPEC,
+                FormSpecs.RELATED_GAP_COLSPEC,
+                ColumnSpec.decode("default:grow"),
+                FormSpecs.RELATED_GAP_COLSPEC,
+                FormSpecs.DEFAULT_COLSPEC,
+                FormSpecs.RELATED_GAP_COLSPEC,
+                FormSpecs.DEFAULT_COLSPEC,
+                FormSpecs.RELATED_GAP_COLSPEC,
+                FormSpecs.DEFAULT_COLSPEC,
+                ColumnSpec.decode("default:grow"),},
+                new RowSpec[] {
+                        RowSpec.decode("default:grow"),}));
 
-		ActionListener minDist1SettingChangedListener = new ActionListener () {
-			public void actionPerformed(ActionEvent e) {
+        ActionListener minDist1SettingChangedListener = new ActionListener () {
+            public void actionPerformed(ActionEvent e) {
 
-				Preferences prefs = Project.currentProject().getPreferences();
+                Preferences prefs = Project.currentProject().getPreferences();
 
-				if (comboBoxMinDistPlotSource1.getSelectedIndex() >= 0)
-					prefs.setMinDistPlotPlayer1(comboBoxMinDistPlotSource1.getSelectedIndex());
+                if (comboBoxMinDistPlotSource1.getSelectedIndex() >= 0)
+                    prefs.setMinDistPlotPlayer1(comboBoxMinDistPlotSource1.getSelectedIndex());
 
-				parentFrame.drawSliderMinDistance();
-			}
-		};
+                parentFrame.drawSliderMinDistance();
+            }
+        };
 
-		ActionListener minDist2SettingChangedListener = new ActionListener () {
-			public void actionPerformed(ActionEvent e) {
+        ActionListener minDist2SettingChangedListener = new ActionListener () {
+            public void actionPerformed(ActionEvent e) {
 
-				Preferences prefs = Project.currentProject().getPreferences();
+                Preferences prefs = Project.currentProject().getPreferences();
 
-				if (comboBoxMinDistPlotSource2.getSelectedIndex() >= 0)
-					prefs.setMinDistPlotPlayer2(comboBoxMinDistPlotSource2.getSelectedIndex());
+                if (comboBoxMinDistPlotSource2.getSelectedIndex() >= 0)
+                    prefs.setMinDistPlotPlayer2(comboBoxMinDistPlotSource2.getSelectedIndex());
 
-				parentFrame.drawSliderMinDistance();
-			}
-		};
+                parentFrame.drawSliderMinDistance();
+            }
+        };
 
-		ActionListener attentionMapSettingChangedListener = new ActionListener () {
-			public void actionPerformed(ActionEvent e) {
+        ActionListener attentionMapSettingChangedListener = new ActionListener () {
+            public void actionPerformed(ActionEvent e) {
 
-				Preferences prefs = Project.currentProject().getPreferences();
+                Preferences prefs = Project.currentProject().getPreferences();
 
-				if (comboBoxOverlayHeatMapSource.getSelectedIndex() >= 0)
-					prefs.setHeatMapOverlayPlayer(comboBoxOverlayHeatMapSource.getSelectedIndex());
+                if (comboBoxOverlayHeatMapSource.getSelectedIndex() >= 0)
+                    prefs.setHeatMapOverlayPlayer(comboBoxOverlayHeatMapSource.getSelectedIndex());
 
-				parentFrame.getPanel().repaint();
-			}
-		};
+                parentFrame.getPanel().repaint();
+            }
+        };
 
-		JLabel lblAttentionmapoverlayQuelle = new JLabel("Attention-Map-Overlay Quelle:");
-		add(lblAttentionmapoverlayQuelle, "2, 1, right, default");
+        JLabel lblAttentionmapoverlayQuelle = new JLabel("Attention-Map-Overlay Quelle:");
+        add(lblAttentionmapoverlayQuelle, "2, 1, right, default");
 
-		comboBoxOverlayHeatMapSource = new JComboBox();
-		comboBoxOverlayHeatMapSource.setToolTipText("Quelle f\u00FCr das Attention-Map-Overlay ausw\u00E4hlen");
-		add(comboBoxOverlayHeatMapSource, "4, 1, fill, default");
+        comboBoxOverlayHeatMapSource = new JComboBox();
+        comboBoxOverlayHeatMapSource.setToolTipText("Quelle f\u00FCr das Attention-Map-Overlay ausw\u00E4hlen");
+        add(comboBoxOverlayHeatMapSource, "4, 1, fill, default");
 
-		JLabel lblMindistplotQuellen = new JLabel("MinDist-Plot Quellen:");
-		add(lblMindistplotQuellen, "6, 1");
+        JLabel lblMindistplotQuellen = new JLabel("MinDist-Plot Quellen:");
+        add(lblMindistplotQuellen, "6, 1");
 
-		JLabel label = new JLabel("1:");
-		add(label, "8, 1, right, default");
+        JLabel label = new JLabel("1:");
+        add(label, "8, 1, right, default");
 
-		comboBoxMinDistPlotSource1 = new JComboBox();
-		comboBoxMinDistPlotSource1.setToolTipText("Erste Quelle f\u00FCr den MinDist-Plot ausw\u00E4hlen");
-		add(comboBoxMinDistPlotSource1, "10, 1, fill, default");
+        comboBoxMinDistPlotSource1 = new JComboBox();
+        comboBoxMinDistPlotSource1.setToolTipText("Erste Quelle f\u00FCr den MinDist-Plot ausw\u00E4hlen");
+        add(comboBoxMinDistPlotSource1, "10, 1, fill, default");
 
-		JLabel label_1 = new JLabel("2:");
-		add(label_1, "12, 1, right, default");
+        JLabel label_1 = new JLabel("2:");
+        add(label_1, "12, 1, right, default");
 
-		comboBoxMinDistPlotSource2 = new JComboBox();
-		comboBoxMinDistPlotSource2.setToolTipText("Zweite Quelle f\u00FCr den MinDist-Plot ausw\u00E4hlen");
-		add(comboBoxMinDistPlotSource2, "14, 1, fill, default");
+        comboBoxMinDistPlotSource2 = new JComboBox();
+        comboBoxMinDistPlotSource2.setToolTipText("Zweite Quelle f\u00FCr den MinDist-Plot ausw\u00E4hlen");
+        add(comboBoxMinDistPlotSource2, "14, 1, fill, default");
 
-		JLabel lblFarben = new JLabel("Farben:");
-		add(lblFarben, "16, 1");
+        JLabel lblFarben = new JLabel("Farben:");
+        add(lblFarben, "16, 1");
 
-		JButton btnInfosZuSpielerfarben = new JButton("Infos zu Spielerfarben");
-		btnInfosZuSpielerfarben.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+        JButton btnInfosZuSpielerfarben = new JButton("Infos zu Spielerfarben");
+        btnInfosZuSpielerfarben.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 
-				ArrayList<String> playerList = new ArrayList<String>();
-				ArrayList<Color> colorList = new ArrayList<Color>();
-				for (int i = 0; i < parentFrame.getPanel().getProjectors().size(); i++) {
-					playerList.add("Spieler " + (i + 1));
-					colorList.add(parentFrame.getPanel().getProjector(i).getRecording().preferredGazeColor);
-				}
+                ArrayList<String> playerList = new ArrayList<String>();
+                ArrayList<Color> colorList = new ArrayList<Color>();
+                for (int i = 0; i < parentFrame.getPanel().getProjectors().size(); i++) {
+                    playerList.add("Spieler " + (i + 1));
+                    colorList.add(parentFrame.getPanel().getProjector(i).getRecording().preferredGazeColor);
+                }
 
-				ColorInfoFrame colInfo = new ColorInfoFrame(parentFrame, playerList, colorList);
-				colInfo.setVisible(true);
-			}
-		});
-		add(btnInfosZuSpielerfarben, "18, 1");
+                ColorInfoFrame colInfo = new ColorInfoFrame(parentFrame, playerList, colorList);
+                colInfo.setVisible(true);
+            }
+        });
+        add(btnInfosZuSpielerfarben, "18, 1");
 
-		JButton btnInfosZuMindistfarben = new JButton("Infos zu MinDist-Farben");
-		btnInfosZuMindistfarben.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+        JButton btnInfosZuMindistfarben = new JButton("Infos zu MinDist-Farben");
+        btnInfosZuMindistfarben.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
 
-				Preferences prefs = Project.currentProject().getPreferences();
-				int minDist = prefs.getMinDistPlotMinDist();
+                Preferences prefs = Project.currentProject().getPreferences();
+                int minDist = prefs.getMinDistPlotMinDist();
 
-				ArrayList<String> entityList = new ArrayList<String>();
-				ArrayList<Color> colorList = new ArrayList<Color>();
-				for (int i = 0; i < 4; i++) {
+                ArrayList<String> entityList = new ArrayList<String>();
+                ArrayList<Color> colorList = new ArrayList<Color>();
+                for (int i = 0; i < 4; i++) {
 
-					switch (i) {
-					
-						case 0:
-							entityList.add("Abstand zwischen Gaze-Punkten (Rohdaten) der Spieler <= " + minDist + "px");
-							colorList.add(Color.CYAN);
-							break;
+                    switch (i) {
+                    
+                        case 0:
+                            entityList.add("Abstand zwischen Gaze-Punkten (Rohdaten) der Spieler <= " + minDist + "px");
+                            colorList.add(Color.CYAN);
+                            break;
 
-						case 1:
-							entityList.add("Abstand zwischen Gaze-Punkten (Rohdaten) der Spieler > " + minDist + "px");
-							colorList.add(Color.RED);
-							break;
+                        case 1:
+                            entityList.add("Abstand zwischen Gaze-Punkten (Rohdaten) der Spieler > " + minDist + "px");
+                            colorList.add(Color.RED);
+                            break;
 
-						case 2:
-							entityList.add("Gaze-Punkt (Rohdaten) mindestens eines Spielers ist außerhalb des Spielfeldes");
-							colorList.add(Color.YELLOW);
-							break;
+                        case 2:
+                            entityList.add("Gaze-Punkt (Rohdaten) mindestens eines Spielers ist außerhalb des Spielfeldes");
+                            colorList.add(Color.YELLOW);
+                            break;
 
-						case 3:
-							entityList.add("Gaze-Daten fehlen für mindestens einen Spieler");
-							colorList.add(Color.DARK_GRAY);
-							break;
-							
-						default:
-							break;
-					}
-				}
+                        case 3:
+                            entityList.add("Gaze-Daten fehlen für mindestens einen Spieler");
+                            colorList.add(Color.DARK_GRAY);
+                            break;
+                            
+                        default:
+                            break;
+                    }
+                }
 
-				ColorInfoFrame colInfo = new ColorInfoFrame(parentFrame, entityList, colorList);
-				colInfo.setVisible(true);
-			}
-		});
-		add(btnInfosZuMindistfarben, "20, 1");
+                ColorInfoFrame colInfo = new ColorInfoFrame(parentFrame, entityList, colorList);
+                colInfo.setVisible(true);
+            }
+        });
+        add(btnInfosZuMindistfarben, "20, 1");
 
-		updateSelectableIndicesFromDatasets();
-		updateSelectedIndicesFromPreferences();
+        updateSelectableIndicesFromDatasets();
+        updateSelectedIndicesFromPreferences();
 
-		comboBoxOverlayHeatMapSource.addActionListener(attentionMapSettingChangedListener);
-		comboBoxMinDistPlotSource1.addActionListener(minDist1SettingChangedListener);
-		comboBoxMinDistPlotSource2.addActionListener(minDist2SettingChangedListener);
-	}
+        comboBoxOverlayHeatMapSource.addActionListener(attentionMapSettingChangedListener);
+        comboBoxMinDistPlotSource1.addActionListener(minDist1SettingChangedListener);
+        comboBoxMinDistPlotSource2.addActionListener(minDist2SettingChangedListener);
+    }
 
-	public void updateSelectedIndicesFromPreferences() {
+    public void updateSelectedIndicesFromPreferences() {
 
-		Preferences prefs = Project.currentProject().getPreferences();
+        Preferences prefs = Project.currentProject().getPreferences();
 
-		comboBoxOverlayHeatMapSource.setSelectedIndex(Math.min(comboBoxOverlayHeatMapSource.getItemCount() - 1, prefs.getHeatMapOverlayPlayer()));
-		comboBoxMinDistPlotSource1.setSelectedIndex(Math.min(comboBoxMinDistPlotSource1.getItemCount() - 1, prefs.getMinDistPlotPlayer1()));
-		comboBoxMinDistPlotSource2.setSelectedIndex(Math.min(comboBoxMinDistPlotSource2.getItemCount() - 1, prefs.getMinDistPlotPlayer2()));
-	}
+        comboBoxOverlayHeatMapSource.setSelectedIndex(Math.min(comboBoxOverlayHeatMapSource.getItemCount() - 1, prefs.getHeatMapOverlayPlayer()));
+        comboBoxMinDistPlotSource1.setSelectedIndex(Math.min(comboBoxMinDistPlotSource1.getItemCount() - 1, prefs.getMinDistPlotPlayer1()));
+        comboBoxMinDistPlotSource2.setSelectedIndex(Math.min(comboBoxMinDistPlotSource2.getItemCount() - 1, prefs.getMinDistPlotPlayer2()));
+    }
 
-	public void updateSelectableIndicesFromDatasets() {
+    public void updateSelectableIndicesFromDatasets() {
 
-		ArrayList<String> playerList = new ArrayList<String>();
-		for (int i = 1; i <= parentFrame.getPanel().getProjectors().size(); i++) {
-			playerList.add("Spieler " + i);
-		}
+        ArrayList<String> playerList = new ArrayList<String>();
+        for (int i = 1; i <= parentFrame.getPanel().getProjectors().size(); i++) {
+            playerList.add("Spieler " + i);
+        }
 
-		if (playerList.size() < 1)
-			playerList.add("Keine Daten geladen");
+        if (playerList.size() < 1)
+            playerList.add("Keine Daten geladen");
 
-		comboBoxOverlayHeatMapSource.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
-		comboBoxMinDistPlotSource1.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
-		comboBoxMinDistPlotSource2.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
-	}
+        comboBoxOverlayHeatMapSource.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
+        comboBoxMinDistPlotSource1.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
+        comboBoxMinDistPlotSource2.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
+    }
 }

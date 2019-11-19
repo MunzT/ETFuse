@@ -8,32 +8,32 @@ import de.uni_stuttgart.visus.etfuse.eyetracker.EyeTrackerRecording;
 
 public abstract class TSVParser {
 
-	private int progress = 0;
-	private PropertyChangeSupport changeSupp = null;
+    private int progress = 0;
+    private PropertyChangeSupport changeSupp = null;
 
-	public TSVParser() {
+    public TSVParser() {
 
-		super();
+        super();
 
-		this.changeSupp = new PropertyChangeSupport(this);
-	}
+        this.changeSupp = new PropertyChangeSupport(this);
+    }
 
-	public int getProgress() {
-		return this.progress;
-	}
+    public int getProgress() {
+        return this.progress;
+    }
 
-	protected void setProgress(int progress) {
+    protected void setProgress(int progress) {
 
-		this.progress = progress;
-		this.changeSupp.firePropertyChange("progress", 1, 2);
-	}
+        this.progress = progress;
+        this.changeSupp.firePropertyChange("progress", 1, 2);
+    }
 
-	public void addProgressEventListener(PropertyChangeListener listener) {
+    public void addProgressEventListener(PropertyChangeListener listener) {
 
-		this.changeSupp.addPropertyChangeListener(listener);
-	}
+        this.changeSupp.addPropertyChangeListener(listener);
+    }
 
-	abstract public String parserDescription();
-	abstract public EyeTrackerRecording parseData(List<String> rawData);
-	abstract public double canParseDataConfidence(List<String> rawData);
+    abstract public String parserDescription();
+    abstract public EyeTrackerRecording parseData(List<String> rawData);
+    abstract public double canParseDataConfidence(List<String> rawData);
 }
