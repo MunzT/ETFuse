@@ -1,5 +1,6 @@
 package de.uni_stuttgart.visus.etfuse.media;
 
+import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
@@ -46,6 +47,8 @@ public class HeatMapGenerator extends SwingWorker {
     @Override
     protected Object doInBackground() throws Exception {
 
+        Preferences prefs = Project.currentProject().getPreferences();
+
         Mat heatMap = proj.getNormalizedHeatMap();
 
         if (!proj.isHeatMapBeingGenerated()) {
@@ -56,11 +59,33 @@ public class HeatMapGenerator extends SwingWorker {
                 return heatMap;
             proj.setRawHeatMap(step1);
             Mat step2 = normalizeHeatMap(step1, 0, 255);
-            Mat step3 = colorMapHeatMap(step2, Imgproc.COLORMAP_HOT);
-            proj.setNormalizedHeatMap(step3);
-            step3 = colorMapHeatMap(step2, Imgproc.COLORMAP_JET);
-            Mat step4 = makeHeatMapTransparentABGR(step3);
-            proj.setTransparentHeatMap(step4);
+
+            Mat finalStep;
+
+            // TODO heatmap
+            if (true) {
+                // set everything equally transparent
+                Mat step3 = colorMapHeatMap(step2, prefs.getColorMap());
+
+                finalStep = makeHeatMapTransparentABGR(step3);
+            }
+            else if (false) {
+                // remove black; for Imgproc.COLORMAP_HOT
+                Mat step3 = colorMapHeatMap(step2, prefs.getColorMap());
+
+                finalStep = makeHeatMapTransparentABGR_removeBlack(step3);
+            }
+            else if (false) {
+                // TODO original version version
+                Mat step3 = colorMapHeatMap(step2, Imgproc.COLORMAP_HOT);
+                proj.setNormalizedHeatMap(step3);
+
+                step3 = colorMapHeatMap(step2, prefs.getColorMap());
+
+                finalStep = makeHeatMapTransparentABGR_removeBlue(step3);
+            }
+
+            proj.setTransparentHeatMap(finalStep);
             proj.setIsHeatMapBeingGenerated(false);
             HeatMapGenerator.allActiveGenerators.remove(this);
 
@@ -87,6 +112,8 @@ public class HeatMapGenerator extends SwingWorker {
 
     public static Mat[] processHeatMapsForComparison(Mat heatMap1, Mat heatMap2) {
 
+        Preferences prefs = Project.currentProject().getPreferences();
+
         Mat norm1 = heatMap1.clone();
         Mat norm2 = heatMap2.clone();
 
@@ -108,8 +135,8 @@ public class HeatMapGenerator extends SwingWorker {
         norm1 = normalizeHeatMap(norm1, h1Min, h1Max);
         norm2 = normalizeHeatMap(norm2, h2Min, h2Max);
 
-        norm1 = colorMapHeatMap(norm1, Imgproc.COLORMAP_HOT);
-        norm2 = colorMapHeatMap(norm2, Imgproc.COLORMAP_HOT);
+        norm1 = colorMapHeatMap(norm1, prefs.getColorMap());
+        norm2 = colorMapHeatMap(norm2, prefs.getColorMap());
 
         Mat[] result = {norm1, norm2};
         return result;
@@ -121,12 +148,36 @@ public class HeatMapGenerator extends SwingWorker {
         Core.subtract(hm1, hm2, hm3);
 
         hm3 = normalizeHeatMap(hm3, 0, 255);
-        hm3 = colorMapHeatMap(hm3, Imgproc.COLORMAP_HOT);
+        hm3 = colorMapHeatMap(hm3, Project.currentProject().getPreferences().getColorMap());
+
 
         return hm3;
     }
 
     private static Mat makeHeatMapTransparentABGR(Mat heatMap) {
+        // make everything 50% transparent
+        Mat transparent = heatMap.clone();
+        Imgproc.cvtColor(transparent, transparent, Imgproc.COLOR_BGR2BGRA);
+
+        for (int x = 0; x < transparent.cols(); x++) {
+            for (int y = 0; y < transparent.rows(); y++) {
+                double[] pixel = transparent.get(y, x);
+
+                pixel[3] = pixel[2];
+                pixel[2] = pixel[1];
+                pixel[1] = pixel[0];
+
+                // alpha
+                pixel[0] = 256 / 2;
+
+                transparent.put(y, x, pixel);
+            }
+        }
+
+        return transparent;
+    }
+
+    private static Mat makeHeatMapTransparentABGR_removeBlue(Mat heatMap) {
 
         Mat transparent = heatMap.clone();
         Imgproc.cvtColor(transparent, transparent, Imgproc.COLOR_BGR2BGRA);
@@ -143,6 +194,37 @@ public class HeatMapGenerator extends SwingWorker {
                 // kaltes blau transparent machen
                 /*if (pixel[1] == 128 && pixel[2] == 0 && pixel[3] == 0)
                     pixel[0] = 0;*/
+
+                transparent.put(y, x, pixel);
+            }
+        }
+
+        return transparent;
+    }
+
+    private static Mat makeHeatMapTransparentABGR_removeBlack(Mat heatMap) {
+
+        Mat transparent = heatMap.clone();
+        Imgproc.cvtColor(transparent, transparent, Imgproc.COLOR_BGR2BGRA);
+
+        for (int x = 0; x < transparent.cols(); x++) {
+            for (int y = 0; y < transparent.rows(); y++) {
+                double[] pixel = transparent.get(y, x);
+
+                float[] hsv = new float[3];
+                Color.RGBtoHSB((int)(pixel[2]*255), (int)(pixel[1]*255), (int)(pixel[0]*255), hsv);
+
+                // alpha in relation to saturation
+                pixel[0] = hsv[2] / 1.1;
+
+                // remove value
+                hsv[2] = 1;
+
+                Color c = new Color(Color.HSBtoRGB(hsv[0], hsv[1], hsv[2]));
+
+                pixel[3] = c.getRed();
+                pixel[2] = c.getGreen();
+                pixel[1] = c.getBlue();
 
                 transparent.put(y, x, pixel);
             }

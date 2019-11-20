@@ -1,6 +1,5 @@
 package de.uni_stuttgart.visus.etfuse.fileimport;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
@@ -75,7 +74,7 @@ public class DataImporter implements ActionListener, PropertyChangeListener {
 
                 if (rec != null) {
 
-                    rec.preferredGazeColor = Color.blue;
+                    rec.preferredGazeColor = Project.currentProject().getPreferences().getColorPlayer1();
                     this.parentFrame.setHostRecording(rec);
                     this.parentFrame.setCursor(Cursor.getDefaultCursor());
                     this.parentFrame.updateQuickSettingsToolbar();

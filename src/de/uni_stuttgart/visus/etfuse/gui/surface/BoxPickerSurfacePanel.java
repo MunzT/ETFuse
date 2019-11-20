@@ -12,6 +12,7 @@ import java.awt.geom.Line2D;
 import org.opencv.videoio.Videoio;
 
 import de.uni_stuttgart.visus.etfuse.media.OverlayGazeProjector;
+import de.uni_stuttgart.visus.etfuse.projectio.Project;
 
 public class BoxPickerSurfacePanel extends VideoSurfacePanel {
 
@@ -83,7 +84,7 @@ public class BoxPickerSurfacePanel extends VideoSurfacePanel {
         if (mousePos == null)
             return;
 
-        g2.setColor(Color.blue);
+        g2.setColor(Project.currentProject().getPreferences().getColorPlayer1());
 
         if (step == 0) {
             g2.setStroke(new BasicStroke(3));

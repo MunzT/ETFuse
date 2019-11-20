@@ -149,12 +149,17 @@ public class VideoSurfacePanel extends JPanel {
 
             for (int i = lastEvents.size() - 1; i > -1; i--) {
 
-                if (projector.getRecording().preferredGazeColor == Color.blue)
-                    g2.setColor(Color.cyan);
-                else if (projector.getRecording().preferredGazeColor == Color.red)
-                    g2.setColor(Color.pink);
-                else if (projector.getRecording().preferredGazeColor == Color.orange)
-                    g2.setColor(Color.yellow);
+                // original color but with transparency and brighter/darker
+                Color newColor;
+                if (projector.getRecording().preferredGazeColor.getRed()
+                        + projector.getRecording().preferredGazeColor.getGreen()
+                        + projector.getRecording().preferredGazeColor.getBlue() < 350) {
+                    newColor = projector.getRecording().preferredGazeColor.brighter();
+                }
+                else {
+                    newColor = projector.getRecording().preferredGazeColor.darker();
+                }
+                g2.setColor(new Color(newColor.getRed(), newColor.getGreen(), newColor.getBlue(), 100));
 
                 EyeTrackerEyeEvent curEvent = lastEvents.get(i);
 
@@ -200,7 +205,10 @@ public class VideoSurfacePanel extends JPanel {
             for (int i = lastEvents.size() - 1; i > -1; i--) {
 
                 g2.setStroke(new BasicStroke(10));
-                g2.setColor(Color.gray);
+
+                g2.setColor(new Color(projector.getRecording().preferredGazeColor.getRed(),
+                                      projector.getRecording().preferredGazeColor.getGreen(),
+                                      projector.getRecording().preferredGazeColor.getBlue(), 100));
 
                 EyeTrackerEyeEvent curEvent = lastEvents.get(i);
 
@@ -227,7 +235,9 @@ public class VideoSurfacePanel extends JPanel {
                 g2.setStroke(new BasicStroke(2));
                 g2.draw(outer);
 
-                g2.setColor(Color.gray);
+                g2.setColor(new Color(projector.getRecording().preferredGazeColor.getRed(),
+                                      projector.getRecording().preferredGazeColor.getGreen(),
+                                      projector.getRecording().preferredGazeColor.getBlue(), 100));
 
                 if (i > 0) {
 

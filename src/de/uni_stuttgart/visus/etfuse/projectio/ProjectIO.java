@@ -231,8 +231,9 @@ public class ProjectIO implements PropertyChangeListener {
                         }
 
                         if (rec != null) {
+                            rec.preferredGazeColor = 
+                                Project.currentProject().getPreferences().getColorPlayer1();
 
-                            rec.preferredGazeColor = Color.blue;
                             vidFrame.setHostRecording(rec);
                             ProjectIO.this.prepareProjectStep2();
                         }
@@ -346,7 +347,9 @@ public class ProjectIO implements PropertyChangeListener {
                 if (rec != null) {
 
                     if (vidFrame.getPanel().getProjectors().size() == 1)
-                        rec.preferredGazeColor = Color.red;
+                        rec.preferredGazeColor = 
+                            Project.currentProject().getPreferences().getColorPlayer2();
+
                     else if (vidFrame.getPanel().getProjectors().size() == 2)
                         rec.preferredGazeColor = Color.orange;
                     else {

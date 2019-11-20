@@ -1,6 +1,5 @@
 package de.uni_stuttgart.visus.etfuse.gui.element;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -13,6 +12,8 @@ import javax.swing.plaf.metal.MetalSliderUI;
 import de.uni_stuttgart.visus.etfuse.eyetracker.EyeTrackerEyeEvent;
 import de.uni_stuttgart.visus.etfuse.gui.VideoFrame;
 import de.uni_stuttgart.visus.etfuse.media.OverlayGazeProjector;
+import de.uni_stuttgart.visus.etfuse.misc.Preferences;
+import de.uni_stuttgart.visus.etfuse.projectio.Project;
 
 public class MetalRecordingSliderUI extends MetalSliderUI {
 
@@ -39,6 +40,8 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
 
     @Override
     public void paintTicks(Graphics g) {
+
+        Preferences prefs = Project.currentProject().getPreferences();
 
         if (vidFrame == null)
             return;
@@ -97,7 +100,7 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                         guestProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
 
                 if (hostEvents == null || hostEvents.size() < 1 || guestEvents == null || guestEvents.size() < 1)
-                    g.setColor(Color.darkGray);
+                    g.setColor(prefs.getColorMinDistOutsideDisplay());
                 else {
 
                     int belowMinDistanceCounter = 0;
@@ -139,15 +142,12 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                         }
                     }
 
-                    if (notContainedInRectCounter > belowMinDistanceCounter
-                            && notContainedInRectCounter > aboveMinDistanceCounter)
-                        g.setColor(Color.yellow);
-                    else if (belowMinDistanceCounter > aboveMinDistanceCounter
-                            && belowMinDistanceCounter > notContainedInRectCounter)
-                        g.setColor(Color.cyan);
-                    else if (aboveMinDistanceCounter > belowMinDistanceCounter
-                            && aboveMinDistanceCounter > notContainedInRectCounter)
-                        g.setColor(Color.red);
+                    if (notContainedInRectCounter > belowMinDistanceCounter && notContainedInRectCounter > aboveMinDistanceCounter)
+                        g.setColor(prefs.getColorMinDistOutsideBoard());
+                    else if (belowMinDistanceCounter > aboveMinDistanceCounter && belowMinDistanceCounter > notContainedInRectCounter)
+                        g.setColor(prefs.getColorMinDistClose());
+                    else if (aboveMinDistanceCounter > belowMinDistanceCounter && aboveMinDistanceCounter > notContainedInRectCounter)
+                        g.setColor(prefs.getColorMinDistFarAway());
                 }
 
                 paintMajorTickForHorizSlider(g, tickBounds, xPos);
@@ -184,7 +184,7 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                         guestProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
 
                 if (hostEvents == null || hostEvents.size() < 1 || guestEvents == null || guestEvents.size() < 1)
-                    g.setColor(Color.darkGray);
+                    g.setColor(prefs.getColorMinDistOutsideDisplay());
                 else {
 
                     int belowMinDistanceCounter = 0;
@@ -225,15 +225,13 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                         }
                     }
 
-                    if (notContainedInRectCounter > belowMinDistanceCounter
-                            && notContainedInRectCounter > aboveMinDistanceCounter)
-                        g.setColor(Color.yellow);
-                    else if (belowMinDistanceCounter > aboveMinDistanceCounter
-                            && belowMinDistanceCounter > notContainedInRectCounter)
-                        g.setColor(Color.cyan);
-                    else if (aboveMinDistanceCounter > belowMinDistanceCounter
-                            && aboveMinDistanceCounter > notContainedInRectCounter)
-                        g.setColor(Color.red);
+
+                    if (notContainedInRectCounter > belowMinDistanceCounter && notContainedInRectCounter > aboveMinDistanceCounter)
+                        g.setColor(prefs.getColorMinDistOutsideBoard());
+                    else if (belowMinDistanceCounter > aboveMinDistanceCounter && belowMinDistanceCounter > notContainedInRectCounter)
+                        g.setColor(prefs.getColorMinDistFarAway());
+                    else if (aboveMinDistanceCounter > belowMinDistanceCounter && aboveMinDistanceCounter > notContainedInRectCounter)
+                        g.setColor(prefs.getColorMinDistClose());
                 }
 
                 paintMajorTickForVertSlider(g, tickBounds, yPos);

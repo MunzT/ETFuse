@@ -157,22 +157,22 @@ public class QuickSettingsToolbar extends JPanel {
 
                         case 0:
                             entityList.add("Distance between gaze points (raw data) of the players <= " + minDist + "px");
-                            colorList.add(Color.CYAN);
+                            colorList.add(prefs.getColorMinDistClose());
                             break;
 
                         case 1:
                             entityList.add("Distance between gaze points (raw data) of the players > " + minDist + "px");
-                            colorList.add(Color.RED);
+                            colorList.add(prefs.getColorMinDistFarAway());
                             break;
 
                         case 2:
                             entityList.add("Gaze point (raw data) of at least one player is outside the board");
-                            colorList.add(Color.YELLOW);
+                            colorList.add(prefs.getColorMinDistOutsideBoard());
                             break;
 
                         case 3:
                             entityList.add("Gaze data missing for at least one player");
-                            colorList.add(Color.DARK_GRAY);
+                            colorList.add(prefs.getColorMinDistOutsideDisplay());
                             break;
 
                         default:

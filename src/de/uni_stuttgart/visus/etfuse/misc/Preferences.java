@@ -1,17 +1,20 @@
 package de.uni_stuttgart.visus.etfuse.misc;
 
+import java.awt.Color;
 import java.io.Serializable;
+
+import org.opencv.imgproc.Imgproc;
 
 public class Preferences implements Serializable {
 
     private static final long serialVersionUID = -3052803564035377548L;
 
     // Overlay
-    private Boolean enableHeatMapOverlay = false;
+    private Boolean enableHeatMapOverlay = true;
     private int heatMapOverlayPlayer = 0;
     private Boolean enableFixationOverlay = true;
     private int fixationOverlayTimeSpan = 500;
-    private Boolean enableRawDataOverlay = false;
+    private Boolean enableRawDataOverlay = true;
 
     // MinDist-Plot
     private int minDistPlotPlayer1 = 0;
@@ -32,6 +35,24 @@ public class Preferences implements Serializable {
     private int histogramGridSize = 16;
     private int histogramCorrelationThreshold = 40;
     private int histogramDeviatingCellsThreshold = 1;
+
+    // File path for file dialog
+    private String prevFileDirectory = "";
+
+    // Colors for fixations
+    //private Color colorPlayer1 = new Color(255, 0, 0);
+    //private Color colorPlayer2 = new Color(0, 255, 0);
+    private Color colorPlayer1 = new Color(0, 0, 0);
+    private Color colorPlayer2 = new Color(240, 240, 240);
+
+    // Colors for MinDist plot
+    private Color colorMinDistOutsideDisplay = new Color(150, 150, 150);
+    private Color colorMinDistOutsideBoard = new Color(61, 1, 76);
+    private Color colorMinDistClose = new Color(255, 234, 0);
+    private Color colorMinDistFarAway = new Color(40, 161, 151);
+
+    // Colormap
+    private int colorMap = Imgproc.COLORMAP_VIRIDIS;
 
     public Boolean getEnableHeatMapOverlay() {
         return enableHeatMapOverlay;
@@ -134,5 +155,54 @@ public class Preferences implements Serializable {
     }
     public void setHistogramDeviatingCellsThreshold(int histogramDeviatingCellsThreshold) {
         this.histogramDeviatingCellsThreshold = histogramDeviatingCellsThreshold;
+    }
+    public String getFileDirectory() {
+        return this.prevFileDirectory;
+    }
+    public void setFileDirectory(String prevFileDirectory) {
+        this.prevFileDirectory = prevFileDirectory;
+    }
+    public Color getColorPlayer1() {
+        System.out.print(colorPlayer1);
+        return this.colorPlayer1;
+    }
+    public void setColorPlayer1(Color colorPlayer1) {
+        this.colorPlayer1 = colorPlayer1;
+    }
+    public Color getColorPlayer2() {
+        return this.colorPlayer2;
+    }
+    public void setColorPlayer2(Color colorPlayer2) {
+        this.colorPlayer2 = colorPlayer2;
+    }
+    public Color getColorMinDistOutsideDisplay() {
+        return this.colorMinDistOutsideDisplay;
+    }
+    public void setColorMinDistOutsideDisplay(Color colorMinDistOutsideDisplay) {
+        this.colorMinDistOutsideDisplay = colorMinDistOutsideDisplay;
+    }
+    public Color getColorMinDistOutsideBoard() {
+        return this.colorMinDistOutsideBoard;
+    }
+    public void setColorMinDistOutsideBoard(Color colorMinDistOutsideBoard) {
+        this.colorMinDistOutsideBoard = colorMinDistOutsideBoard;
+    }
+    public Color getColorMinDistClose() {
+        return this.colorMinDistClose;
+    }
+    public void setColorMinDistClose(Color colorMinDistClose) {
+        this.colorMinDistClose = colorMinDistClose;
+    }
+    public Color getColorMinDistFarAway() {
+        return this.colorMinDistFarAway;
+    }
+    public void setColorMinDistFarAway(Color colorMinDistFarAway) {
+        this.colorMinDistFarAway = colorMinDistFarAway;
+    }
+    public int getColorMap() {
+        return this.colorMap;
+    }
+    public void setColorMap(int colorMap) {
+        this.colorMap = colorMap;
     }
 }

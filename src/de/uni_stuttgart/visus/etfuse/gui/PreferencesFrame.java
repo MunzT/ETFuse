@@ -8,6 +8,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -24,6 +26,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+
+import org.opencv.imgproc.Imgproc;
 
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -54,6 +58,16 @@ public class PreferencesFrame extends JDialog {
     private JTextField txtHistogramCorrelationThreshold;
     private JTextField txtHistogramDeviatingCellsThreshold;
     private JSpinner spinnerHistogramGridSize;
+    private JComboBox comboBoxHeatmapColors;
+    private ColorChooserButton colorPickerButtonFixationsPlayer1;
+    private ColorChooserButton colorPickerButtonFixationsPlayer2;
+    private ColorChooserButton colorPickerButtonMinDistPlotClose;
+    private ColorChooserButton colorPickerButtonMinDistPlotFar;
+    private ColorChooserButton colorPickerButtonMinDistPlotOutsideBoard;
+    private ColorChooserButton colorPickerButtonMinDistPlotOutsideScreen;
+
+    Map<Integer, Integer> colorMapMapping;
+    Map<Integer, Integer> colorMapIndexMapping;
 
     private VideoFrame vidFrame = null;
 
@@ -389,6 +403,164 @@ public class PreferencesFrame extends JDialog {
         JLabel lblberDieseMetrik = new JLabel("This metric is used to search for the first frame of a given state / move.");
         histogramCompPrefsPanel.add(lblberDieseMetrik, "4, 10");
 
+        JPanel panelColorsPrefs = new JPanel();
+        tabbedPane.addTab("Colors", null, panelColorsPrefs, null);
+        panelColorsPrefs.setLayout(new FormLayout(new ColumnSpec[] {
+                ColumnSpec.decode("default:grow"),},
+            new RowSpec[] {
+                RowSpec.decode("fill:default"),
+                RowSpec.decode("fill:default"),
+                RowSpec.decode("fill:default"),}));
+
+        JPanel fixationsColorPrefsPanel = new JPanel();
+        fixationsColorPrefsPanel.setBorder(new TitledBorder(null, "Fixations", TitledBorder.LEADING,
+                TitledBorder.TOP, null, null));
+        panelColorsPrefs.add(fixationsColorPrefsPanel, "1, 1, fill, center");
+        fixationsColorPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
+                FormSpecs.RELATED_GAP_COLSPEC,
+                ColumnSpec.decode("left:default"),
+                FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                ColumnSpec.decode("default:grow"),
+                FormSpecs.RELATED_GAP_COLSPEC,},
+            new RowSpec[] {
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,}));
+
+        JLabel fixationsPlayer1ColorLabel = new JLabel("Player 1:");
+        fixationsColorPrefsPanel.add(fixationsPlayer1ColorLabel, "2, 2, right, default");
+
+        colorPickerButtonFixationsPlayer1 = new ColorChooserButton();
+        fixationsColorPrefsPanel.add(colorPickerButtonFixationsPlayer1, "4, 2, fill, default");
+
+        JLabel fixationsPlayer2ColorLabel = new JLabel("Player 2:");
+        fixationsColorPrefsPanel.add(fixationsPlayer2ColorLabel, "2, 4, right, default");
+
+        colorPickerButtonFixationsPlayer2 = new ColorChooserButton();
+        fixationsColorPrefsPanel.add(colorPickerButtonFixationsPlayer2, "4, 4, fill, default");
+
+        JPanel minDistPlotColorPrefsPanel = new JPanel();
+        minDistPlotColorPrefsPanel.setBorder(new TitledBorder(null, "MinDist Plot", TitledBorder.LEADING,
+                TitledBorder.TOP, null, null));
+        panelColorsPrefs.add(minDistPlotColorPrefsPanel, "1, 2, fill, center");
+        minDistPlotColorPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
+                FormSpecs.RELATED_GAP_COLSPEC,
+                ColumnSpec.decode("left:default"),
+                FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                ColumnSpec.decode("default:grow"),
+                FormSpecs.RELATED_GAP_COLSPEC,},
+            new RowSpec[] {
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,}));
+
+        JLabel colorPickerMinDistPlotCloseLabel = new JLabel("Small distance between gaze points:");
+        minDistPlotColorPrefsPanel.add(colorPickerMinDistPlotCloseLabel, "2, 2, right, default");
+
+        colorPickerButtonMinDistPlotClose =new ColorChooserButton();
+        minDistPlotColorPrefsPanel.add(colorPickerButtonMinDistPlotClose, "4, 2, fill, default");
+
+        JLabel colorPickerMinDistPlotFarLabel = new JLabel("Larger distance between gaze points:");
+        minDistPlotColorPrefsPanel.add(colorPickerMinDistPlotFarLabel, "2, 4, right, default");
+
+        colorPickerButtonMinDistPlotFar = new ColorChooserButton();
+        minDistPlotColorPrefsPanel.add(colorPickerButtonMinDistPlotFar, "4, 4, fill, default");
+
+        JLabel colorPickerMinDistPlotOutsideBoardLabel = new JLabel("Gaze points outside the board:");
+        minDistPlotColorPrefsPanel.add(colorPickerMinDistPlotOutsideBoardLabel, "2, 6, right, default");
+
+        colorPickerButtonMinDistPlotOutsideBoard = new ColorChooserButton();
+        minDistPlotColorPrefsPanel.add(colorPickerButtonMinDistPlotOutsideBoard, "4, 6, fill, default");
+
+        JLabel colorPickerMinDistPlotOutsideScreenLabel = new JLabel("Missing gaze points:");
+        minDistPlotColorPrefsPanel.add(colorPickerMinDistPlotOutsideScreenLabel, "2, 8, right, default");
+
+        colorPickerButtonMinDistPlotOutsideScreen = new ColorChooserButton();
+        minDistPlotColorPrefsPanel.add(colorPickerButtonMinDistPlotOutsideScreen, "4, 8, fill, default");
+
+        JPanel heatmapColorPrefsPanel = new JPanel();
+        heatmapColorPrefsPanel.setBorder(new TitledBorder(null, "Heatmap", TitledBorder.LEADING,
+                TitledBorder.TOP, null, null));
+        panelColorsPrefs.add(heatmapColorPrefsPanel, "1, 3, fill, center");
+        heatmapColorPrefsPanel.setLayout(new FormLayout(new ColumnSpec[] {
+                FormSpecs.RELATED_GAP_COLSPEC,
+                ColumnSpec.decode("left:default"),
+                FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+                ColumnSpec.decode("default:grow"),
+                FormSpecs.RELATED_GAP_COLSPEC,},
+            new RowSpec[] {
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,}));
+
+        JLabel heatmapColors = new JLabel("Color:");
+        heatmapColorPrefsPanel.add(heatmapColors, "2, 2, right, default");
+
+        int[] colorMaps = {
+                Imgproc.COLORMAP_AUTUMN,
+                Imgproc.COLORMAP_BONE,
+                Imgproc.COLORMAP_JET,
+                Imgproc.COLORMAP_WINTER,
+                Imgproc.COLORMAP_RAINBOW,
+                Imgproc.COLORMAP_OCEAN,
+                Imgproc.COLORMAP_SUMMER,
+                Imgproc.COLORMAP_SPRING,
+                Imgproc.COLORMAP_COOL,
+                Imgproc.COLORMAP_HSV,
+                Imgproc.COLORMAP_PINK,
+                Imgproc.COLORMAP_HOT,
+                Imgproc.COLORMAP_PARULA,
+                Imgproc.COLORMAP_MAGMA,
+                Imgproc.COLORMAP_INFERNO,
+                Imgproc.COLORMAP_PLASMA,
+                Imgproc.COLORMAP_VIRIDIS,
+                Imgproc.COLORMAP_CIVIDIS,
+                Imgproc.COLORMAP_TWILIGHT,
+                Imgproc.COLORMAP_TWILIGHT_SHIFTED };
+
+        String[] colorMapsStrings = {
+                "COLORMAP_AUTUMN",
+                "COLORMAP_BONE",
+                "COLORMAP_JET",
+                "COLORMAP_WINTER",
+                "COLORMAP_RAINBOW",
+                "COLORMAP_OCEAN",
+                "COLORMAP_SUMMER",
+                "COLORMAP_SPRING",
+                "COLORMAP_COOL",
+                "COLORMAP_HSV",
+                "COLORMAP_PINK",
+                "COLORMAP_HOT",
+                "COLORMAP_PARULA",
+                "COLORMAP_MAGMA",
+                "COLORMAP_INFERNO",
+                "COLORMAP_PLASMA",
+                "COLORMAP_VIRIDIS",
+                "COLORMAP_CIVIDIS",
+                "COLORMAP_TWILIGHT",
+                "COLORMAP_TWILIGHT_SHIFTED" };
+
+        colorMapMapping = new HashMap<Integer, Integer>();
+        colorMapIndexMapping = new HashMap<Integer, Integer>();
+        for (int i = 0; i < colorMapsStrings.length; i++) {
+            colorMapMapping.put(i, colorMaps[i]);
+            colorMapIndexMapping.put(colorMaps[i], i);
+        }
+
+        comboBoxHeatmapColors = new JComboBox();
+        comboBoxHeatmapColors.setModel(new DefaultComboBoxModel(colorMapsStrings));
+        heatmapColorPrefsPanel.add(comboBoxHeatmapColors, "4, 2, fill, default");
+
         JPanel buttonPanel = new JPanel();
         FlowLayout flowLayout = (FlowLayout) buttonPanel.getLayout();
         flowLayout.setAlignment(FlowLayout.RIGHT);
@@ -450,6 +622,16 @@ public class PreferencesFrame extends JDialog {
         txtHistogramCorrelationThreshold.setText(Integer.toString(prefs.getHistogramCorrelationThreshold()));
         txtHistogramDeviatingCellsThreshold.setText(Integer.toString(prefs.getHistogramDeviatingCellsThreshold()));
         spinnerHistogramGridSize.setValue(prefs.getHistogramGridSize());
+
+        colorPickerButtonFixationsPlayer1.setBackground(prefs.getColorPlayer1());
+        colorPickerButtonFixationsPlayer2.setBackground(prefs.getColorPlayer2());
+        colorPickerButtonMinDistPlotClose.setBackground(prefs.getColorMinDistClose());
+        colorPickerButtonMinDistPlotFar.setBackground(prefs.getColorMinDistFarAway());
+        colorPickerButtonMinDistPlotOutsideBoard.setBackground(prefs.getColorMinDistOutsideBoard());
+        colorPickerButtonMinDistPlotOutsideScreen.setBackground(prefs.getColorMinDistOutsideDisplay());
+
+        comboBoxHeatmapColors.setSelectedIndex(Math.min(comboBoxHeatmapColors.getItemCount() - 1,
+                colorMapIndexMapping.get(prefs.getColorMap())));
     }
 
     private void writeElementsToPrefs() {
@@ -484,7 +666,16 @@ public class PreferencesFrame extends JDialog {
         if (!txtHistogramDeviatingCellsThreshold.getText().isEmpty())
             prefs.setHistogramDeviatingCellsThreshold(Integer.parseInt(txtHistogramDeviatingCellsThreshold.getText()));
         prefs.setHistogramGridSize((int) spinnerHistogramGridSize.getValue());
-
+        prefs.setColorPlayer1(colorPickerButtonFixationsPlayer1.getBackground());
+        prefs.setColorPlayer2(colorPickerButtonFixationsPlayer2.getBackground());
+        vidFrame.getPanel().getProjector(0).getRecording().preferredGazeColor = prefs.getColorPlayer1();
+        vidFrame.getPanel().getProjector(1).getRecording().preferredGazeColor = prefs.getColorPlayer2();
+        prefs.setColorMinDistClose(colorPickerButtonMinDistPlotClose.getBackground());
+        prefs.setColorMinDistFarAway(colorPickerButtonMinDistPlotFar.getBackground());
+        prefs.setColorMinDistOutsideBoard(colorPickerButtonMinDistPlotOutsideBoard.getBackground());
+        prefs.setColorMinDistOutsideDisplay(colorPickerButtonMinDistPlotOutsideScreen.getBackground());
+        if (comboBoxHeatmapColors.getSelectedIndex() >= 0)
+            prefs.setColorMap(colorMapMapping.get(comboBoxHeatmapColors.getSelectedIndex())); // TODO updates only for the next heatmap generation
 
         for (OverlayGazeProjector p : vidFrame.getPanel().getProjectors()) {
             IVTFilter.filterRecording(p.getRecording(), prefs.getFilterVelocityThreshold(),

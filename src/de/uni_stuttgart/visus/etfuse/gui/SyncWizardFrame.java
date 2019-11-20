@@ -653,7 +653,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                 if (rec != null) {
 
                     if (this.parentFrame.getPanel().getProjectors().size() == 1)
-                        rec.preferredGazeColor = Color.red;
+                        rec.preferredGazeColor = Project.currentProject().getPreferences().getColorPlayer2();
                     else if (this.parentFrame.getPanel().getProjectors().size() == 2)
                         rec.preferredGazeColor = Color.orange;
                     else {

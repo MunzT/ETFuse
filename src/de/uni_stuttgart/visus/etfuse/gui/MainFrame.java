@@ -85,6 +85,9 @@ public class MainFrame extends JFrame {
 
         hiThereGazePlot = new JPanel() {
 
+            Color color1 = new Color(155, 0, 161);
+            Color color2 = new Color(246, 189, 39);
+
             @Override
             protected void paintComponent(Graphics g) {
 
@@ -96,8 +99,9 @@ public class MainFrame extends JFrame {
                 int[] x2 = {220, 90, 85};
                 int[] y2 = {145, 180, 102};
 
-                paintPlot(g, x1, y1, Color.blue);
-                paintPlot(g, x2, y2, Color.red);
+                paintPlot(g, x1, y1, color1);
+                paintPlot(g, x2, y2, color2);
+
             }
 
             private void paintPlot(Graphics g, int[] x, int[] y, Color color) {
@@ -107,7 +111,7 @@ public class MainFrame extends JFrame {
                 for (int i = x.length - 1; i >= 0; i--) {
 
                     g2.setStroke(new BasicStroke(10));
-                    g2.setColor(Color.gray);
+                    g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), 100));
 
                     if (i == 0)
                         g2.setColor(color);
@@ -121,7 +125,7 @@ public class MainFrame extends JFrame {
                     g2.setStroke(new BasicStroke(2));
                     g2.draw(outer);
 
-                    g2.setColor(Color.gray);
+                    g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), 100));
 
                     if (i > 0 && i < x.length) {
 
