@@ -25,7 +25,7 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
     public MetalRecordingSliderUI() {
 
         super();
-        this.safeLength = ((Integer) UIManager.get( "Slider.majorTickLength" )).intValue();
+        this.safeLength = ((Integer) UIManager.get("Slider.majorTickLength")).intValue();
     }
 
     protected void setMinDistanceRecordingsToDraw(VideoFrame vidFrame,

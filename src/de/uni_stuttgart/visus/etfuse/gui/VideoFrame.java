@@ -27,6 +27,8 @@ import javax.swing.KeyStroke;
 import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -352,6 +354,9 @@ public class VideoFrame extends JFrame implements ChangeListener {
         layout.putConstraint(SpringLayout.NORTH, this.playPauseButton, 3,
                 SpringLayout.NORTH, this.playbackPanel);
 
+        UIDefaults def = UIManager.getDefaults();
+        def.put("Slider.majorTickLength", 26);
+
         this.progressSlider = new RecordingSlider(JSlider.HORIZONTAL, 0,
                 (int) newCamera.get(Videoio.CAP_PROP_FRAME_COUNT), 0);
         this.progressSlider.setToolTipText("Timeline with MinDist plot");
@@ -432,7 +437,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
         layout.putConstraint(SpringLayout.WEST, this.heatMapSlider, 5,
                 SpringLayout.EAST, this.playPauseButton);
         layout.putConstraint(SpringLayout.NORTH, this.heatMapSlider, 3,
-                SpringLayout.SOUTH, this.playPauseButton);
+                SpringLayout.SOUTH, this.progressSlider);
         layout.putConstraint(SpringLayout.EAST, this.heatMapSlider, -5,
                 SpringLayout.EAST, this.playbackPanel);
 
@@ -450,7 +455,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
         this.add(this.playbackPanel, BorderLayout.PAGE_END);
 
         this.playbackPanel.setPreferredSize(new Dimension(this.panel.getPreferredSize().width,
-                this.playPauseButton.getPreferredSize().height * 3 + 6));
+                this.playPauseButton.getPreferredSize().height * 3 + 6 + 20));
 
         this.setResizable(true);
         this.pack();

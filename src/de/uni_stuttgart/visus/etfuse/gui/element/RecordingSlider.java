@@ -13,9 +13,9 @@ public class RecordingSlider extends JSlider {
     private static final long serialVersionUID = -2083295176874326801L;
     private MetalRecordingSliderUI ui = null;
 
-    public RecordingSlider(int eins, int zwei, int drei, int vier) {
+    public RecordingSlider(int orientation, int min, int max, int value) {
 
-        super(eins, zwei, drei, vier);
+        super(orientation, min, max, value);
 
         // Zur angeklickten Position springen
         // https://stackoverflow.com/questions/518471/jslider-question-position-after-leftclick
