@@ -35,7 +35,8 @@ public class DataImporter implements ActionListener, PropertyChangeListener {
 
         // https://docs.oracle.com/javase/tutorial/uiswing/components/filechooser.html
         //Create a file chooser
-        final JFileChooser fc = new JFileChooser();
+        final JFileChooser fc =
+                new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
         fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV-Datei", "tsv"));
         fc.setAcceptAllFileFilterUsed(false);

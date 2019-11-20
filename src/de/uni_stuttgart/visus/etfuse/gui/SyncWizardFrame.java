@@ -117,7 +117,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
 
                 // https://docs.oracle.com/javase/tutorial/uiswing/components/filechooser.html
                 //Create a file chooser
-                final JFileChooser fc = new JFileChooser();
+                final JFileChooser fc =
+                        new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
                 fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV file", "tsv"));
                 fc.setAcceptAllFileFilterUsed(false);
@@ -137,6 +138,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                     ImportTask importTask = new ImportTask(chosenFile);
                     importTask.addPropertyChangeListener(SyncWizardFrame.this);
                     importTask.execute();
+
+                    Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
                 }
             }
         });
@@ -149,7 +152,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
 
                 // https://docs.oracle.com/javase/tutorial/uiswing/components/filechooser.html
                 //Create a file chooser
-                final JFileChooser fc = new JFileChooser();
+                final JFileChooser fc =
+                        new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
                 fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi",
                                                                       "mkv", "flv", "mpeg"));
@@ -170,6 +174,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                             sourceCamera, sourceData, SyncWizardFrame.this);
                     childFrames.add(sourceBpf);
                     sourceBpf.setVisible(true);
+
+                    Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
                 }
             }
         });
@@ -272,7 +278,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
 
                         // https://docs.oracle.com/javase/tutorial/uiswing/components/filechooser.html
                         //Create a file chooser
-                        final JFileChooser fc = new JFileChooser();
+                        final JFileChooser fc =
+                                new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
                         fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4",
                                                                               "avi", "mkv", "flv", "mpeg"));
@@ -289,6 +296,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                             Project.currentProject().guestVidPaths.add(chosenFile.getAbsolutePath());
                             VideoCapture sourceCamera = new VideoCapture(chosenFile.getAbsolutePath());
                             sourceVideo = sourceCamera;
+
+                            Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
                         }
                         else {
                             estimatedTimeSyncRadio.setSelected(true);
@@ -321,7 +330,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
 
                         // https://docs.oracle.com/javase/tutorial/uiswing/components/filechooser.html
                         //Create a file chooser
-                        final JFileChooser fc = new JFileChooser();
+                        final JFileChooser fc =
+                                new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
                         fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4",
                                                                               "avi", "mkv", "flv", "mpeg"));
@@ -338,6 +348,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                             Project.currentProject().guestVidPaths.add(chosenFile.getAbsolutePath());
                             VideoCapture sourceCamera = new VideoCapture(chosenFile.getAbsolutePath());
                             sourceVideo = sourceCamera;
+
+                            Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
                         }
                         else {
                             estimatedTimeSyncRadio.setSelected(true);

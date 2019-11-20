@@ -42,7 +42,8 @@ public class ProjectIO implements PropertyChangeListener {
         if (mainFrame != null)
             mainFrame.setButtonEnabled(false);
 
-        final JFileChooser fc = new JFileChooser();
+        final JFileChooser fc =
+                new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
         fc.addChoosableFileFilter(new FileNameExtensionFilter("Eye Tracker Project", "etproj"));
         fc.setAcceptAllFileFilterUsed(false);
@@ -63,6 +64,8 @@ public class ProjectIO implements PropertyChangeListener {
             }
 
             prepareProjectStep1();
+
+            Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
         }
         else
             if (mainFrame != null)
@@ -92,7 +95,8 @@ public class ProjectIO implements PropertyChangeListener {
 
             JOptionPane.showMessageDialog(mainFrame, "Could not find host video \"" + proj.hostVidPath + "\"!");
 
-            final JFileChooser fc = new JFileChooser();
+            final JFileChooser fc =
+                    new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
             fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4", "avi",
                                                                   "mkv", "flv", "mpeg"));
@@ -104,6 +108,8 @@ public class ProjectIO implements PropertyChangeListener {
 
                 final File chosenFile = fc.getSelectedFile();
                 proj.hostVidPath = chosenFile.getAbsolutePath();
+
+                Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
             }
             else
                 return false;
@@ -118,7 +124,8 @@ public class ProjectIO implements PropertyChangeListener {
             JOptionPane.showMessageDialog(mainFrame,
                     "Could not find host eye tracking data set \"" + proj.hostDatasetPath + "\"!");
 
-            final JFileChooser fc = new JFileChooser();
+            final JFileChooser fc =
+                    new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
             fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV file", "tsv"));
             fc.setAcceptAllFileFilterUsed(false);
@@ -129,6 +136,8 @@ public class ProjectIO implements PropertyChangeListener {
 
                 final File chosenFile = fc.getSelectedFile();
                 proj.hostDatasetPath = chosenFile.getAbsolutePath();
+
+                Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
             }
             else
                 return false;
@@ -147,7 +156,8 @@ public class ProjectIO implements PropertyChangeListener {
                 JOptionPane.showMessageDialog(mainFrame,
                         "Could not find guest video \"" + guestVidPath + "\"!");
 
-                final JFileChooser fc = new JFileChooser();
+                final JFileChooser fc =
+                        new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
                 fc.addChoosableFileFilter(
                         new FileNameExtensionFilter("Video file", "mp4", "avi", "mkv", "flv", "mpeg"));
@@ -159,6 +169,8 @@ public class ProjectIO implements PropertyChangeListener {
 
                     final File chosenFile = fc.getSelectedFile();
                     proj.guestVidPaths.set(i, chosenFile.getAbsolutePath());
+
+                    Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
                 }
                 else
                     return false;
@@ -178,7 +190,8 @@ public class ProjectIO implements PropertyChangeListener {
                 JOptionPane.showMessageDialog(mainFrame,
                         "Could not find guest eye tracking data set \"" + guestDatasetPath + "\"!");
 
-                final JFileChooser fc = new JFileChooser();
+                final JFileChooser fc =
+                        new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
                 fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV file", "tsv"));
                 fc.setAcceptAllFileFilterUsed(false);
@@ -189,6 +202,8 @@ public class ProjectIO implements PropertyChangeListener {
 
                     final File chosenFile = fc.getSelectedFile();
                     proj.guestDatasetPaths.set(i, chosenFile.getAbsolutePath());
+
+                    Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
                 }
                 else
                     return false;
@@ -317,7 +332,8 @@ public class ProjectIO implements PropertyChangeListener {
 
     public void saveProject() {
 
-        final JFileChooser fc = new JFileChooser();
+        final JFileChooser fc =
+                new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
         fc.addChoosableFileFilter(new FileNameExtensionFilter("Eye tracker project (.etproj)", "etproj"));
         fc.setAcceptAllFileFilterUsed(false);
@@ -330,6 +346,8 @@ public class ProjectIO implements PropertyChangeListener {
             if (!chosenFile.getAbsolutePath().endsWith(".etproj"))
                 chosenFile = new File(chosenFile.getAbsolutePath().concat(".etproj"));
             Project.saveProjectToFile(chosenFile);
+
+            Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
         }
     }
 

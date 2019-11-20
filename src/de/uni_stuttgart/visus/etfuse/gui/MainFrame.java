@@ -165,7 +165,8 @@ public class MainFrame extends JFrame {
 
                 // https://docs.oracle.com/javase/tutorial/uiswing/components/filechooser.html
                 //Create a file chooser
-                final JFileChooser fc = new JFileChooser();
+                final JFileChooser fc =
+                        new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
                 fc.addChoosableFileFilter(new FileNameExtensionFilter("Video file", "mp4",
                                                                       "avi", "mkv", "flv", "mpeg"));
@@ -187,6 +188,8 @@ public class MainFrame extends JFrame {
 
                     MainFrame.this.setVisible(false);
                     MainFrame.this.dispose();
+
+                    Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
                 }
             }
         };
