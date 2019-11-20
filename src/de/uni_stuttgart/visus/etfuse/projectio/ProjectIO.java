@@ -7,6 +7,8 @@ import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Random;
 
 import javax.swing.JFileChooser;
@@ -209,7 +211,10 @@ public class ProjectIO implements PropertyChangeListener {
 
         Project proj = Project.currentProject();
 
-        vidFrame = new VideoFrame(proj.hostVidPath, proj.hostVidPath);
+        Path path = Paths.get(proj.hostVidPath);
+        Path fileName = path.getFileName();
+
+        vidFrame = new VideoFrame("ETFuse - " + fileName.toString(), proj.hostVidPath);
         vidFrame.setLocationRelativeTo(null);
 
         File hostDatasetFile = new File(proj.hostDatasetPath);
@@ -231,7 +236,7 @@ public class ProjectIO implements PropertyChangeListener {
                         }
 
                         if (rec != null) {
-                            rec.preferredGazeColor = 
+                            rec.preferredGazeColor =
                                 Project.currentProject().getPreferences().getColorPlayer1();
 
                             vidFrame.setHostRecording(rec);
@@ -347,7 +352,7 @@ public class ProjectIO implements PropertyChangeListener {
                 if (rec != null) {
 
                     if (vidFrame.getPanel().getProjectors().size() == 1)
-                        rec.preferredGazeColor = 
+                        rec.preferredGazeColor =
                             Project.currentProject().getPreferences().getColorPlayer2();
 
                     else if (vidFrame.getPanel().getProjectors().size() == 2)
