@@ -32,6 +32,7 @@ import de.uni_stuttgart.visus.etfuse.misc.Utils;
 public class BoxPickerFrame extends JDialog implements ChangeListener, MouseListener,
                                                                        MouseMotionListener {
 
+    private VideoFrame vidFrame;
     private BoxPickerSurfacePanel panel;
     private JPanel panelContainer;
     private JPanel playbackPanel;
@@ -46,7 +47,7 @@ public class BoxPickerFrame extends JDialog implements ChangeListener, MouseList
     private NotificationListener callbackTarget;
 
     public BoxPickerFrame(JDialog parentFrame, VideoCapture camera, EyeTrackerRecording rec,
-            NotificationListener callbackTarget) {
+            NotificationListener callbackTarget, VideoFrame vidFrame) {
 
         super(parentFrame, "Select area", true);
 
@@ -60,6 +61,7 @@ public class BoxPickerFrame extends JDialog implements ChangeListener, MouseList
         this.camera = camera;
         this.rec = rec;
         this.callbackTarget = callbackTarget;
+        this.vidFrame = vidFrame;
 
         this.setSize(0, 0);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -71,7 +73,7 @@ public class BoxPickerFrame extends JDialog implements ChangeListener, MouseList
         this.panel.attachCamera(camera);
         this.panel.setPaintGazePlot(true);
 
-        OverlayGazeProjector projector = new OverlayGazeProjector(rec);
+        OverlayGazeProjector projector = new OverlayGazeProjector(rec, vidFrame.getPanel());
         this.panel.attachProjector(projector);
 
         this.panel.addMouseListener(this);

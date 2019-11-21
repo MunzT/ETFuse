@@ -12,6 +12,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JPanel;
 
@@ -33,13 +34,14 @@ public class VideoSurfacePanel extends JPanel {
     static private VideoSurfacePanel lastInstance;
     protected BufferedImage image;
     protected VideoCapture camera;
-    protected ArrayList<OverlayGazeProjector> projectors;
+    protected ArrayList<OverlayGazeProjector> projectors; // heatmaps?
     private Boolean paintHeatMap = false;
     private Boolean repaintHeatMap = false;
     private Mat compositeHeatMap = null;
     private Boolean paintGazePlot = false;
     private Boolean paintRawDataPlot = false;
     private VideoFrame parentVideoFrame = null;
+    private ArrayList<Long> clicks = new ArrayList<Long>();
 
     static public VideoSurfacePanel lastInstanceIfExists() {
 
@@ -73,6 +75,10 @@ public class VideoSurfacePanel extends JPanel {
     public void attachProjector(OverlayGazeProjector projector) {
 
         this.projectors.add(projector);
+
+        ArrayList<Long> c = projector.getRecording().getClicks();
+        clicks.addAll(c);
+        Collections.sort(clicks);
     }
 
     public OverlayGazeProjector getProjector(int index) {
@@ -88,6 +94,11 @@ public class VideoSurfacePanel extends JPanel {
     public void setImage(BufferedImage image) {
 
         this.image = image;
+    }
+
+    public long getCurrentTime() {
+        return (long) Math.floor((camera.get(Videoio.CV_CAP_PROP_POS_FRAMES)
+                / camera.get(Videoio.CAP_PROP_FPS)) * 1000);
     }
 
     @Override
@@ -133,8 +144,7 @@ public class VideoSurfacePanel extends JPanel {
 
         Graphics2D g2 = (Graphics2D) g;
 
-        long currentTime = (long) Math.floor((camera.get(Videoio.CV_CAP_PROP_POS_FRAMES)
-                / camera.get(Videoio.CAP_PROP_FPS)) * 1000);
+        long currentTime = getCurrentTime();
 
         for (OverlayGazeProjector projector : this.projectors) {
 
@@ -186,8 +196,7 @@ public class VideoSurfacePanel extends JPanel {
 
         Graphics2D g2 = (Graphics2D) g;
 
-        long currentTime = (long) Math.floor((camera.get(Videoio.CV_CAP_PROP_POS_FRAMES)
-                / camera.get(Videoio.CAP_PROP_FPS)) * 1000);
+        long currentTime = getCurrentTime();
 
         for (OverlayGazeProjector projector : this.projectors) {
 
@@ -266,9 +275,12 @@ public class VideoSurfacePanel extends JPanel {
         if (repaintHeatMap) {
             for (int i = 0; i < this.projectors.size(); i++) {
                 OverlayGazeProjector proj = this.projectors.get(i);
-                HeatMapGenerator mapGen = new HeatMapGenerator(proj);
-                mapGen.attachVideoFrameForTitleUpdate(this.parentVideoFrame);
-                mapGen.execute();
+
+                for (int j = 0; j <= this.parentVideoFrame.getPanel().getClicks().size() + 1; j++) {
+                    HeatMapGenerator mapGen = new HeatMapGenerator(proj, j, this.parentVideoFrame);
+                    mapGen.attachVideoFrameForTitleUpdate(this.parentVideoFrame);
+                    mapGen.execute();
+                }
             }
 
             repaintHeatMap = false;
@@ -277,7 +289,7 @@ public class VideoSurfacePanel extends JPanel {
         int heatMapToPaint = Project.currentProject().getPreferences().getHeatMapOverlayPlayer();
 
         if (this.projectors.size() > heatMapToPaint)
-            this.compositeHeatMap = this.projectors.get(heatMapToPaint).getTransparentHeatMap();
+            this.compositeHeatMap = this.projectors.get(heatMapToPaint).getCurrentTransparentHeatMap();
         else
             return;
 
@@ -288,7 +300,7 @@ public class VideoSurfacePanel extends JPanel {
         }
     }
 
-    private void setRepaintHeatMap() {
+    public void setRepaintHeatMap() {
 
         repaintHeatMap = true;
     }
@@ -315,5 +327,9 @@ public class VideoSurfacePanel extends JPanel {
 
     public void setPaintHeatMap(Boolean paintHeatMap) {
         this.paintHeatMap = paintHeatMap;
+    }
+
+    public ArrayList<Long> getClicks() {
+        return clicks;
     }
 }

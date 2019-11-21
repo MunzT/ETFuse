@@ -68,7 +68,7 @@ public class FramePickerFrame extends JDialog implements ChangeListener {
         this.panel.setToolTipText("Current frame. Can be selected via \\\"Select this frame\\\".");
         this.panel.attachCamera(camera);
 
-        OverlayGazeProjector projector = new OverlayGazeProjector(rec);
+        OverlayGazeProjector projector = new OverlayGazeProjector(rec, panel);
         this.panel.attachProjector(projector);
 
         this.panel.setPreferredSize(new Dimension((int) Math.ceil(camera.get(Videoio.CAP_PROP_FRAME_WIDTH)), (int) Math.ceil(camera.get(Videoio.CAP_PROP_FRAME_HEIGHT))));

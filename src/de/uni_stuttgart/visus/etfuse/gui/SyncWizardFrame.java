@@ -171,7 +171,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                     VideoCapture sourceCamera = new VideoCapture(chosenFile.getAbsolutePath());
                     sourceVideo = sourceCamera;
                     BoxPickerFrame sourceBpf = new BoxPickerFrame(SyncWizardFrame.this,
-                            sourceCamera, sourceData, SyncWizardFrame.this);
+                            sourceCamera, sourceData, SyncWizardFrame.this, parentFrame);
                     childFrames.add(sourceBpf);
                     sourceBpf.setVisible(true);
 
@@ -256,7 +256,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                 EyeTrackerRecording targetData = parentFrame.hostProjector.getRecording();
 
                 BoxPickerFrame targetBpf = new BoxPickerFrame(SyncWizardFrame.this, targetCamera,
-                        targetData, SyncWizardFrame.this);
+                        targetData, SyncWizardFrame.this, parentFrame);
                 childFrames.add(targetBpf);
                 targetBpf.setVisible(true);
             }
@@ -493,7 +493,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
         else {
             // fertigstellen
 
-            OverlayGazeProjector newProjector = new OverlayGazeProjector(sourceData);
+            OverlayGazeProjector newProjector = new OverlayGazeProjector(sourceData, parentFrame.getPanel());
             newProjector.transformRawPointsToTarget(targetData);
             newProjector.transformFilteredPointsToTarget(targetData);
 
@@ -532,11 +532,24 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
 
             newProjector.setTimeSyncShift(timeShift);
 
-            HeatMapGenerator mapGen = new HeatMapGenerator(newProjector);
-            mapGen.attachVideoFrameForTitleUpdate(this.parentFrame);
-            mapGen.execute();
-
+            int previousClickNo = this.parentFrame.getPanel().getClicks().size();
             this.parentFrame.getPanel().attachProjector(newProjector);
+            int newClickNo = this.parentFrame.getPanel().getClicks().size();
+
+            for (int i = 0; i <= parentFrame.getPanel().getClicks().size() + 1; i++) {
+                HeatMapGenerator mapGen = new HeatMapGenerator(newProjector, i, parentFrame);
+                mapGen.attachVideoFrameForTitleUpdate(this.parentFrame);
+                mapGen.execute();
+            }
+
+            // recalculate for other projectors just the ones influenced by clicks
+            for (int i = 0; i < this.parentFrame.getPanel().getProjectors().size() - 1; i++) {
+                for (int j = 1; j <= newClickNo + 1; j++) {
+                    HeatMapGenerator mapGen = new HeatMapGenerator(this.parentFrame.getPanel().getProjector(i), j, this.parentFrame);
+                    mapGen.attachVideoFrameForTitleUpdate(this.parentFrame);
+                    mapGen.execute();
+                }
+            }
 
             Preferences prefs = proj.getPreferences();
             prefs.setMinDistPlotPlayer2(this.parentFrame.getPanel().getProjectors().size() - 1);

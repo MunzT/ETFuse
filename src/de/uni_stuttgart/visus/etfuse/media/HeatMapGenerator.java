@@ -25,6 +25,9 @@ public class HeatMapGenerator extends SwingWorker {
     private OverlayGazeProjector proj;
     private VideoFrame vidFrame;
     public int progress;
+    private long minTime;
+    private long maxTime;
+    private long heatmapId;
 
     private static ArrayList<HeatMapGenerator> allActiveGenerators = new ArrayList<HeatMapGenerator>();
 
@@ -39,9 +42,34 @@ public class HeatMapGenerator extends SwingWorker {
         }
     }
 
-    public HeatMapGenerator(OverlayGazeProjector proj) {
+    public HeatMapGenerator(OverlayGazeProjector proj, int heatmapId, VideoFrame vidFrame) {
 
         this.proj = proj;
+        this.heatmapId = heatmapId;
+        this.vidFrame = vidFrame;
+        int hostVidFps = (int) vidFrame.getPanel().getCamera().get(Videoio.CV_CAP_PROP_FPS);
+
+        if (heatmapId == 0) {
+            this.minTime = vidFrame.getHeatMapRangeLow();
+            this.maxTime = vidFrame.getHeatMapRangeHigh();
+        }
+        else {
+            ArrayList<Long> clicks = this.vidFrame.getPanel().getClicks();
+
+            if (heatmapId == 1) {// first click
+                this.minTime = vidFrame.getHostProjector().getRecording().getRawEyeEvents().get(0).timestamp; // beginning of video
+                this.maxTime = clicks.get(0) * hostVidFps / 1000;
+            }
+            else if (heatmapId == clicks.size() + 1) { // last click
+                this.minTime = clicks.get(clicks.size() - 1)  * hostVidFps / 1000;;
+                this.maxTime = vidFrame.getHostProjector().getRecording().getRawEyeEvents().get(
+                        vidFrame.getHostProjector().getRecording().getRawEyeEvents().size() - 1).timestamp; // end of video
+            }
+            else {
+                this.minTime = clicks.get(heatmapId - 2) * hostVidFps / 1000;
+                this.maxTime = clicks.get(heatmapId - 1) * hostVidFps / 1000;
+            }
+        }
     }
 
     @Override
@@ -49,43 +77,44 @@ public class HeatMapGenerator extends SwingWorker {
 
         Preferences prefs = Project.currentProject().getPreferences();
 
-        Mat heatMap = proj.getNormalizedHeatMap();
+        Mat heatMap = proj.getNormalizedHeatMap(heatmapId);
 
-        if (!proj.isHeatMapBeingGenerated()) {
+        if (true) {//(!proj.isHeatMapBeingGenerated()) { // TODO
             proj.setIsHeatMapBeingGenerated(true);
             HeatMapGenerator.allActiveGenerators.add(this);
             Mat step1 = generateHeatMapRaw(proj);
             if (this.isCancelled())
                 return heatMap;
-            proj.setRawHeatMap(step1);
+            proj.setRawHeatMap(step1, heatmapId);
             Mat step2 = normalizeHeatMap(step1, 0, 255);
 
             Mat finalStep;
 
-            // TODO heatmap
             if (true) {
                 // set everything equally transparent
                 Mat step3 = colorMapHeatMap(step2, prefs.getColorMap());
+                proj.setNormalizedHeatMap(step3, heatmapId);
 
                 finalStep = makeHeatMapTransparentABGR(step3);
             }
             else if (false) {
                 // remove black; for Imgproc.COLORMAP_HOT
                 Mat step3 = colorMapHeatMap(step2, prefs.getColorMap());
+                proj.setNormalizedHeatMap(step3, heatmapId);
 
                 finalStep = makeHeatMapTransparentABGR_removeBlack(step3);
             }
             else if (false) {
-                // TODO original version version
+                // TODO original version
                 Mat step3 = colorMapHeatMap(step2, Imgproc.COLORMAP_HOT);
-                proj.setNormalizedHeatMap(step3);
+                proj.setNormalizedHeatMap(step3, heatmapId);
 
                 step3 = colorMapHeatMap(step2, prefs.getColorMap());
 
                 finalStep = makeHeatMapTransparentABGR_removeBlue(step3);
             }
 
-            proj.setTransparentHeatMap(finalStep);
+            proj.setTransparentHeatMap(finalStep, heatmapId);
             proj.setIsHeatMapBeingGenerated(false);
             HeatMapGenerator.allActiveGenerators.remove(this);
 
@@ -142,14 +171,31 @@ public class HeatMapGenerator extends SwingWorker {
         return result;
     }
 
-    public static Mat processDiffedHeatMap(Mat hm1, Mat hm2) {
+    public static Mat processDiffedHeatMap(Mat hm1, Mat hm2, Boolean absoluteDiff) {
 
         Mat hm3 = new Mat();
-        Core.subtract(hm1, hm2, hm3);
+
+        if (absoluteDiff) {
+            Core.absdiff(hm1, hm2, hm3);
+        }
+        else {
+            Core.subtract(hm1, hm2, hm3);
+        }
 
         hm3 = normalizeHeatMap(hm3, 0, 255);
         hm3 = colorMapHeatMap(hm3, Project.currentProject().getPreferences().getColorMap());
 
+
+        return hm3;
+    }
+
+    public static Mat processAddedHeatMap(Mat hm1, Mat hm2) {
+
+        Mat hm3 = new Mat();
+        Core.add(hm1, hm2, hm3);
+
+        hm3 = normalizeHeatMap(hm3, 0, 255);
+        hm3 = colorMapHeatMap(hm3, Project.currentProject().getPreferences().getColorMap());
 
         return hm3;
     }
@@ -168,7 +214,7 @@ public class HeatMapGenerator extends SwingWorker {
                 pixel[1] = pixel[0];
 
                 // alpha
-                pixel[0] = 256 / 2;
+                pixel[0] = Project.currentProject().getPreferences().getHeatmapTransparency();
 
                 transparent.put(y, x, pixel);
             }
@@ -308,8 +354,8 @@ public class HeatMapGenerator extends SwingWorker {
 
         if (vidFrame != null) {
             int hostVidFps = (int) vidFrame.getPanel().getCamera().get(Videoio.CV_CAP_PROP_FPS);
-            int startTS = (vidFrame.getHeatMapRangeLow() / hostVidFps) * 1000;
-            int stopTS = (vidFrame.getHeatMapRangeHigh() / hostVidFps) * 1000;
+            long startTS = (minTime / hostVidFps) * 1000;
+            long stopTS = (maxTime / hostVidFps) * 1000;
 
             eyeEvents = hostProj.eventsBetweenShiftedTimestamps(startTS, stopTS, false, true);
         }

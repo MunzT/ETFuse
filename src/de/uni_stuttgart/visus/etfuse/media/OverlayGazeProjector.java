@@ -3,27 +3,41 @@ package de.uni_stuttgart.visus.etfuse.media;
 import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.opencv.core.Mat;
 
 import de.uni_stuttgart.visus.etfuse.eyetracker.EyeTrackerEyeEvent;
 import de.uni_stuttgart.visus.etfuse.eyetracker.EyeTrackerRecording;
+import de.uni_stuttgart.visus.etfuse.gui.surface.VideoSurfacePanel;
+import de.uni_stuttgart.visus.etfuse.misc.Preferences;
 import de.uni_stuttgart.visus.etfuse.misc.Utils;
+import de.uni_stuttgart.visus.etfuse.projectio.Project;
 
 public class OverlayGazeProjector {
 
     private EyeTrackerRecording recording;
+    private VideoSurfacePanel vidFramePanel = null;
     private int lastSearchPointer;
     private long lastSearchTimestamp;
     private long timeSyncOffset;
-    private Mat rawHeatMap;
-    private Mat standardHeatMap;
-    private Mat transparentHeatMap;
+
+    // Lists of heatmaps:
+    // index 0: for selected region (defined by slider)
+    // from index 1: heatmaps for regions defined by mousen clicks
+    // index 1: region before first click
+    // index 1 - #clicks + 1: region between two clicks
+    // index #clicks + 2: region after last click
+    private Map<Long, Mat> rawHeatMaps = new HashMap<Long, Mat>();
+    private Map<Long, Mat> standardHeatMaps = new HashMap<Long, Mat>();
+    private Map<Long, Mat> transparentHeatMaps = new HashMap<Long, Mat>();
     private Boolean heatMapIsBeingGenerated = false;
 
-    public OverlayGazeProjector(EyeTrackerRecording recording) {
+    public OverlayGazeProjector(EyeTrackerRecording recording, VideoSurfacePanel vidFramePanel) {
 
         this.recording = recording;
+        this.vidFramePanel = vidFramePanel;
 
         lastSearchPointer = 0;
         lastSearchTimestamp = 0;
@@ -114,41 +128,76 @@ public class OverlayGazeProjector {
                 fromRawData, includeEyesNotFound);
     }
 
-    public void setRawHeatMap(Mat heatMap) {
-
-        this.rawHeatMap = heatMap;
+    public void setRawHeatMap(Mat heatMap, long id) {
+        this.rawHeatMaps.put(id, heatMap);
     }
 
-    public Mat getRawHeatMap() {
-
-        return this.rawHeatMap;
+    public Mat getCurrentRawHeatMap() {
+        return getRawHeatMap(determineCurrentHeatmapId());
     }
 
-    public void setNormalizedHeatMap(Mat heatMap) {
-
-        this.standardHeatMap = heatMap;
+    public Mat getRawHeatMap(long id) {
+        if (this.rawHeatMaps.containsKey(id))
+            return this.rawHeatMaps.get(id);
+        return null;
     }
 
-    public Mat getNormalizedHeatMap() {
-
-        return this.standardHeatMap;
+    public void setNormalizedHeatMap(Mat heatMap, long id) {
+        this.standardHeatMaps.put(id, heatMap);
     }
 
-    public void setTransparentHeatMap(Mat heatMap) {
-
-        this.transparentHeatMap = heatMap;
+    public Mat getCurrentNormalizedHeatMap() {
+        return getNormalizedHeatMap(determineCurrentHeatmapId());
     }
 
-    public Mat getTransparentHeatMap() {
-
-        return this.transparentHeatMap;
+    public Mat getNormalizedHeatMap(long id) {
+        if (this.standardHeatMaps.containsKey(id))
+            return this.standardHeatMaps.get(id);
+        return null;
     }
 
-    public Boolean isHeatMapBeingGenerated() {
-        return heatMapIsBeingGenerated;
+    public void setTransparentHeatMap(Mat heatMap, long id) {
+        this.transparentHeatMaps.put(id, heatMap);
+    }
+
+    public Mat getTransparentHeatMap(long id) {
+        if (this.transparentHeatMaps.containsKey(id))
+            return this.transparentHeatMaps.get(id);
+        return null;
+    }
+
+    public Mat getCurrentTransparentHeatMap() {
+        return getTransparentHeatMap(determineCurrentHeatmapId());
     }
 
     public void setIsHeatMapBeingGenerated(Boolean heatMapIsBeingGenerated) {
         this.heatMapIsBeingGenerated = heatMapIsBeingGenerated;
+    }
+
+    public Boolean isHeatMapBeingGenerated() {
+        return this.heatMapIsBeingGenerated;
+    }
+
+    private int determineCurrentHeatmapId() {
+        if (Project.currentProject().getPreferences().getHeatMapSource()
+                == Preferences.HeatMapTimeSource.USERDEFINED) {
+            return 0;
+        }
+        else { // depends on mouse click
+            long currentTime = this.vidFramePanel.getCurrentTime();
+            ArrayList<Long> clicks = this.vidFramePanel.getClicks();
+
+            int mapIndex = 1;
+            for (int i = 0; i < clicks.size(); i++)
+            {
+                if (currentTime >= clicks.get(i)) {
+                    mapIndex++;
+                }
+                else {
+                    return mapIndex;
+                }
+            }
+            return mapIndex;
+        }
     }
 }

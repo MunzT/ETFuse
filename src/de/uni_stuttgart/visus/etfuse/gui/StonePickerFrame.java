@@ -69,7 +69,7 @@ public class StonePickerFrame extends JDialog implements ChangeListener, MouseLi
         this.panel.setToolTipText("Click in the center  of a brick");
         this.panel.attachCamera(camera);
 
-        OverlayGazeProjector projector = new OverlayGazeProjector(rec);
+        OverlayGazeProjector projector = new OverlayGazeProjector(rec, panel);
         this.panel.attachProjector(projector);
 
         this.panel.addMouseListener(this);

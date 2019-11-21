@@ -257,7 +257,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
                 for (OverlayGazeProjector p : VideoFrame.this.getPanel().getProjectors()) {
 
-                    if (p.getRawHeatMap() == null || p.isHeatMapBeingGenerated()) {
+                    if (p.getCurrentRawHeatMap() == null || p.isHeatMapBeingGenerated()) {
 
                         JOptionPane.showMessageDialog(null, "Heatmap generation is not yet completed!");
                         return;
@@ -422,7 +422,9 @@ public class VideoFrame extends JFrame implements ChangeListener {
                     HeatMapGenerator.killAllActiveGenerators();
 
                     for (OverlayGazeProjector proj : VideoFrame.this.getPanel().getProjectors()) {
-                        HeatMapGenerator mapGen = new HeatMapGenerator(proj);
+                        int i = 0; // just for the first heatmap which i used for the user defined
+                                   // time range
+                        HeatMapGenerator mapGen = new HeatMapGenerator(proj, i, VideoFrame.this);
                         mapGen.attachVideoFrameForTitleUpdate(VideoFrame.this);
                         mapGen.execute();
                     }
@@ -499,12 +501,14 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
     public void setHostRecording(EyeTrackerRecording rec) {
 
-        this.hostProjector = new OverlayGazeProjector(rec);
+        this.hostProjector = new OverlayGazeProjector(rec, this.getPanel());
         this.panel.attachProjector(this.hostProjector);
 
-        HeatMapGenerator mapGen = new HeatMapGenerator(this.hostProjector);
-        mapGen.attachVideoFrameForTitleUpdate(this);
-        mapGen.execute();
+        for (int i = 0; i <= this.getPanel().getClicks().size() + 1; i++) {
+            HeatMapGenerator mapGen = new HeatMapGenerator(this.hostProjector, i, this);
+            mapGen.attachVideoFrameForTitleUpdate(this);
+            mapGen.execute();
+        }
     }
 
     public void setPlaybackSpeed(double speed) {

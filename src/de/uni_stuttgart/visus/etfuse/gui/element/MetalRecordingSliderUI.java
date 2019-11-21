@@ -23,6 +23,11 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
     private int minDistance = 0;
     private int safeLength = 0;
 
+    enum GazeDistanceState
+    {
+       CLOSE, FARAWAY, OUTSIDEBOARD, OUTSIDESCREEN;
+    };
+
     public MetalRecordingSliderUI() {
 
         super();
@@ -72,82 +77,207 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
         if (slider.getOrientation() == JSlider.HORIZONTAL) {
             g.translate(0, tickBounds.y);
 
+            GazeDistanceState currentState = GazeDistanceState.OUTSIDEBOARD;;
+
+            ArrayList<Long> clicks = this.vidFrame.getPanel().getClicks();
+            int nextClickId = 0;
+
             for (int x = 0; x < trackRect.width; x++) {
 
                 int xPos = x + trackRect.x;
-                double progress = ((double) x) / trackRect.width;
-                long progressTS = Math.round(startTS + (progress * (endTS - startTS)));
 
-                // progressStartTS und progressEndTS markieren den Bereich aller Punkte, die am nächsten an progressTS liegen
-                // .     -----.-----ooooo.ooooo     .     # - bzw. o markiert Bereich, . ist progressTS für Pixel des Tracks
-                long progressStartTS = startTS;
-                if (x > 0) {
-                    progressStartTS = Math.round(startTS + ((((double) x - 1) / trackRect.width)
-                            * (endTS - startTS)));
-                    progressStartTS = Math.round((progressStartTS + progressTS) * 0.5);
-                }
+                if (prefs.getMinDistSubdivision() == Preferences.MinDistSubdivision.MINAREAS) {
+                    double progress = ((double) x) / trackRect.width;
+                    long progressTS = Math.round(startTS + (progress * (endTS - startTS)));
 
-                long progressEndTS = endTS;
-                if (x < trackRect.width - 1) {
-                    progressEndTS = Math.round(startTS + ((((double) x + 1) / trackRect.width)
-                            * (endTS - startTS)));
-                    progressEndTS = Math.round((progressEndTS + progressTS) * 0.5);
-                }
-
-                ArrayList<EyeTrackerEyeEvent> hostEvents =
-                        hostProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
-                ArrayList<EyeTrackerEyeEvent> guestEvents =
-                        guestProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
-
-                if (hostEvents == null || hostEvents.size() < 1 || guestEvents == null || guestEvents.size() < 1)
-                    g.setColor(prefs.getColorMinDistOutsideDisplay());
-                else {
-
-                    int belowMinDistanceCounter = 0;
-                    int aboveMinDistanceCounter = 0;
-                    int notContainedInRectCounter = 0;
-                    int guestIndex = 0;
-
-                    for (EyeTrackerEyeEvent hostEvent : hostEvents) {
-
-                        if (!hostEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
-                            notContainedInRectCounter++;
-                            continue;
-                        }
-
-                        long tsHost = hostEvent.timestamp - hostProj.getTimeSyncOffset();
-
-                        while (guestIndex < guestEvents.size()) {
-
-                            EyeTrackerEyeEvent guestEvent = guestEvents.get(guestIndex);
-
-                            // TODO: nicht immer mit allen gast-events vergleichen
-                            if ((guestEvent.timestamp - guestProj.getTimeSyncOffset()) < tsHost)
-                                break;
-
-                            if (!guestEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
-                                notContainedInRectCounter++;
-                            }
-                            else {
-                                Point hostPoint = new Point(hostEvent.fixationPointX, hostEvent.fixationPointY);
-                                Point guestPoint = new Point(guestEvent.fixationPointX, guestEvent.fixationPointY);
-
-                                if (hostPoint.distance(guestPoint) > minDistance)
-                                    aboveMinDistanceCounter++;
-                                else
-                                    belowMinDistanceCounter++;
-                            }
-
-                            guestIndex++;
-                        }
+                    // progressStartTS und progressEndTS markieren den Bereich aller Punkte, die am nächsten an progressTS liegen
+                    // .     -----.-----ooooo.ooooo     .     # - bzw. o markiert Bereich, . ist progressTS für Pixel des Tracks
+                    long progressStartTS = startTS;
+                    if (x > 0) {
+                        progressStartTS = Math.round(startTS + ((((double) x - 1) / trackRect.width)
+                                * (endTS - startTS)));
+                        progressStartTS = Math.round((progressStartTS + progressTS) * 0.5);
                     }
 
-                    if (notContainedInRectCounter > belowMinDistanceCounter && notContainedInRectCounter > aboveMinDistanceCounter)
-                        g.setColor(prefs.getColorMinDistOutsideBoard());
-                    else if (belowMinDistanceCounter > aboveMinDistanceCounter && belowMinDistanceCounter > notContainedInRectCounter)
-                        g.setColor(prefs.getColorMinDistClose());
-                    else if (aboveMinDistanceCounter > belowMinDistanceCounter && aboveMinDistanceCounter > notContainedInRectCounter)
-                        g.setColor(prefs.getColorMinDistFarAway());
+                    long progressEndTS = endTS;
+                    if (x < trackRect.width - 1) {
+                        progressEndTS = Math.round(startTS + ((((double) x + 1) / trackRect.width)
+                                * (endTS - startTS)));
+                        progressEndTS = Math.round((progressEndTS + progressTS) * 0.5);
+                    }
+
+                    ArrayList<EyeTrackerEyeEvent> hostEvents =
+                            hostProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
+                    ArrayList<EyeTrackerEyeEvent> guestEvents =
+                            guestProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
+
+                    if (hostEvents == null || hostEvents.size() < 1 || guestEvents == null || guestEvents.size() < 1)
+                        currentState = GazeDistanceState.OUTSIDESCREEN;
+                    else {
+
+                        int belowMinDistanceCounter = 0;
+                        int aboveMinDistanceCounter = 0;
+                        int notContainedInRectCounter = 0;
+                        int guestIndex = 0;
+
+                        for (EyeTrackerEyeEvent hostEvent : hostEvents) {
+
+                            if (!hostEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
+                                notContainedInRectCounter++;
+                                continue;
+                            }
+
+                            long tsHost = hostEvent.timestamp - hostProj.getTimeSyncOffset();
+
+                            while (guestIndex < guestEvents.size()) {
+
+                                EyeTrackerEyeEvent guestEvent = guestEvents.get(guestIndex);
+
+                                // TODO: nicht immer mit allen gast-events vergleichen
+                                if ((guestEvent.timestamp - guestProj.getTimeSyncOffset()) < tsHost)
+                                    break;
+
+                                if (!guestEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
+                                    notContainedInRectCounter++;
+                                }
+                                else {
+                                    Point hostPoint = new Point(hostEvent.fixationPointX, hostEvent.fixationPointY);
+                                    Point guestPoint = new Point(guestEvent.fixationPointX, guestEvent.fixationPointY);
+
+                                    if (hostPoint.distance(guestPoint) > minDistance)
+                                        aboveMinDistanceCounter++;
+                                    else
+                                        belowMinDistanceCounter++;
+                                }
+
+                                guestIndex++;
+                            }
+                        }
+
+                        if (notContainedInRectCounter > belowMinDistanceCounter
+                                && notContainedInRectCounter > aboveMinDistanceCounter)
+                            currentState = GazeDistanceState.OUTSIDEBOARD;
+                        else if (belowMinDistanceCounter > aboveMinDistanceCounter
+                                && belowMinDistanceCounter > notContainedInRectCounter)
+                            currentState = GazeDistanceState.CLOSE;
+                        else if (aboveMinDistanceCounter > belowMinDistanceCounter
+                                && aboveMinDistanceCounter > notContainedInRectCounter)
+                            currentState = GazeDistanceState.FARAWAY;
+                    }
+                }
+                else {
+                    double progress = ((double) x) / trackRect.width;
+                    long progressTS = Math.round(startTS + (progress * (endTS - startTS)));
+
+                    // progressStartTS und progressEndTS markieren den Bereich aller Punkte, die am nächsten an progressTS liegen
+                    // .     -----.-----ooooo.ooooo     .     # - bzw. o markiert Bereich, . ist progressTS für Pixel des Tracks
+                    long progressStartTS = startTS;
+                    if (x > 0) {
+                        progressStartTS = Math.round(startTS + ((((double) x - 1) / trackRect.width)
+                                * (endTS - startTS)));
+                        progressStartTS = Math.round((progressStartTS + progressTS) * 0.5);
+                    }
+
+                    long progressEndTS = endTS;
+                    if (x < trackRect.width - 1) {
+                        progressEndTS = Math.round(startTS + ((((double) x + 1) / trackRect.width)
+                                * (endTS - startTS)));
+                        progressEndTS = Math.round((progressEndTS + progressTS) * 0.5);
+                    }
+
+                    if (nextClickId >= clicks.size() || progressEndTS < clicks.get(nextClickId)) {
+                        // no nothing and draw same as before
+                    }
+                    else {
+                        Long startTime;
+                        Long endTime;
+
+                        if (nextClickId == 0) { // area before first click
+                            startTime = startTS;
+                            endTime = clicks.get(nextClickId);
+                        }
+                        else if (nextClickId == clicks.size()) { // area after last click
+                            startTime = clicks.get(nextClickId - 1);
+                            endTime = endTS;
+                        }
+                        else {
+                            startTime = clicks.get(nextClickId - 1);
+                            endTime = clicks.get(nextClickId);;
+                        }
+
+                        ArrayList<EyeTrackerEyeEvent> hostEvents =
+                                hostProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
+                        ArrayList<EyeTrackerEyeEvent> guestEvents =
+                                guestProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
+
+                        if (hostEvents == null || hostEvents.size() < 1 || guestEvents == null || guestEvents.size() < 1)
+                            currentState = GazeDistanceState.OUTSIDESCREEN;
+                        else {
+
+                            int belowMinDistanceCounter = 0;
+                            int aboveMinDistanceCounter = 0;
+                            int notContainedInRectCounter = 0;
+                            int guestIndex = 0;
+
+                            for (EyeTrackerEyeEvent hostEvent : hostEvents) {
+
+                                if (!hostEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
+                                    notContainedInRectCounter++;
+                                    continue;
+                                }
+
+                                long tsHost = hostEvent.timestamp - hostProj.getTimeSyncOffset();
+
+                                while (guestIndex < guestEvents.size()) {
+
+                                    EyeTrackerEyeEvent guestEvent = guestEvents.get(guestIndex);
+
+                                    // TODO: nicht immer mit allen gast-events vergleichen
+                                    if ((guestEvent.timestamp - guestProj.getTimeSyncOffset()) < tsHost)
+                                        break;
+
+                                    if (!guestEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
+                                        notContainedInRectCounter++;
+                                    }
+                                    else {
+                                        Point hostPoint = new Point(hostEvent.fixationPointX, hostEvent.fixationPointY);
+                                        Point guestPoint = new Point(guestEvent.fixationPointX, guestEvent.fixationPointY);
+
+                                        if (hostPoint.distance(guestPoint) > minDistance)
+                                            aboveMinDistanceCounter++;
+                                        else
+                                            belowMinDistanceCounter++;
+                                    }
+
+                                    guestIndex++;
+                                }
+                            }
+
+                            if (notContainedInRectCounter > belowMinDistanceCounter
+                                    && notContainedInRectCounter > aboveMinDistanceCounter)
+                                currentState = GazeDistanceState.OUTSIDEBOARD;
+                            else if (belowMinDistanceCounter > aboveMinDistanceCounter
+                                    && belowMinDistanceCounter > notContainedInRectCounter)
+                                currentState = GazeDistanceState.CLOSE;
+                            else if (aboveMinDistanceCounter > belowMinDistanceCounter
+                                    && aboveMinDistanceCounter > notContainedInRectCounter)
+                                currentState = GazeDistanceState.FARAWAY;
+                        }
+                        nextClickId++;
+                    }
+                }
+
+                if (currentState == GazeDistanceState.CLOSE) {
+                    g.setColor(prefs.getColorMinDistClose());
+                }
+                else if (currentState == GazeDistanceState.FARAWAY) {
+                    g.setColor(prefs.getColorMinDistFarAway());
+                }
+                else if (currentState == GazeDistanceState.OUTSIDEBOARD) {
+                    g.setColor(prefs.getColorMinDistOutsideBoard());
+                }
+                else if (currentState == GazeDistanceState.OUTSIDESCREEN) {
+                    g.setColor(prefs.getColorMinDistOutsideDisplay());
                 }
 
                 paintMajorTickForHorizSlider(g, tickBounds, xPos);
@@ -156,88 +286,7 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
             g.translate( 0, -tickBounds.y);
         }
         else {
-            g.translate(tickBounds.x, 0);
-
-            for (int y = 0; y < trackRect.height; y++) {
-
-                int yPos = y + trackRect.x;
-                double progress = ((double) y) / trackRect.height;
-                long progressTS = (long) (startTS + (progress * (endTS - startTS)));
-
-                long progressStartTS = startTS;
-                if (y > 0) {
-                    progressStartTS = Math.round(startTS + ((((double) y - 1) / trackRect.width)
-                            * (endTS - startTS)));
-                    progressStartTS = Math.round((progressStartTS + progressTS) * 0.5);
-                }
-
-                long progressEndTS = endTS;
-                if (y < trackRect.height - 1) {
-                    progressEndTS = Math.round(startTS + ((((double) y + 1) / trackRect.width)
-                            * (endTS - startTS)));
-                    progressEndTS = Math.round((progressEndTS + progressTS) * 0.5);
-                }
-
-                ArrayList<EyeTrackerEyeEvent> hostEvents =
-                        hostProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
-                ArrayList<EyeTrackerEyeEvent> guestEvents =
-                        guestProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
-
-                if (hostEvents == null || hostEvents.size() < 1 || guestEvents == null || guestEvents.size() < 1)
-                    g.setColor(prefs.getColorMinDistOutsideDisplay());
-                else {
-
-                    int belowMinDistanceCounter = 0;
-                    int aboveMinDistanceCounter = 0;
-                    int notContainedInRectCounter = 0;
-                    int guestIndex = 0;
-
-                    for (EyeTrackerEyeEvent hostEvent : hostEvents) {
-
-                        if (!hostEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
-                            notContainedInRectCounter++;
-                            continue;
-                        }
-
-                        long tsHost = hostEvent.timestamp - hostProj.getTimeSyncOffset();
-
-                        while (guestIndex < guestEvents.size()) {
-
-                            EyeTrackerEyeEvent guestEvent = guestEvents.get(guestIndex);
-
-                            if ((guestEvent.timestamp - guestProj.getTimeSyncOffset()) < tsHost)
-                                break;
-
-                            if (!guestEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
-                                notContainedInRectCounter++;
-                            }
-                            else {
-                                Point hostPoint = new Point(hostEvent.fixationPointX, hostEvent.fixationPointY);
-                                Point guestPoint = new Point(guestEvent.fixationPointX, guestEvent.fixationPointY);
-
-                                if (hostPoint.distance(guestPoint) > minDistance)
-                                    aboveMinDistanceCounter++;
-                                else
-                                    belowMinDistanceCounter++;
-                            }
-
-                            guestIndex++;
-                        }
-                    }
-
-
-                    if (notContainedInRectCounter > belowMinDistanceCounter && notContainedInRectCounter > aboveMinDistanceCounter)
-                        g.setColor(prefs.getColorMinDistOutsideBoard());
-                    else if (belowMinDistanceCounter > aboveMinDistanceCounter && belowMinDistanceCounter > notContainedInRectCounter)
-                        g.setColor(prefs.getColorMinDistFarAway());
-                    else if (aboveMinDistanceCounter > belowMinDistanceCounter && aboveMinDistanceCounter > notContainedInRectCounter)
-                        g.setColor(prefs.getColorMinDistClose());
-                }
-
-                paintMajorTickForVertSlider(g, tickBounds, yPos);
-            }
-
-            g.translate(-tickBounds.x, 0);
+            // slider has to be horizontal
         }
     }
 

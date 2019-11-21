@@ -302,16 +302,31 @@ public class ProjectIO implements PropertyChangeListener {
         Rectangle guestFrame = proj.guestFrames.get(curGuest);
         lastRec.setFrame(new Point((int) guestFrame.getMinX(), (int) guestFrame.getMinY()),
                 new Point((int) guestFrame.getMaxX(), (int) guestFrame.getMaxY()));
-        OverlayGazeProjector guestProj = new OverlayGazeProjector(lastRec);
+        OverlayGazeProjector guestProj = new OverlayGazeProjector(lastRec, vidFrame.getPanel());
         guestProj.transformRawPointsToTarget(vidFrame.getHostProjector().getRecording());
         guestProj.transformFilteredPointsToTarget(vidFrame.getHostProjector().getRecording());
         guestProj.setTimeSyncShift(proj.guestTimeShiftOffsets.get(curGuest));
 
-        HeatMapGenerator mapGen = new HeatMapGenerator(guestProj);
-        mapGen.attachVideoFrameForTitleUpdate(vidFrame);
-        mapGen.execute();
-
+        int previousClickNo = vidFrame.getPanel().getClicks().size();
         vidFrame.getPanel().attachProjector(guestProj);
+        int newClickNo = vidFrame.getPanel().getClicks().size();
+
+        for (int i = 0; i <= newClickNo + 1; i++) {
+            HeatMapGenerator mapGen = new HeatMapGenerator(guestProj, i, vidFrame);
+            mapGen.attachVideoFrameForTitleUpdate(vidFrame);
+            mapGen.execute();
+        }
+
+        if (newClickNo != previousClickNo) {
+            // recalculate for host
+            for (int i = 0; i < vidFrame.getPanel().getProjectors().size() - 1; i++) {
+                for (int j = 1; j <= newClickNo + 1; j++) {
+                    HeatMapGenerator mapGen = new HeatMapGenerator(vidFrame.getPanel().getProjector(i), j, vidFrame);
+                    mapGen.attachVideoFrameForTitleUpdate(vidFrame);
+                    mapGen.execute();
+                }
+            }
+        }
 
         curGuest++;
 

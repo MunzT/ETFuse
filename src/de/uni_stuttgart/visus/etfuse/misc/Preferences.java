@@ -21,6 +21,12 @@ public class Preferences implements Serializable {
     private int minDistPlotPlayer2 = 0;
     private int minDistPlotMinDist = 150;
 
+    public enum MinDistSubdivision
+    {
+       MINAREAS, CLICKS;
+    }
+    private MinDistSubdivision minDistSubdivision = MinDistSubdivision.CLICKS;
+
     // Gaze-Filter
     private int filterVelocityThreshold = 20;
     private int filterDistanceThreshold = 35;
@@ -31,6 +37,13 @@ public class Preferences implements Serializable {
     private int heatMapGenHeatRadius = 80;
     private Boolean heatMapGenGenFromFrequencyInstead = false;
 
+    public enum HeatMapTimeSource
+    {
+       USERDEFINED, CLICKS;
+    }
+    private HeatMapTimeSource heatMapSource = HeatMapTimeSource.CLICKS;
+    private int heatmapTransparency = 128;
+
     // Temp Sync
     private int histogramGridSize = 16;
     private int histogramCorrelationThreshold = 40;
@@ -40,8 +53,6 @@ public class Preferences implements Serializable {
     private String prevFileDirectory = "";
 
     // Colors for fixations
-    //private Color colorPlayer1 = new Color(255, 0, 0);
-    //private Color colorPlayer2 = new Color(0, 255, 0);
     private Color colorPlayer1 = new Color(0, 0, 0);
     private Color colorPlayer2 = new Color(240, 240, 240);
 
@@ -52,7 +63,7 @@ public class Preferences implements Serializable {
     private Color colorMinDistFarAway = new Color(40, 161, 151);
 
     // Colormap
-    private int colorMap = Imgproc.COLORMAP_VIRIDIS;
+    private int colorMap = Imgproc.COLORMAP_MAGMA;
 
     public Boolean getEnableHeatMapOverlay() {
         return enableHeatMapOverlay;
@@ -102,6 +113,13 @@ public class Preferences implements Serializable {
     public void setMinDistPlotMinDist(int minDistPlotMinDist) {
         this.minDistPlotMinDist = minDistPlotMinDist;
     }
+    public MinDistSubdivision getMinDistSubdivision() {
+        return minDistSubdivision;
+    }
+    public void setMinDistSubdivision(MinDistSubdivision minDistSubdivision) {
+        this.minDistSubdivision = minDistSubdivision;
+    }
+
     public int getFilterVelocityThreshold() {
         return filterVelocityThreshold;
     }
@@ -138,6 +156,18 @@ public class Preferences implements Serializable {
     public void setHeatMapGenGenFromFrequencyInstead(Boolean heatMapGenGenFromFrequencyInstead) {
         this.heatMapGenGenFromFrequencyInstead = heatMapGenGenFromFrequencyInstead;
     }
+    public HeatMapTimeSource getHeatMapSource() {
+        return heatMapSource;
+    }
+    public void setHeatMapSource(HeatMapTimeSource heatMapSource) {
+        this.heatMapSource = heatMapSource;
+    }
+    public void setHeatmapTransparency(int heatmapTransparency) {
+        this.heatmapTransparency = heatmapTransparency;
+    }
+    public int getHeatmapTransparency() {
+        return this.heatmapTransparency;
+    }
     public int getHistogramGridSize() {
         return histogramGridSize;
     }
@@ -163,7 +193,6 @@ public class Preferences implements Serializable {
         this.prevFileDirectory = prevFileDirectory;
     }
     public Color getColorPlayer1() {
-        System.out.print(colorPlayer1);
         return this.colorPlayer1;
     }
     public void setColorPlayer1(Color colorPlayer1) {
