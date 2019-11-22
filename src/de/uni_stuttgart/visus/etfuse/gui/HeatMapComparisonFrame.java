@@ -173,7 +173,7 @@ public class HeatMapComparisonFrame extends JFrame {
                         FormSpecs.UNRELATED_GAP_ROWSPEC,
                         FormSpecs.MIN_ROWSPEC,
                         FormSpecs.LABEL_COMPONENT_GAP_ROWSPEC,
-                        RowSpec.decode("116px:grow"),
+                        RowSpec.decode("130px:grow"),
                         FormSpecs.MIN_ROWSPEC,
                         FormSpecs.MIN_ROWSPEC}));
 
@@ -231,6 +231,8 @@ public class HeatMapComparisonFrame extends JFrame {
                         FormSpecs.RELATED_GAP_ROWSPEC,
                         FormSpecs.DEFAULT_ROWSPEC,
                         FormSpecs.RELATED_GAP_ROWSPEC,
+                        FormSpecs.DEFAULT_ROWSPEC,
+                        FormSpecs.RELATED_GAP_ROWSPEC,
                         FormSpecs.DEFAULT_ROWSPEC,}));
 
         JButton btnLinksRechts = new JButton("Difference left minus right");
@@ -247,7 +249,7 @@ public class HeatMapComparisonFrame extends JFrame {
                 chckbxGetrenntNormalisieren.setEnabled(false);
             }
         });
-        btnContainer.add(btnLinksRechts, "1, 1, center, top");
+        btnContainer.add(btnLinksRechts, "1, 3, center, top");
 
         JButton btnStandardansicht = new JButton("Default view");
         btnStandardansicht.addActionListener(new ActionListener() {
@@ -279,7 +281,7 @@ public class HeatMapComparisonFrame extends JFrame {
                 chckbxGetrenntNormalisieren.setEnabled(false);
             }
         });
-        btnContainer.add(btnSum, "2, 3, center, top");
+        btnContainer.add(btnSum, "2, 5, center, top");
 
         JButton btnLeft = new JButton("Left");
         btnLeft.addActionListener(new ActionListener() {
@@ -295,7 +297,7 @@ public class HeatMapComparisonFrame extends JFrame {
                 chckbxGetrenntNormalisieren.setEnabled(false);
             }
         });
-        btnContainer.add(btnLeft, "1, 3, center, top");
+        btnContainer.add(btnLeft, "1, 1, center, top");
 
         JButton btnRight = new JButton("Right");
         btnRight.addActionListener(new ActionListener() {
@@ -311,7 +313,23 @@ public class HeatMapComparisonFrame extends JFrame {
                 chckbxGetrenntNormalisieren.setEnabled(false);
             }
         });
-        btnContainer.add(btnRight, "3, 3, center, top");
+        btnContainer.add(btnRight, "3, 1, center, top");
+
+        JButton btnIntersection = new JButton("Intersection");
+        btnIntersection.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                mode = 7;
+
+                redrawHeatMaps();
+
+                splitHeatMapPanel.setVisible(false);
+                singleHeatMapPanelContainer.setVisible(true);
+                chckbxGetrenntNormalisieren.setEnabled(false);
+            }
+        });
+        btnContainer.add(btnIntersection, "2, 7, center, top");
 
         JButton btnAbsoluteDiff = new JButton("Absolute difference");
         btnAbsoluteDiff.addActionListener(new ActionListener() {
@@ -327,7 +345,7 @@ public class HeatMapComparisonFrame extends JFrame {
                 chckbxGetrenntNormalisieren.setEnabled(false);
             }
         });
-        btnContainer.add(btnAbsoluteDiff, "2, 5, center, top");
+        btnContainer.add(btnAbsoluteDiff, "2, 3, center, top");
 
         JButton btnRechtsLinks = new JButton("Difference right minus left");
         btnRechtsLinks.addActionListener(new ActionListener() {
@@ -343,7 +361,7 @@ public class HeatMapComparisonFrame extends JFrame {
                 chckbxGetrenntNormalisieren.setEnabled(false);
             }
         });
-        btnContainer.add(btnRechtsLinks, "3, 1, center, top");
+        btnContainer.add(btnRechtsLinks, "3, 3, center, top");
 
         heatMapRightList.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
         controlPanel.add(heatMapRightList, "12, 4, fill, fill");
@@ -528,6 +546,30 @@ public class HeatMapComparisonFrame extends JFrame {
 
             singleHeatMapPanel.repaint();
             break;
+
+        case 7:
+
+            Mat hmi1 = pane.getProjector(heatMapLeftList.getSelectedIndex()).getCurrentRawHeatMap();
+            Mat hmi2 = pane.getProjector(heatMapRightList.getSelectedIndex()).getCurrentRawHeatMap();
+            Mat hmi3 = HeatMapGenerator.processIntersectedHeatMap(hmi2, hmi1);
+
+            if (chckbxNurSpielfeldbereich.isSelected()) {
+
+                OverlayGazeProjector proj = pane.getProjector(0);
+                Point p1 = proj.getRecording().getFramePoint1();
+                Point p2 = proj.getRecording().getFramePoint2();
+                Rect roiR = new Rect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+
+                hms3 = hmi3.submat(roiR);
+            }
+
+            singleHeatMapPanel.setHeatMap(hmi3);
+
+            Utils.resizePanelToRetainAspectRatio(singleHeatMapPanel, singleHeatMapPanelContainer);
+
+            singleHeatMapPanel.repaint();
+            break;
+
 
         case 5: // left
         case 6: // right

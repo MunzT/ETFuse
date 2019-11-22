@@ -200,6 +200,17 @@ public class HeatMapGenerator extends SwingWorker {
         return hm3;
     }
 
+    public static Mat processIntersectedHeatMap(Mat hm1, Mat hm2) {
+
+        Mat hm3 = new Mat();
+        Core.min(hm1, hm2, hm3); // minimum values for intersection
+
+        hm3 = normalizeHeatMap(hm3, 0, 255);
+        hm3 = colorMapHeatMap(hm3, Project.currentProject().getPreferences().getColorMap());
+
+        return hm3;
+    }
+
     private static Mat makeHeatMapTransparentABGR(Mat heatMap) {
         // make everything 50% transparent
         Mat transparent = heatMap.clone();
