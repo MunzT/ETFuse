@@ -1,5 +1,6 @@
 package de.uni_stuttgart.visus.etfuse;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import org.opencv.core.Core;
@@ -22,6 +23,10 @@ public class ETFuseMain {
         }
 
         MainFrame mainFrame = new MainFrame("ETFuse");
+
+        ImageIcon icon = new ImageIcon("resources/icon.png");
+        mainFrame.setIconImage(icon.getImage());
+
         mainFrame.setVisible(true);
     }
 }

@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -89,6 +90,9 @@ public class VideoFrame extends JFrame implements ChangeListener {
         idleTitle = title;
 
         lastInstance = this;
+
+        ImageIcon icon = new ImageIcon("resources/icon.png");
+        this.setIconImage(icon.getImage());
 
         this.addComponentListener(new ComponentAdapter() {
             @Override
