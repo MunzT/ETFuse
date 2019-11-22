@@ -13,6 +13,8 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -181,7 +183,11 @@ public class MainFrame extends JFrame {
                     final File chosenFile = fc.getSelectedFile();
 
                     Project.currentProject().hostVidPath = chosenFile.getAbsolutePath();
-                    VideoFrame vidFrame = new VideoFrame(chosenFile.getAbsolutePath(),
+
+                    Path path = Paths.get(Project.currentProject().hostVidPath );
+                    Path fileName = path.getFileName();
+
+                    VideoFrame vidFrame = new VideoFrame("ETFuse - " + fileName.toString(),
                                                          chosenFile.getAbsolutePath());
                     vidFrame.setLocationRelativeTo(null);
                     vidFrame.setVisible(true);
