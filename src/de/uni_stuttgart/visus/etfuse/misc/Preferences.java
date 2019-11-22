@@ -19,7 +19,7 @@ public class Preferences implements Serializable {
     // MinDist-Plot
     private int minDistPlotPlayer1 = 0;
     private int minDistPlotPlayer2 = 0;
-    private int minDistPlotMinDist = 150;
+    private int minDistPlotMinDist = 200;
 
     public enum MinDistSubdivision
     {

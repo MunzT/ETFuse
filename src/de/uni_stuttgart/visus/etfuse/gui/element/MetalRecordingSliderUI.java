@@ -1,5 +1,6 @@
 package de.uni_stuttgart.visus.etfuse.gui.element;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -22,6 +23,9 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
     private VideoFrame vidFrame = null;
     private int minDistance = 0;
     private int safeLength = 0;
+
+    ArrayList<Long> clickPositions1;
+    ArrayList<Long> clickPositions2;
 
     enum GazeDistanceState
     {
@@ -77,41 +81,66 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
         if (slider.getOrientation() == JSlider.HORIZONTAL) {
             g.translate(0, tickBounds.y);
 
-            GazeDistanceState currentState = GazeDistanceState.OUTSIDEBOARD;;
+            GazeDistanceState currentState = GazeDistanceState.OUTSIDESCREEN;
 
-            ArrayList<Long> clicks = this.vidFrame.getPanel().getClicks();
+            // timestamp position on slider for both players
+            for (int i = 0; i < 2; i++) {
+                OverlayGazeProjector proj = this.vidFrame.getPanel().getProjectors().get(i);
+
+                ArrayList<Long> tempClicks = proj.getRecording().getClicks();
+                ArrayList<Long> clickPositions = new ArrayList<Long>();
+                for (int j = 0; j < tempClicks.size(); ++j) {
+                    long c =  Math.round(((((float)(tempClicks.get(j)
+                            - proj.getTimeSyncOffset() - startTS) * trackRect.width
+                            / (endTS - startTS)) + trackRect.x)));
+                    clickPositions.add(c);
+                }
+
+                if (i == 0)
+                    clickPositions1 = clickPositions;
+                else
+                    clickPositions2 = clickPositions;
+            }
+
+            // all timestamps for clicks
+            ArrayList<Long> clicksTS  = this.vidFrame.getPanel().getClicks();
+
             int nextClickId = 0;
 
             for (int x = 0; x < trackRect.width; x++) {
 
                 int xPos = x + trackRect.x;
 
+                double progress = ((double) x) / trackRect.width;
+                long progressTS = Math.round(startTS + (progress * (endTS - startTS)));
+
+                // progressStartTS und progressEndTS markieren den Bereich aller Punkte, die am nächsten an progressTS liegen
+                // .     -----.-----ooooo.ooooo     .     # - bzw. o markiert Bereich, . ist progressTS für Pixel des Tracks
+                long progressStartTS = startTS;
+                if (x > 0) {
+                    progressStartTS = Math.round(startTS + ((((double) x - 1) / trackRect.width)
+                            * (endTS - startTS)));
+                    progressStartTS = Math.round((progressStartTS + progressTS) * 0.5);
+                }
+
+                long progressEndTS = endTS;
+                if (x < trackRect.width - 1) {
+                    progressEndTS = Math.round(startTS + ((((double) x + 1) / trackRect.width)
+                            * (endTS - startTS)));
+                    progressEndTS = Math.round((progressEndTS + progressTS) * 0.5);
+                }
+
                 if (prefs.getMinDistSubdivision() == Preferences.MinDistSubdivision.MINAREAS) {
-                    double progress = ((double) x) / trackRect.width;
-                    long progressTS = Math.round(startTS + (progress * (endTS - startTS)));
-
-                    // progressStartTS und progressEndTS markieren den Bereich aller Punkte, die am nächsten an progressTS liegen
-                    // .     -----.-----ooooo.ooooo     .     # - bzw. o markiert Bereich, . ist progressTS für Pixel des Tracks
-                    long progressStartTS = startTS;
-                    if (x > 0) {
-                        progressStartTS = Math.round(startTS + ((((double) x - 1) / trackRect.width)
-                                * (endTS - startTS)));
-                        progressStartTS = Math.round((progressStartTS + progressTS) * 0.5);
-                    }
-
-                    long progressEndTS = endTS;
-                    if (x < trackRect.width - 1) {
-                        progressEndTS = Math.round(startTS + ((((double) x + 1) / trackRect.width)
-                                * (endTS - startTS)));
-                        progressEndTS = Math.round((progressEndTS + progressTS) * 0.5);
-                    }
 
                     ArrayList<EyeTrackerEyeEvent> hostEvents =
-                            hostProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
+                            hostProj.eventsBetweenShiftedTimestamps(progressStartTS,
+                                    progressEndTS, true, false);
                     ArrayList<EyeTrackerEyeEvent> guestEvents =
-                            guestProj.eventsBetweenShiftedTimestamps(progressStartTS, progressEndTS, true, false);
+                            guestProj.eventsBetweenShiftedTimestamps(progressStartTS,
+                                    progressEndTS, true, false);
 
-                    if (hostEvents == null || hostEvents.size() < 1 || guestEvents == null || guestEvents.size() < 1)
+                    if (hostEvents == null || hostEvents.size() < 1
+                            || guestEvents == null || guestEvents.size() < 1)
                         currentState = GazeDistanceState.OUTSIDESCREEN;
                     else {
 
@@ -141,8 +170,10 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                                     notContainedInRectCounter++;
                                 }
                                 else {
-                                    Point hostPoint = new Point(hostEvent.fixationPointX, hostEvent.fixationPointY);
-                                    Point guestPoint = new Point(guestEvent.fixationPointX, guestEvent.fixationPointY);
+                                    Point hostPoint = new Point(hostEvent.fixationPointX,
+                                            hostEvent.fixationPointY);
+                                    Point guestPoint = new Point(guestEvent.fixationPointX,
+                                            guestEvent.fixationPointY);
 
                                     if (hostPoint.distance(guestPoint) > minDistance)
                                         aboveMinDistanceCounter++;
@@ -166,26 +197,9 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                     }
                 }
                 else {
-                    double progress = ((double) x) / trackRect.width;
-                    long progressTS = Math.round(startTS + (progress * (endTS - startTS)));
 
-                    // progressStartTS und progressEndTS markieren den Bereich aller Punkte, die am nächsten an progressTS liegen
-                    // .     -----.-----ooooo.ooooo     .     # - bzw. o markiert Bereich, . ist progressTS für Pixel des Tracks
-                    long progressStartTS = startTS;
-                    if (x > 0) {
-                        progressStartTS = Math.round(startTS + ((((double) x - 1) / trackRect.width)
-                                * (endTS - startTS)));
-                        progressStartTS = Math.round((progressStartTS + progressTS) * 0.5);
-                    }
-
-                    long progressEndTS = endTS;
-                    if (x < trackRect.width - 1) {
-                        progressEndTS = Math.round(startTS + ((((double) x + 1) / trackRect.width)
-                                * (endTS - startTS)));
-                        progressEndTS = Math.round((progressEndTS + progressTS) * 0.5);
-                    }
-
-                    if (nextClickId >= clicks.size() || progressEndTS < clicks.get(nextClickId)) {
+                    if (nextClickId != 0 && (nextClickId >= clicksTS.size()
+                            || progressEndTS < clicksTS.get(nextClickId))) {
                         // no nothing and draw same as before
                     }
                     else {
@@ -194,24 +208,27 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
 
                         if (nextClickId == 0) { // area before first click
                             startTime = startTS;
-                            endTime = clicks.get(nextClickId);
+                            endTime = clicksTS.get(nextClickId);
                         }
-                        else if (nextClickId == clicks.size()) { // area after last click
-                            startTime = clicks.get(nextClickId - 1);
+                        else if (nextClickId == clicksTS.size()) { // area after last click
+                            startTime = clicksTS.get(nextClickId - 1);
                             endTime = endTS;
                         }
                         else {
-                            startTime = clicks.get(nextClickId - 1);
-                            endTime = clicks.get(nextClickId);;
+                            startTime = clicksTS.get(nextClickId - 1);
+                            endTime = clicksTS.get(nextClickId);
                         }
 
+                        // lists are sorted from large to small
                         ArrayList<EyeTrackerEyeEvent> hostEvents =
                                 hostProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
                         ArrayList<EyeTrackerEyeEvent> guestEvents =
                                 guestProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
 
-                        if (hostEvents == null || hostEvents.size() < 1 || guestEvents == null || guestEvents.size() < 1)
+                        if (hostEvents == null || hostEvents.size() < 1
+                                || guestEvents == null || guestEvents.size() < 1) {
                             currentState = GazeDistanceState.OUTSIDESCREEN;
+                        }
                         else {
 
                             int belowMinDistanceCounter = 0;
@@ -219,29 +236,45 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                             int notContainedInRectCounter = 0;
                             int guestIndex = 0;
 
+                            // outer loop should be the smaller list: swap lists
+                            OverlayGazeProjector tempGuestProj = guestProj;
+                            OverlayGazeProjector tempHosttProj = hostProj;
+                            if (hostEvents.size() > guestEvents.size()) {
+                                ArrayList<EyeTrackerEyeEvent> temp;
+                                temp = guestEvents;
+                                guestEvents = hostEvents;
+                                hostEvents = temp;
+                                tempGuestProj = hostProj;
+                                tempHosttProj = guestProj;
+                            }
+
                             for (EyeTrackerEyeEvent hostEvent : hostEvents) {
 
+                                Boolean notContained = false;
                                 if (!hostEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
                                     notContainedInRectCounter++;
-                                    continue;
+                                    notContained = true;
                                 }
 
-                                long tsHost = hostEvent.timestamp - hostProj.getTimeSyncOffset();
+                                long tsHost = hostEvent.timestamp - tempHosttProj.getTimeSyncOffset();
 
                                 while (guestIndex < guestEvents.size()) {
-
                                     EyeTrackerEyeEvent guestEvent = guestEvents.get(guestIndex);
 
                                     // TODO: nicht immer mit allen gast-events vergleichen
-                                    if ((guestEvent.timestamp - guestProj.getTimeSyncOffset()) < tsHost)
+                                    if ((guestEvent.timestamp - tempGuestProj.getTimeSyncOffset()) < tsHost) {
                                         break;
+                                    }
 
                                     if (!guestEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
-                                        notContainedInRectCounter++;
+                                        if (!notContained)
+                                            notContainedInRectCounter++;
                                     }
                                     else {
-                                        Point hostPoint = new Point(hostEvent.fixationPointX, hostEvent.fixationPointY);
-                                        Point guestPoint = new Point(guestEvent.fixationPointX, guestEvent.fixationPointY);
+                                        Point hostPoint = new Point(hostEvent.fixationPointX,
+                                                hostEvent.fixationPointY);
+                                        Point guestPoint = new Point(guestEvent.fixationPointX,
+                                                guestEvent.fixationPointY);
 
                                         if (hostPoint.distance(guestPoint) > minDistance)
                                             aboveMinDistanceCounter++;
@@ -253,15 +286,15 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                                 }
                             }
 
-                            if (notContainedInRectCounter > belowMinDistanceCounter
-                                    && notContainedInRectCounter > aboveMinDistanceCounter)
-                                currentState = GazeDistanceState.OUTSIDEBOARD;
-                            else if (belowMinDistanceCounter > aboveMinDistanceCounter
-                                    && belowMinDistanceCounter > notContainedInRectCounter)
+                            if (belowMinDistanceCounter >= aboveMinDistanceCounter
+                                    && belowMinDistanceCounter >= notContainedInRectCounter)
                                 currentState = GazeDistanceState.CLOSE;
-                            else if (aboveMinDistanceCounter > belowMinDistanceCounter
+                            else if (aboveMinDistanceCounter >= belowMinDistanceCounter
                                     && aboveMinDistanceCounter > notContainedInRectCounter)
                                 currentState = GazeDistanceState.FARAWAY;
+                            else if (notContainedInRectCounter >= belowMinDistanceCounter
+                                    && notContainedInRectCounter >= aboveMinDistanceCounter)
+                                currentState = GazeDistanceState.OUTSIDEBOARD;
                         }
                         nextClickId++;
                     }
@@ -292,8 +325,30 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
 
     @Override
     protected void paintMajorTickForHorizSlider( Graphics g, Rectangle tickBounds, int x ) {
-        g.drawLine( x, TICK_BUFFER , x, TICK_BUFFER + (safeLength - 1) );
+        g.drawLine( x, TICK_BUFFER + (safeLength - 1) * 1/8, x, TICK_BUFFER + (safeLength - 1) );
+
+        if (clickPositions1.contains((long)x)) {
+            g.setColor(changeColorBrightness(Project.currentProject().
+                    getPreferences().getColorPlayer1()));
+            g.drawLine( x, TICK_BUFFER - 5, x, TICK_BUFFER + (safeLength - 1) * 1/8 - 2);
+        }
+
+        if (clickPositions2.contains((long)x)) {
+            g.setColor(changeColorBrightness(Project.currentProject().
+                    getPreferences().getColorPlayer2()));
+            g.drawLine( x, TICK_BUFFER - 5, x, TICK_BUFFER + (safeLength - 1) * 1/8 - 2);
+        }
+    }
+    Color changeColorBrightness(Color c) {
+        if (c.getRed() + c.getGreen() + c.getBlue() < 350) {
+            c = c.brighter();
+        }
+        else {
+            c = c.darker();
+        }
+        return c;
     }
+
 
     @Override
     protected void paintMajorTickForVertSlider( Graphics g, Rectangle tickBounds, int y ) {

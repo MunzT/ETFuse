@@ -220,7 +220,7 @@ public class PreferencesFrame extends JDialog {
         comboBoxMinDistTemporalSubdivision.setModel(new DefaultComboBoxModel(minDistTemporalSubdivisionList));
         minDistPrefsPanel.add(comboBoxMinDistTemporalSubdivision, "4, 2, fill, default");
 
-        JLabel label = new JLabel("Minimum distance (in px; default: 150):");
+        JLabel label = new JLabel("Minimum distance (in px; default: 200):");
         minDistPrefsPanel.add(label, "2, 4, right, default");
 
         txtMinDistPlotDist = new JTextField();

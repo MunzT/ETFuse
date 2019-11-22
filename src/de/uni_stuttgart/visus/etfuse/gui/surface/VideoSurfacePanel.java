@@ -76,8 +76,15 @@ public class VideoSurfacePanel extends JPanel {
 
         this.projectors.add(projector);
 
-        ArrayList<Long> c = projector.getRecording().getClicks();
-        clicks.addAll(c);
+        clicks = new ArrayList<Long>();
+        for (int i = 0; i < lastInstance.getProjectors().size(); i++) {
+            OverlayGazeProjector proj = lastInstance.getProjectors().get(i);
+            ArrayList<Long> c = proj.getRecording().getClicks();
+            for (int j = 0; j < c.size(); j++) {
+                clicks.add(c.get(j) - proj.getTimeSyncOffset());
+            }
+        }
+
         Collections.sort(clicks);
     }
 
