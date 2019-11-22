@@ -287,7 +287,7 @@ public class HeatMapGenerator extends SwingWorker {
         return norm;
     }
 
-    private static Mat colorMapHeatMap(Mat heatMap, int colorMap) {
+    public static Mat colorMapHeatMap(Mat heatMap, int colorMap) {
 
         Mat mapped = heatMap.clone();
         mapped.convertTo(mapped, CvType.CV_8UC3);

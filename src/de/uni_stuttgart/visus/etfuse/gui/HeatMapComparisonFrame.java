@@ -37,6 +37,7 @@ import de.uni_stuttgart.visus.etfuse.gui.surface.VideoSurfacePanel;
 import de.uni_stuttgart.visus.etfuse.media.HeatMapGenerator;
 import de.uni_stuttgart.visus.etfuse.media.OverlayGazeProjector;
 import de.uni_stuttgart.visus.etfuse.misc.Utils;
+import de.uni_stuttgart.visus.etfuse.projectio.Project;
 
 public class HeatMapComparisonFrame extends JFrame {
 
@@ -280,6 +281,38 @@ public class HeatMapComparisonFrame extends JFrame {
         });
         btnContainer.add(btnSum, "2, 3, center, top");
 
+        JButton btnLeft = new JButton("Left");
+        btnLeft.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                mode = 5;
+
+                redrawHeatMaps();
+
+                splitHeatMapPanel.setVisible(false);
+                singleHeatMapPanelContainer.setVisible(true);
+                chckbxGetrenntNormalisieren.setEnabled(false);
+            }
+        });
+        btnContainer.add(btnLeft, "1, 3, center, top");
+
+        JButton btnRight = new JButton("Right");
+        btnRight.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                mode = 6;
+
+                redrawHeatMaps();
+
+                splitHeatMapPanel.setVisible(false);
+                singleHeatMapPanelContainer.setVisible(true);
+                chckbxGetrenntNormalisieren.setEnabled(false);
+            }
+        });
+        btnContainer.add(btnRight, "3, 3, center, top");
+
         JButton btnAbsoluteDiff = new JButton("Absolute difference");
         btnAbsoluteDiff.addActionListener(new ActionListener() {
             @Override
@@ -490,6 +523,35 @@ public class HeatMapComparisonFrame extends JFrame {
             }
 
             singleHeatMapPanel.setHeatMap(hms3);
+
+            Utils.resizePanelToRetainAspectRatio(singleHeatMapPanel, singleHeatMapPanelContainer);
+
+            singleHeatMapPanel.repaint();
+            break;
+
+        case 5: // left
+        case 6: // right
+            Mat hm = null;
+            if (mode == 5) {
+                hm = pane.getProjector(heatMapLeftList.getSelectedIndex()).getCurrentNormalizedHeatMap();
+            }
+            else if (mode == 6) {
+                hm = pane.getProjector(heatMapRightList.getSelectedIndex()).getCurrentNormalizedHeatMap();
+            }
+
+            hm = HeatMapGenerator.colorMapHeatMap(hm, Project.currentProject().getPreferences().getColorMap());
+
+            if (chckbxNurSpielfeldbereich.isSelected()) {
+
+                OverlayGazeProjector proj = pane.getProjector(0);
+                Point p1 = proj.getRecording().getFramePoint1();
+                Point p2 = proj.getRecording().getFramePoint2();
+                roi = new Rect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+
+                hm = hm.submat(roi);
+            }
+
+            singleHeatMapPanel.setHeatMap(hm);
 
             Utils.resizePanelToRetainAspectRatio(singleHeatMapPanel, singleHeatMapPanelContainer);
 
