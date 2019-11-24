@@ -106,7 +106,7 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
             ArrayList<Long> clicksTS  = this.vidFrame.getPanel().getClicks();
 
             // for click method
-            int nextClickId = 0;
+            int currentClickId = -1;
 
             // for interval method
             int currentInterval = 0;
@@ -163,22 +163,23 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                 }
                 else if (prefs.getMinDistSubdivision() == Preferences.MinDistSubdivision.CLICKS) {
 
-                    if (nextClickId != 0 && (nextClickId >= clicksTS.size()
-                            || progressEndTS < clicksTS.get(nextClickId))) {
+                    if (currentClickId != -1 && (currentClickId >= clicksTS.size()
+                            || progressEndTS < clicksTS.get(currentClickId))) {
                         // no nothing and draw same as before
                     }
                     else {
-                        if (nextClickId == 0) { // area before first click
+                        currentClickId++;
+                        if (currentClickId == 0) { // area before first click
                             startTime = startTS;
-                            endTime = clicksTS.get(nextClickId);
+                            endTime = clicksTS.get(currentClickId);
                         }
-                        else if (nextClickId == clicksTS.size()) { // area after last click
-                            startTime = clicksTS.get(nextClickId - 1);
+                        else if (currentClickId == clicksTS.size()) { // area after last click
+                            startTime = clicksTS.get(currentClickId - 1);
                             endTime = endTS;
                         }
                         else {
-                            startTime = clicksTS.get(nextClickId - 1);
-                            endTime = clicksTS.get(nextClickId);
+                            startTime = clicksTS.get(currentClickId - 1);
+                            endTime = clicksTS.get(currentClickId);
                         }
 
                         hostEvents = hostProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
@@ -192,7 +193,6 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                             currentState = getDistanceStateForAsynchroneData(hostEvents, guestEvents,
                                     hostProj, guestProj);
                         }
-                        nextClickId++;
                     }
                 }
 
@@ -256,9 +256,6 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
 
         GazeDistanceState currentState = GazeDistanceState.OUTSIDESCREEN;
 
-        Point hostFramePoint1 = vidFrame.getHostProjector().getRecording().getFramePoint1();
-        Point hostFramePoint2 = vidFrame.getHostProjector().getRecording().getFramePoint2();
-
         // outer loop should be the smaller list: swap lists
         OverlayGazeProjector tempGuestProj = guest;
         OverlayGazeProjector tempHosttProj = host;
@@ -271,6 +268,9 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
             tempGuestProj = host;
             tempHosttProj = guest;
         }
+
+        Point hostFramePoint1 = host.getRecording().getFramePoint1();
+        Point hostFramePoint2 = host.getRecording().getFramePoint2();
 
         int index = -1;
         for (EyeTrackerEyeEvent hostEvent : hostEvents) {
