@@ -22,6 +22,7 @@ import de.uni_stuttgart.visus.etfuse.gui.MainFrame;
 import de.uni_stuttgart.visus.etfuse.gui.VideoFrame;
 import de.uni_stuttgart.visus.etfuse.media.HeatMapGenerator;
 import de.uni_stuttgart.visus.etfuse.media.OverlayGazeProjector;
+import de.uni_stuttgart.visus.etfuse.misc.Preferences.HeatMapTimeSource;
 
 public class ProjectIO implements PropertyChangeListener {
 
@@ -311,8 +312,11 @@ public class ProjectIO implements PropertyChangeListener {
         vidFrame.getPanel().attachProjector(guestProj);
         int newClickNo = vidFrame.getPanel().getClicks().size();
 
-        for (int i = 0; i <= newClickNo + 1; i++) {
-            HeatMapGenerator mapGen = new HeatMapGenerator(guestProj, i, vidFrame);
+        HeatMapGenerator mapGen = new HeatMapGenerator(guestProj, 0, HeatMapTimeSource.USERDEFINED, vidFrame);
+        mapGen.attachVideoFrameForTitleUpdate(vidFrame);
+        mapGen.execute();
+        for (int i = 0; i <= newClickNo; i++) {
+            mapGen = new HeatMapGenerator(guestProj, i, HeatMapTimeSource.CLICKS, vidFrame);
             mapGen.attachVideoFrameForTitleUpdate(vidFrame);
             mapGen.execute();
         }
@@ -320,8 +324,14 @@ public class ProjectIO implements PropertyChangeListener {
         if (newClickNo != previousClickNo) {
             // recalculate for host
             for (int i = 0; i < vidFrame.getPanel().getProjectors().size() - 1; i++) {
-                for (int j = 1; j <= newClickNo + 1; j++) {
-                    HeatMapGenerator mapGen = new HeatMapGenerator(vidFrame.getPanel().getProjector(i), j, vidFrame);
+                mapGen = new HeatMapGenerator(vidFrame.getPanel().getProjector(i),
+                        0, HeatMapTimeSource.USERDEFINED, vidFrame);
+                mapGen.attachVideoFrameForTitleUpdate(vidFrame);
+                mapGen.execute();
+
+                for (int j = 1; j <= newClickNo; j++) {
+                    mapGen = new HeatMapGenerator(vidFrame.getPanel().getProjector(i),
+                            j, HeatMapTimeSource.CLICKS, vidFrame);
                     mapGen.attachVideoFrameForTitleUpdate(vidFrame);
                     mapGen.execute();
                 }

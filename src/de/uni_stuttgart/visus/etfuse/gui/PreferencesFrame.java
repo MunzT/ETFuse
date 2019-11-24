@@ -45,6 +45,7 @@ public class PreferencesFrame extends JDialog {
     private JTextField txtGazeFilterVelocityThreshold;
     private JTextField txtGazeFilterDistanceThreshold;
     private JComboBox comboBoxMinDistTemporalSubdivision;
+    private JSpinner spinnerSubdivisionIntervalSize;
     private JTextField txtMinDistPlotDist;
     private JComboBox comboBoxHeatmapSource;
     private JTextField txtHeatMapGeneratorSkipPercentage;
@@ -209,38 +210,52 @@ public class PreferencesFrame extends JDialog {
                 FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,
                 FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,}));
 
         JLabel minDistTemporalSubdivision = new JLabel("Temporal subdivision:");
         minDistPrefsPanel.add(minDistTemporalSubdivision, "2, 2, right, default");
 
-        String[] minDistTemporalSubdivisionList = { "Minimum areas", "Mouse clicks" };
+        String[] minDistTemporalSubdivisionList = { "Minimum areas", "Mouse clicks", "Intervals" };
 
         comboBoxMinDistTemporalSubdivision = new JComboBox();
         comboBoxMinDistTemporalSubdivision.setModel(new DefaultComboBoxModel(minDistTemporalSubdivisionList));
         minDistPrefsPanel.add(comboBoxMinDistTemporalSubdivision, "4, 2, fill, default");
 
+        JLabel lblTimelineIntervalSize = new JLabel("Subdivision interval size (if Intervals is selected):");
+        minDistPrefsPanel.add(lblTimelineIntervalSize, "2, 4, right, default");
+
+        spinnerSubdivisionIntervalSize = new JSpinner();
+        spinnerSubdivisionIntervalSize.setModel(new SpinnerNumberModel(1000, 0, 1000000, 1));
+        JComponent editor3 = spinnerSubdivisionIntervalSize.getEditor();
+        if (editor3 instanceof JSpinner.DefaultEditor) {
+            JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) editor3;
+            spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
+        }
+        minDistPrefsPanel.add(spinnerSubdivisionIntervalSize, "4, 4, fill, default");
+
         JLabel label = new JLabel("Minimum distance (in px; default: 200):");
-        minDistPrefsPanel.add(label, "2, 4, right, default");
+        minDistPrefsPanel.add(label, "2, 6, right, default");
 
         txtMinDistPlotDist = new JTextField();
         txtMinDistPlotDist.setHorizontalAlignment(SwingConstants.LEFT);
         txtMinDistPlotDist.setColumns(10);
-        minDistPrefsPanel.add(txtMinDistPlotDist, "4, 4, fill, default");
+        minDistPrefsPanel.add(txtMinDistPlotDist, "4, 6, fill, default");
 
         JLabel lblQuelldatensatz_1 = new JLabel("Source data set 1:");
-        minDistPrefsPanel.add(lblQuelldatensatz_1, "2, 6, right, default");
+        minDistPrefsPanel.add(lblQuelldatensatz_1, "2, 8, right, default");
 
         comboBoxMinDistPlotSource1 = new JComboBox();
         comboBoxMinDistPlotSource1.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
-        minDistPrefsPanel.add(comboBoxMinDistPlotSource1, "4, 6, fill, default");
+        minDistPrefsPanel.add(comboBoxMinDistPlotSource1, "4, 8, fill, default");
 
         JLabel lblQuelldatensatz_2 = new JLabel("Source data set 2:");
-        minDistPrefsPanel.add(lblQuelldatensatz_2, "2, 8, right, default");
+        minDistPrefsPanel.add(lblQuelldatensatz_2, "2, 10, right, default");
 
         comboBoxMinDistPlotSource2 = new JComboBox();
         comboBoxMinDistPlotSource2.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
-        minDistPrefsPanel.add(comboBoxMinDistPlotSource2, "4, 8, fill, default");
+        minDistPrefsPanel.add(comboBoxMinDistPlotSource2, "4, 10, fill, default");
 
         JPanel panelGazeFilterPrefs = new JPanel();
         tabbedPane.addTab("Gaze Filter", null, panelGazeFilterPrefs, null);
@@ -554,26 +569,26 @@ public class PreferencesFrame extends JDialog {
                 Imgproc.COLORMAP_TWILIGHT_SHIFTED };
 
         String[] colorMapsStrings = {
-                "COLORMAP_AUTUMN",
-                "COLORMAP_BONE",
-                "COLORMAP_JET",
-                "COLORMAP_WINTER",
-                "COLORMAP_RAINBOW",
-                "COLORMAP_OCEAN",
-                "COLORMAP_SUMMER",
-                "COLORMAP_SPRING",
-                "COLORMAP_COOL",
-                "COLORMAP_HSV",
-                "COLORMAP_PINK",
-                "COLORMAP_HOT",
-                "COLORMAP_PARULA",
-                "COLORMAP_MAGMA",
-                "COLORMAP_INFERNO",
-                "COLORMAP_PLASMA",
-                "COLORMAP_VIRIDIS",
-                "COLORMAP_CIVIDIS",
-                "COLORMAP_TWILIGHT",
-                "COLORMAP_TWILIGHT_SHIFTED" };
+                "AUTUMN",
+                "BONE",
+                "JET",
+                "WINTER",
+                "RAINBOW",
+                "OCEAN",
+                "SUMMER",
+                "SPRING",
+                "COOL",
+                "HSV",
+                "PINK",
+                "HOT",
+                "PARULA",
+                "MAGMA",
+                "INFERNO",
+                "PLASMA",
+                "VIRIDIS",
+                "CIVIDIS",
+                "TWILIGHT",
+                "TWILIGHT_SHIFTED" };
 
         colorMapMapping = new HashMap<Integer, Integer>();
         colorMapIndexMapping = new HashMap<Integer, Integer>();
@@ -593,7 +608,7 @@ public class PreferencesFrame extends JDialog {
         spinnerHeatmapTransparency.setModel(new SpinnerNumberModel(128, 0, 256, 1));
         JComponent editor2 = spinnerHeatmapTransparency.getEditor();
         if (editor2 instanceof JSpinner.DefaultEditor) {
-            JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) editor;
+            JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) editor2;
             spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
         }
         heatmapColorPrefsPanel.add(spinnerHeatmapTransparency, "4, 4, fill, default");
@@ -656,6 +671,7 @@ public class PreferencesFrame extends JDialog {
         comboBoxMinDistTemporalSubdivision.setSelectedIndex(Math.min(
                 comboBoxMinDistTemporalSubdivision.getItemCount() - 1,
                 prefs.getMinDistSubdivision().ordinal()));
+        spinnerSubdivisionIntervalSize.setValue(prefs.getMinDistSubdivisionInterval());
         comboBoxMinDistPlotSource1.setSelectedIndex(Math.min(comboBoxMinDistPlotSource1.getItemCount() - 1,
                 prefs.getMinDistPlotPlayer1()));
         comboBoxMinDistPlotSource2.setSelectedIndex(Math.min(comboBoxMinDistPlotSource2.getItemCount() - 1,
@@ -705,6 +721,7 @@ public class PreferencesFrame extends JDialog {
         if (comboBoxMinDistTemporalSubdivision .getSelectedIndex() >= 0)
             prefs.setMinDistSubdivision(Preferences.MinDistSubdivision.values()[
                 comboBoxMinDistTemporalSubdivision.getSelectedIndex()]);
+        prefs.setMinDistSubdivisionInterval((int) spinnerSubdivisionIntervalSize.getValue());
         if (comboBoxMinDistPlotSource1.getSelectedIndex() >= 0)
             prefs.setMinDistPlotPlayer1(comboBoxMinDistPlotSource1.getSelectedIndex());
         if (comboBoxMinDistPlotSource2.getSelectedIndex() >= 0)

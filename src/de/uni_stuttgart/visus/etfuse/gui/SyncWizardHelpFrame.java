@@ -19,10 +19,10 @@ public class SyncWizardHelpFrame extends JDialog {
         txtrInstructions.setWrapStyleWord(true);
         txtrInstructions.setEditable(false);
         txtrInstructions.setLineWrap(true);
-        txtrInstructions.setText("Step 1 :“ Loading the guest record\n"
+        txtrInstructions.setText("Step 1 : Loading the guest record\n"
             + "In the first step, the data set of the guest recording is loaded.\n"
             + "This dataset has to be in TSV format.\n" + "\n"
-            + "Step 2 :“ Defining the board area in the guest recording\n"
+            + "Step 2 : Defining the board area in the guest recording\n"
             + "In the second step the area of the video in the guest recording is selected which "
             + "will be affected by the coordinate transformation. "
             + "The user can choose "
@@ -38,7 +38,7 @@ public class SyncWizardHelpFrame extends JDialog {
             + "marked by mouse click. "
             + "If this is done, the wizard moves to the next step.\n"
             + "\n"
-            + "Step 3 :“ Defining the playing field area in the host recording\n"
+            + "Step 3 : Defining the playing field area in the host recording\n"
             + "Analogous to step 2, in the third step the board area in the host recording is "
             + "determined. "
             + "Here, the same presets are available as from the previous step. Alternatively, the "
@@ -47,7 +47,7 @@ public class SyncWizardHelpFrame extends JDialog {
             + "already loaded and taken into account by the wizard. "
             + "Once this step has been completed, the wizard moves to the last step.\n"
             + "\n"
-            + "Step 4 :“ Selecting the synchronization method\n"
+            + "Step 4 : Selecting the synchronization method\n"
             + "In the last step, the user chooses between three options for temporal "
             + "synchronization of the recordings. "
             + "The choice is between an inaccurate, fast method based only on the system time "

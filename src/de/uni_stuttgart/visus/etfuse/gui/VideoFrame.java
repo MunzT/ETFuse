@@ -47,6 +47,7 @@ import de.uni_stuttgart.visus.etfuse.gui.surface.VideoSurfacePanel;
 import de.uni_stuttgart.visus.etfuse.media.HeatMapGenerator;
 import de.uni_stuttgart.visus.etfuse.media.OverlayGazeProjector;
 import de.uni_stuttgart.visus.etfuse.misc.Preferences;
+import de.uni_stuttgart.visus.etfuse.misc.Preferences.HeatMapTimeSource;
 import de.uni_stuttgart.visus.etfuse.misc.Utils;
 import de.uni_stuttgart.visus.etfuse.projectio.Project;
 import de.uni_stuttgart.visus.etfuse.projectio.ProjectIO;
@@ -426,9 +427,8 @@ public class VideoFrame extends JFrame implements ChangeListener {
                     HeatMapGenerator.killAllActiveGenerators();
 
                     for (OverlayGazeProjector proj : VideoFrame.this.getPanel().getProjectors()) {
-                        int i = 0; // just for the first heatmap which i used for the user defined
-                                   // time range
-                        HeatMapGenerator mapGen = new HeatMapGenerator(proj, i, VideoFrame.this);
+                        // just for the first heatmap which i used for the user defined time range
+                        HeatMapGenerator mapGen = new HeatMapGenerator(proj, 0, HeatMapTimeSource.USERDEFINED, VideoFrame.this);
                         mapGen.attachVideoFrameForTitleUpdate(VideoFrame.this);
                         mapGen.execute();
                     }
@@ -508,8 +508,11 @@ public class VideoFrame extends JFrame implements ChangeListener {
         this.hostProjector = new OverlayGazeProjector(rec, this.getPanel());
         this.panel.attachProjector(this.hostProjector);
 
-        for (int i = 0; i <= this.getPanel().getClicks().size() + 1; i++) {
-            HeatMapGenerator mapGen = new HeatMapGenerator(this.hostProjector, i, this);
+        HeatMapGenerator mapGen = new HeatMapGenerator(this.hostProjector, 0, HeatMapTimeSource.USERDEFINED, this);
+        mapGen.attachVideoFrameForTitleUpdate(this);
+        mapGen.execute();
+        for (int i = 0; i <= this.getPanel().getClicks().size(); i++) {
+            mapGen = new HeatMapGenerator(this.hostProjector, i, HeatMapTimeSource.CLICKS, this);
             mapGen.attachVideoFrameForTitleUpdate(this);
             mapGen.execute();
         }

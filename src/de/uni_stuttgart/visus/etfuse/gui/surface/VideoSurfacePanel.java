@@ -25,6 +25,7 @@ import de.uni_stuttgart.visus.etfuse.gui.VideoFrame;
 import de.uni_stuttgart.visus.etfuse.media.HeatMapGenerator;
 import de.uni_stuttgart.visus.etfuse.media.OverlayGazeProjector;
 import de.uni_stuttgart.visus.etfuse.misc.Preferences;
+import de.uni_stuttgart.visus.etfuse.misc.Preferences.HeatMapTimeSource;
 import de.uni_stuttgart.visus.etfuse.misc.Utils;
 import de.uni_stuttgart.visus.etfuse.projectio.Project;
 
@@ -283,8 +284,11 @@ public class VideoSurfacePanel extends JPanel {
             for (int i = 0; i < this.projectors.size(); i++) {
                 OverlayGazeProjector proj = this.projectors.get(i);
 
-                for (int j = 0; j <= this.parentVideoFrame.getPanel().getClicks().size() + 1; j++) {
-                    HeatMapGenerator mapGen = new HeatMapGenerator(proj, j, this.parentVideoFrame);
+                HeatMapGenerator mapGen = new HeatMapGenerator(proj, 0, HeatMapTimeSource.USERDEFINED, this.parentVideoFrame);
+                mapGen.attachVideoFrameForTitleUpdate(this.parentVideoFrame);
+                mapGen.execute();
+                for (int j = 0; j <= this.parentVideoFrame.getPanel().getClicks().size(); j++) {
+                    mapGen = new HeatMapGenerator(proj, j, HeatMapTimeSource.CLICKS, this.parentVideoFrame);
                     mapGen.attachVideoFrameForTitleUpdate(this.parentVideoFrame);
                     mapGen.execute();
                 }

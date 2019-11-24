@@ -105,7 +105,20 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
             // all timestamps for clicks
             ArrayList<Long> clicksTS  = this.vidFrame.getPanel().getClicks();
 
+            // for click method
             int nextClickId = 0;
+
+            // for interval method
+            int currentInterval = 0;
+
+            // for click and interval method
+            Boolean recalcultaeTimeRange = true;
+            Long startTime = (long) 0;
+            Long endTime = (long) 0;
+
+            // lists are sorted from large to small
+            ArrayList<EyeTrackerEyeEvent> hostEvents = null;
+            ArrayList<EyeTrackerEyeEvent> guestEvents = null;
 
             for (int x = 0; x < trackRect.width; x++) {
 
@@ -132,10 +145,10 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
 
                 if (prefs.getMinDistSubdivision() == Preferences.MinDistSubdivision.MINAREAS) {
 
-                    ArrayList<EyeTrackerEyeEvent> hostEvents =
+                    hostEvents =
                             hostProj.eventsBetweenShiftedTimestamps(progressStartTS,
                                     progressEndTS, true, false);
-                    ArrayList<EyeTrackerEyeEvent> guestEvents =
+                    guestEvents =
                             guestProj.eventsBetweenShiftedTimestamps(progressStartTS,
                                     progressEndTS, true, false);
 
@@ -144,68 +157,17 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                         currentState = GazeDistanceState.OUTSIDESCREEN;
                     else {
 
-                        int belowMinDistanceCounter = 0;
-                        int aboveMinDistanceCounter = 0;
-                        int notContainedInRectCounter = 0;
-                        int guestIndex = 0;
-
-                        for (EyeTrackerEyeEvent hostEvent : hostEvents) {
-
-                            if (!hostEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
-                                notContainedInRectCounter++;
-                                continue;
-                            }
-
-                            long tsHost = hostEvent.timestamp - hostProj.getTimeSyncOffset();
-
-                            while (guestIndex < guestEvents.size()) {
-
-                                EyeTrackerEyeEvent guestEvent = guestEvents.get(guestIndex);
-
-                                // TODO: nicht immer mit allen gast-events vergleichen
-                                if ((guestEvent.timestamp - guestProj.getTimeSyncOffset()) < tsHost)
-                                    break;
-
-                                if (!guestEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
-                                    notContainedInRectCounter++;
-                                }
-                                else {
-                                    Point hostPoint = new Point(hostEvent.fixationPointX,
-                                            hostEvent.fixationPointY);
-                                    Point guestPoint = new Point(guestEvent.fixationPointX,
-                                            guestEvent.fixationPointY);
-
-                                    if (hostPoint.distance(guestPoint) > minDistance)
-                                        aboveMinDistanceCounter++;
-                                    else
-                                        belowMinDistanceCounter++;
-                                }
-
-                                guestIndex++;
-                            }
-                        }
-
-                        if (notContainedInRectCounter > belowMinDistanceCounter
-                                && notContainedInRectCounter > aboveMinDistanceCounter)
-                            currentState = GazeDistanceState.OUTSIDEBOARD;
-                        else if (belowMinDistanceCounter > aboveMinDistanceCounter
-                                && belowMinDistanceCounter > notContainedInRectCounter)
-                            currentState = GazeDistanceState.CLOSE;
-                        else if (aboveMinDistanceCounter > belowMinDistanceCounter
-                                && aboveMinDistanceCounter > notContainedInRectCounter)
-                            currentState = GazeDistanceState.FARAWAY;
+                        currentState = getDistanceStateForAsynchroneData(hostEvents, guestEvents,
+                                hostProj, guestProj);
                     }
                 }
-                else {
+                else if (prefs.getMinDistSubdivision() == Preferences.MinDistSubdivision.CLICKS) {
 
                     if (nextClickId != 0 && (nextClickId >= clicksTS.size()
                             || progressEndTS < clicksTS.get(nextClickId))) {
                         // no nothing and draw same as before
                     }
                     else {
-                        Long startTime;
-                        Long endTime;
-
                         if (nextClickId == 0) { // area before first click
                             startTime = startTS;
                             endTime = clicksTS.get(nextClickId);
@@ -219,84 +181,45 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                             endTime = clicksTS.get(nextClickId);
                         }
 
-                        // lists are sorted from large to small
-                        ArrayList<EyeTrackerEyeEvent> hostEvents =
-                                hostProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
-                        ArrayList<EyeTrackerEyeEvent> guestEvents =
-                                guestProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
+                        hostEvents = hostProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
+                        guestEvents = guestProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
 
                         if (hostEvents == null || hostEvents.size() < 1
                                 || guestEvents == null || guestEvents.size() < 1) {
                             currentState = GazeDistanceState.OUTSIDESCREEN;
                         }
                         else {
-
-                            int belowMinDistanceCounter = 0;
-                            int aboveMinDistanceCounter = 0;
-                            int notContainedInRectCounter = 0;
-                            int guestIndex = 0;
-
-                            // outer loop should be the smaller list: swap lists
-                            OverlayGazeProjector tempGuestProj = guestProj;
-                            OverlayGazeProjector tempHosttProj = hostProj;
-                            if (hostEvents.size() > guestEvents.size()) {
-                                ArrayList<EyeTrackerEyeEvent> temp;
-                                temp = guestEvents;
-                                guestEvents = hostEvents;
-                                hostEvents = temp;
-                                tempGuestProj = hostProj;
-                                tempHosttProj = guestProj;
-                            }
-
-                            for (EyeTrackerEyeEvent hostEvent : hostEvents) {
-
-                                Boolean notContained = false;
-                                if (!hostEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
-                                    notContainedInRectCounter++;
-                                    notContained = true;
-                                }
-
-                                long tsHost = hostEvent.timestamp - tempHosttProj.getTimeSyncOffset();
-
-                                while (guestIndex < guestEvents.size()) {
-                                    EyeTrackerEyeEvent guestEvent = guestEvents.get(guestIndex);
-
-                                    // TODO: nicht immer mit allen gast-events vergleichen
-                                    if ((guestEvent.timestamp - tempGuestProj.getTimeSyncOffset()) < tsHost) {
-                                        break;
-                                    }
-
-                                    if (!guestEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
-                                        if (!notContained)
-                                            notContainedInRectCounter++;
-                                    }
-                                    else {
-                                        Point hostPoint = new Point(hostEvent.fixationPointX,
-                                                hostEvent.fixationPointY);
-                                        Point guestPoint = new Point(guestEvent.fixationPointX,
-                                                guestEvent.fixationPointY);
-
-                                        if (hostPoint.distance(guestPoint) > minDistance)
-                                            aboveMinDistanceCounter++;
-                                        else
-                                            belowMinDistanceCounter++;
-                                    }
-
-                                    guestIndex++;
-                                }
-                            }
-
-                            if (belowMinDistanceCounter >= aboveMinDistanceCounter
-                                    && belowMinDistanceCounter >= notContainedInRectCounter)
-                                currentState = GazeDistanceState.CLOSE;
-                            else if (aboveMinDistanceCounter >= belowMinDistanceCounter
-                                    && aboveMinDistanceCounter > notContainedInRectCounter)
-                                currentState = GazeDistanceState.FARAWAY;
-                            else if (notContainedInRectCounter >= belowMinDistanceCounter
-                                    && notContainedInRectCounter >= aboveMinDistanceCounter)
-                                currentState = GazeDistanceState.OUTSIDEBOARD;
+                            currentState = getDistanceStateForAsynchroneData(hostEvents, guestEvents,
+                                    hostProj, guestProj);
                         }
                         nextClickId++;
+                    }
+                }
+
+                else if (prefs.getMinDistSubdivision() == Preferences.MinDistSubdivision.TIMEINTERVALS) {
+
+                    if (recalcultaeTimeRange) {
+                        startTime = startTS + currentInterval * prefs.getMinDistSubdivisionInterval();
+                        endTime = startTS + (currentInterval + 1) * prefs.getMinDistSubdivisionInterval() - 1;
+
+                        hostEvents = hostProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
+                        guestEvents = guestProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
+
+                        recalcultaeTimeRange = false;
+                    }
+
+                    if (hostEvents == null || hostEvents.size() < 1
+                            || guestEvents == null || guestEvents.size() < 1) {
+                        currentState = GazeDistanceState.OUTSIDESCREEN;
+                    }
+                    else {
+                        currentState = getDistanceStateForAsynchroneData(hostEvents, guestEvents,
+                                hostProj, guestProj);
+                    }
+
+                    if (progressEndTS > endTime + (progressEndTS - progressStartTS) / 2) {
+                        currentInterval++;
+                        recalcultaeTimeRange = true;
                     }
                 }
 
@@ -322,6 +245,91 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
             // slider has to be horizontal
         }
     }
+
+
+    private GazeDistanceState getDistanceStateForAsynchroneData(ArrayList<EyeTrackerEyeEvent> hostEvents,
+            ArrayList<EyeTrackerEyeEvent> guestEvents, OverlayGazeProjector host, OverlayGazeProjector guest) {
+        int belowMinDistanceCounter = 0;
+        int aboveMinDistanceCounter = 0;
+        int notContainedInRectCounter = 0;
+        int guestIndex = 0;
+
+        GazeDistanceState currentState = GazeDistanceState.OUTSIDESCREEN;
+
+        Point hostFramePoint1 = vidFrame.getHostProjector().getRecording().getFramePoint1();
+        Point hostFramePoint2 = vidFrame.getHostProjector().getRecording().getFramePoint2();
+
+        // outer loop should be the smaller list: swap lists
+        OverlayGazeProjector tempGuestProj = guest;
+        OverlayGazeProjector tempHosttProj = host;
+        if (hostEvents.size() > guestEvents.size()) {
+            ArrayList<EyeTrackerEyeEvent> tempEvents;
+            tempEvents = guestEvents;
+            guestEvents = hostEvents;
+            hostEvents = tempEvents;
+
+            tempGuestProj = host;
+            tempHosttProj = guest;
+        }
+
+        int index = -1;
+        for (EyeTrackerEyeEvent hostEvent : hostEvents) {
+
+            EyeTrackerEyeEvent nextHostEvent = (index == -1 ? null : hostEvents.get(index));
+
+            Boolean notContained = false;
+            if (!hostEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
+                notContainedInRectCounter++;
+                notContained = true;
+            }
+
+            long tsHost = hostEvent.timestamp - tempHosttProj.getTimeSyncOffset();
+
+            while (guestIndex < guestEvents.size()) {
+                EyeTrackerEyeEvent guestEvent = guestEvents.get(guestIndex);
+
+                // TODO: nicht immer mit allen gast-events vergleichen
+                if ((guestEvent.timestamp - tempGuestProj.getTimeSyncOffset())
+                        < tsHost - (nextHostEvent == null ? 0 :
+                            (nextHostEvent.timestamp - hostEvent.timestamp) / 2)) {
+                    break;
+                }
+
+                if (!guestEvent.containedInRecFrame(hostFramePoint1, hostFramePoint2)) {
+                    if (!notContained)
+                        notContainedInRectCounter++;
+                }
+                else {
+                    Point hostPoint = new Point(hostEvent.fixationPointX,
+                            hostEvent.fixationPointY);
+                    Point guestPoint = new Point(guestEvent.fixationPointX,
+                            guestEvent.fixationPointY);
+
+                    if (hostPoint.distance(guestPoint) > minDistance)
+                        aboveMinDistanceCounter++;
+                    else
+                        belowMinDistanceCounter++;
+                }
+
+                guestIndex++;
+            }
+
+            index++;
+        }
+
+        if (belowMinDistanceCounter >= aboveMinDistanceCounter
+                && belowMinDistanceCounter >= notContainedInRectCounter)
+            currentState = GazeDistanceState.CLOSE;
+        else if (aboveMinDistanceCounter >= belowMinDistanceCounter
+                && aboveMinDistanceCounter > notContainedInRectCounter)
+            currentState = GazeDistanceState.FARAWAY;
+        else if (notContainedInRectCounter >= belowMinDistanceCounter
+                && notContainedInRectCounter >= aboveMinDistanceCounter)
+            currentState = GazeDistanceState.OUTSIDEBOARD;
+
+        return currentState;
+    }
+
 
     @Override
     protected void paintMajorTickForHorizSlider( Graphics g, Rectangle tickBounds, int x ) {

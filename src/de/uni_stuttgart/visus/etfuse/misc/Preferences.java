@@ -23,9 +23,10 @@ public class Preferences implements Serializable {
 
     public enum MinDistSubdivision
     {
-       MINAREAS, CLICKS;
+       MINAREAS, CLICKS, TIMEINTERVALS;
     }
     private MinDistSubdivision minDistSubdivision = MinDistSubdivision.CLICKS;
+    private int minDistSubdivisionInterval = 1000;
 
     // Gaze-Filter
     private int filterVelocityThreshold = 20;
@@ -39,7 +40,7 @@ public class Preferences implements Serializable {
 
     public enum HeatMapTimeSource
     {
-       USERDEFINED, CLICKS;
+       USERDEFINED, CLICKS, TIMEINTERVALS; // TODO TIMEINTERVALS not used yet
     }
     private HeatMapTimeSource heatMapSource = HeatMapTimeSource.CLICKS;
     private int heatmapTransparency = 128;
@@ -57,13 +58,13 @@ public class Preferences implements Serializable {
     private Color colorPlayer2 = new Color(240, 240, 240);
 
     // Colors for MinDist plot
-    private Color colorMinDistOutsideDisplay = new Color(150, 150, 150);
-    private Color colorMinDistOutsideBoard = new Color(61, 1, 76);
-    private Color colorMinDistClose = new Color(255, 234, 0);
-    private Color colorMinDistFarAway = new Color(40, 161, 151);
+    private Color colorMinDistOutsideDisplay = new Color(218, 218, 218);
+    private Color colorMinDistOutsideBoard = new Color(166, 166, 166);
+    private Color colorMinDistClose = new Color(255, 195, 0);
+    private Color colorMinDistFarAway = new Color(255, 255, 167);
 
     // Colormap
-    private int colorMap = Imgproc.COLORMAP_MAGMA;
+    private int colorMap = Imgproc.COLORMAP_INFERNO;
 
     public Boolean getEnableHeatMapOverlay() {
         return enableHeatMapOverlay;
@@ -119,7 +120,12 @@ public class Preferences implements Serializable {
     public void setMinDistSubdivision(MinDistSubdivision minDistSubdivision) {
         this.minDistSubdivision = minDistSubdivision;
     }
-
+    public int getMinDistSubdivisionInterval() {
+        return minDistSubdivisionInterval;
+    }
+    public void setMinDistSubdivisionInterval(int minDistSubdivisionInterval) {
+        this.minDistSubdivisionInterval = minDistSubdivisionInterval;
+    }
     public int getFilterVelocityThreshold() {
         return filterVelocityThreshold;
     }
