@@ -201,7 +201,7 @@ public class OverlayGazeProjector {
             long currentTime = this.vidFramePanel.getCurrentTime();
             ArrayList<Long> clicks = this.vidFramePanel.getClicks();
 
-            int mapIndex = 1;
+            int mapIndex = 0;
             for (int i = 0; i < clicks.size(); i++)
             {
                 if (currentTime >= clicks.get(i)) {

@@ -61,13 +61,13 @@ public class HeatMapGenerator extends SwingWorker {
             ArrayList<Long> clicks = this.vidFrame.getPanel().getClicks();
 
             if (heatmapId == 0) {// first click
-                this.minTime = vidFrame.getHostProjector().getRecording().getRawEyeEvents().get(0).timestamp; // beginning of video
+                this.minTime = vidFrame.getHostProjector().getRecording().getRawEyeEvents().get(0).timestamp - vidFrame.getHostProjector().getTimeSyncOffset(); // beginning of video
                 this.maxTime = clicks.get(0) * hostVidFps / 1000;
             }
             else if (heatmapId == clicks.size()) { // last click
                 this.minTime = clicks.get(clicks.size() - 1)  * hostVidFps / 1000;;
                 this.maxTime = vidFrame.getHostProjector().getRecording().getRawEyeEvents().get(
-                        vidFrame.getHostProjector().getRecording().getRawEyeEvents().size() - 1).timestamp; // end of video
+                        vidFrame.getHostProjector().getRecording().getRawEyeEvents().size() - 1).timestamp - vidFrame.getHostProjector().getTimeSyncOffset(); // end of video
             }
             else {
                 this.minTime = clicks.get(heatmapId - 1) * hostVidFps / 1000;

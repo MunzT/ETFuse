@@ -500,7 +500,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
         // make window smaller as video material might be full hd which will create a window
         //larger than common screens
-        this.setSize(this.getSize().width * 800 / this.getSize().height, 800);
+        this.setSize(this.getSize().width * 1000 / this.getSize().height, 1000);
     }
 
     public void setHostRecording(EyeTrackerRecording rec) {
