@@ -494,6 +494,8 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
         else {
             // fertigstellen
 
+            Project proj = Project.currentProject();
+
             OverlayGazeProjector newProjector = new OverlayGazeProjector(sourceData, parentFrame.getPanel());
             newProjector.transformRawPointsToTarget(targetData);
             newProjector.transformFilteredPointsToTarget(targetData);
@@ -516,11 +518,11 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                 else
                     timeShift = RecTempSynchronizer.computeTimestampOffset(targetData, sourceData);
             }
-            else
+            else {
+                proj.guestVidPaths.add("");
                 timeShift = RecTempSynchronizer.computeTimestampOffset(targetData, sourceData);
+            }
 
-
-            Project proj = Project.currentProject();
             proj.guestTimeShiftOffsets.add(timeShift);
             proj.guestFrames.add(new Rectangle(sourceData.getFramePoint1().x,
                     sourceData.getFramePoint1().y,

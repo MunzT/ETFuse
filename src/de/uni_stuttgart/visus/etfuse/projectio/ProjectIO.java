@@ -144,7 +144,7 @@ public class ProjectIO implements PropertyChangeListener {
                 return false;
         }
 
-        for (int i = 0; i < proj.guestVidPaths.size(); i++) {
+        /*for (int i = 0; i < proj.guestVidPaths.size(); i++) {
 
             String guestVidPath = proj.guestVidPaths.get(i);
 
@@ -176,7 +176,7 @@ public class ProjectIO implements PropertyChangeListener {
                 else
                     return false;
             }
-        }
+        }*/
 
         for (int i = 0; i < proj.guestDatasetPaths.size(); i++) {
 
