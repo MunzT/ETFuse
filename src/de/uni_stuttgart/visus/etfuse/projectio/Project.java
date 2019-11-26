@@ -15,8 +15,8 @@ import de.uni_stuttgart.visus.etfuse.misc.Preferences;
 
 public class Project implements Serializable {
 
-    private static final long serialVersionUID = -2082609050833935516L;
-    //private static final long serialVersionUID = -2615634893322224238L;
+    //private static final long serialVersionUID = -2082609050833935516L;
+    private static final long serialVersionUID = -2615634893322224238L;
 
     public String hostVidPath = "";
     public String hostDatasetPath = "";
