@@ -369,9 +369,6 @@ public class PreferencesFrame extends JDialog {
         chckbxHeatMapGeneratorGenFromFrequencyInstead.setBorder(null);
         heatMapGeneratorPrefsPanel.add(chckbxHeatMapGeneratorGenFromFrequencyInstead, "2, 10");
 
-        JLabel lblnderungenTretenErst = new JLabel("Changes are effective only with the next (manual) generation.");
-        panelHeatMapGeneratorPrefs.add(lblnderungenTretenErst, "2, 3, center, default");
-
         JPanel panelTempSyncPrefs = new JPanel();
         tabbedPane.addTab("Data Set Synchronisation", null, panelTempSyncPrefs, null);
         panelTempSyncPrefs.setLayout(new FormLayout(new ColumnSpec[] {
@@ -708,11 +705,6 @@ public class PreferencesFrame extends JDialog {
         if (comboBoxHeatmapSource.getSelectedIndex() >= 0)
             prefs.setHeatMapSource(Preferences.HeatMapTimeSource.values()[
                 comboBoxHeatmapSource.getSelectedIndex()]);
-        if (!txtHeatMapGeneratorSkipPercentage.getText().isEmpty())
-            prefs.setHeatMapGenSkipPercentage(Float.parseFloat(txtHeatMapGeneratorSkipPercentage.getText()));
-        if (!txtHeatMapGeneratorHeatRadius.getText().isEmpty())
-            prefs.setHeatMapGenHeatRadius(Integer.parseInt(txtHeatMapGeneratorHeatRadius.getText()));
-        prefs.setHeatMapGenSkipEvents(chckbxHeatMapGeneratorSkipPercentage.isSelected());
         if (comboBoxOverlayHeatMapSource.getSelectedIndex() >= 0)
             prefs.setHeatMapOverlayPlayer(comboBoxOverlayHeatMapSource.getSelectedIndex());
         prefs.setEnableHeatMapOverlay(chckbxEnableHeatMapPlot.isSelected());
@@ -726,7 +718,6 @@ public class PreferencesFrame extends JDialog {
             prefs.setMinDistPlotPlayer1(comboBoxMinDistPlotSource1.getSelectedIndex());
         if (comboBoxMinDistPlotSource2.getSelectedIndex() >= 0)
             prefs.setMinDistPlotPlayer2(comboBoxMinDistPlotSource2.getSelectedIndex());
-        prefs.setHeatMapGenGenFromFrequencyInstead(chckbxHeatMapGeneratorGenFromFrequencyInstead.isSelected());
         if (!txtHistogramCorrelationThreshold.getText().isEmpty())
             prefs.setHistogramCorrelationThreshold(Integer.parseInt(txtHistogramCorrelationThreshold.getText()));
         if (!txtHistogramDeviatingCellsThreshold.getText().isEmpty())
@@ -742,15 +733,33 @@ public class PreferencesFrame extends JDialog {
         prefs.setColorMinDistFarAway(colorPickerButtonMinDistPlotFar.getBackground());
         prefs.setColorMinDistOutsideBoard(colorPickerButtonMinDistPlotOutsideBoard.getBackground());
         prefs.setColorMinDistOutsideDisplay(colorPickerButtonMinDistPlotOutsideScreen.getBackground());
-        if (comboBoxHeatmapColors.getSelectedIndex() >= 0) {
-            int prevColormapId = prefs.getColorMap();
-            int prevTransparency = prefs.getHeatmapTransparency();
+
+
+        int prevColormapId = prefs.getColorMap();
+        int prevTransparency = prefs.getHeatmapTransparency();
+        boolean prevHeatMapGenSkipEvents = prefs.getHeatMapGenSkipEvents();
+        float prevHeatMapGenSkipPercentage = prefs.getHeatMapGenSkipPercentage();
+        int prevHeatMapGenHeatRadius = prefs.getHeatMapGenHeatRadius();
+        boolean prevHeatMapGenGenFromFrequencyInstead = prefs.getHeatMapGenGenFromFrequencyInstead();
+
+        if (comboBoxHeatmapColors.getSelectedIndex() >= 0)
             prefs.setColorMap(colorMapMapping.get(comboBoxHeatmapColors.getSelectedIndex()));
-            prefs.setHeatmapTransparency((int) spinnerHeatmapTransparency.getValue());
-            if (prevColormapId != prefs.getColorMap() || prevTransparency != prefs.getHeatmapTransparency()) {
-                vidFrame.getPanel().setRepaintHeatMap();
-            }
+        prefs.setHeatmapTransparency((int) spinnerHeatmapTransparency.getValue());
+        prefs.setHeatMapGenSkipEvents(chckbxHeatMapGeneratorSkipPercentage.isSelected());
+        if (!txtHeatMapGeneratorSkipPercentage.getText().isEmpty())
+            prefs.setHeatMapGenSkipPercentage(Float.parseFloat(txtHeatMapGeneratorSkipPercentage.getText()));
+        if (!txtHeatMapGeneratorHeatRadius.getText().isEmpty())
+            prefs.setHeatMapGenHeatRadius(Integer.parseInt(txtHeatMapGeneratorHeatRadius.getText()));
+        prefs.setHeatMapGenGenFromFrequencyInstead(chckbxHeatMapGeneratorGenFromFrequencyInstead.isSelected());
+
+        if (prevColormapId != prefs.getColorMap() || prevTransparency != prefs.getHeatmapTransparency()
+                || prevHeatMapGenSkipEvents != prefs.getHeatMapGenSkipEvents()
+                || prevHeatMapGenSkipPercentage != prefs.getHeatMapGenSkipPercentage()
+                || prevHeatMapGenHeatRadius != prefs.getHeatMapGenHeatRadius()
+                || prevHeatMapGenGenFromFrequencyInstead != prefs.getHeatMapGenGenFromFrequencyInstead()) {
+            vidFrame.getPanel().setRepaintHeatMap();
         }
+
         for (OverlayGazeProjector p : vidFrame.getPanel().getProjectors()) {
             IVTFilter.filterRecording(p.getRecording(), prefs.getFilterVelocityThreshold(),
                     prefs.getFilterDistanceThreshold());
