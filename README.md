@@ -76,5 +76,5 @@ You may easily adapt the parser files if your data provides the information in d
 ### Videos
 
 Video data should preferably be without eye tracking data.
-For Tobii Studio, video files can be exported without any fixations/raw data visible on the stimulus.
+For Tobii Studio, video files can be exported without any fixations/raw data visible on the stimulus (fixation/raw data overlay can be disabled in the overlay settings; we exported videos using the Microsoft Video 1 video codec).
 When Using Tobii Pro Lab, the original .mp4 files of the project located in the folder `Media` have to be used (as it is not possible to disable visibility of gaze information when exporting a video with the software).
