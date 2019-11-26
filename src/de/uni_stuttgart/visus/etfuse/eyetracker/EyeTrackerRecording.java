@@ -207,6 +207,9 @@ public class EyeTrackerRecording {
         if (timestampEnd < firstTS)
             return eventList;
 
+        if (timestampBegin > lastTS && timestampEnd > lastTS)
+            return eventList;
+
         if (timestampEnd > lastTS)
             timestampEnd = lastTS;
 
