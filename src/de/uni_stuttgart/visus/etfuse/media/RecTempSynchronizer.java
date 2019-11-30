@@ -371,7 +371,7 @@ public class RecTempSynchronizer {
 
                     found = true;
 
-                    System.out.println("<RecTempSynchronizer> Host places brick.");
+                    System.out.println("<RecTempSynchronizer> Host places piece.");
 
                     break;
                 }
@@ -445,7 +445,7 @@ public class RecTempSynchronizer {
 
                         roughGuess *= -1;
 
-                        System.out.println("<RecTempSynchronizer> Guest places brick.");
+                        System.out.println("<RecTempSynchronizer> Guest places piece.");
 
                         break;
                     }
@@ -457,7 +457,7 @@ public class RecTempSynchronizer {
         }
 
         if (!found) {
-            System.out.println("<RecTempSynchronizer> Neither player seems to be placing the brick. Use estimated value.");
+            System.out.println("<RecTempSynchronizer> Neither player seems to be placing a piece. Use estimated value.");
             return timeShift;
         }
 

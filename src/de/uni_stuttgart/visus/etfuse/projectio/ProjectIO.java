@@ -46,7 +46,7 @@ public class ProjectIO implements PropertyChangeListener {
         final JFileChooser fc =
                 new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
-        fc.addChoosableFileFilter(new FileNameExtensionFilter("Eye Tracker Project", "etproj"));
+        fc.addChoosableFileFilter(new FileNameExtensionFilter("Eye Tracker Project (.etp, .etproj)", "etproj", "etp"));
         fc.setAcceptAllFileFilterUsed(false);
 
         //In response to a button click:
@@ -55,7 +55,14 @@ public class ProjectIO implements PropertyChangeListener {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
 
             final File chosenFile = fc.getSelectedFile();
-            Project.loadProjectFromFile(chosenFile);
+
+            if (chosenFile.getAbsolutePath().endsWith(".etproj")) {
+                Project.loadProjectFromFile(chosenFile);
+            }
+            else if (chosenFile.getAbsolutePath().endsWith(".etp")) {
+                Project.curProj = new Project();
+                Project.currentProject().loadProjectFromIniFile(chosenFile);
+            }
 
             if (Project.curProj == null) {
                 JOptionPane.showMessageDialog(mainFrame,
@@ -360,7 +367,7 @@ public class ProjectIO implements PropertyChangeListener {
         final JFileChooser fc =
                 new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
-        fc.addChoosableFileFilter(new FileNameExtensionFilter("Eye tracker project (.etproj)", "etproj"));
+        fc.addChoosableFileFilter(new FileNameExtensionFilter("Eye tracker project (.etp, .etproj)", "etproj", "etp"));
         fc.setAcceptAllFileFilterUsed(false);
 
         int returnVal = fc.showSaveDialog(fc);
@@ -368,9 +375,15 @@ public class ProjectIO implements PropertyChangeListener {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
 
             File chosenFile = fc.getSelectedFile();
-            if (!chosenFile.getAbsolutePath().endsWith(".etproj"))
-                chosenFile = new File(chosenFile.getAbsolutePath().concat(".etproj"));
-            Project.saveProjectToFile(chosenFile);
+            if (!chosenFile.getAbsolutePath().endsWith(".etproj") && !chosenFile.getAbsolutePath().endsWith(".etp"))
+                chosenFile = new File(chosenFile.getAbsolutePath().concat(".etp"));
+
+            if (chosenFile.getAbsolutePath().endsWith(".etproj")) {
+                Project.saveProjectToFile(chosenFile);
+            }
+            else if (chosenFile.getAbsolutePath().endsWith(".etp")) {
+                Project.currentProject().saveProjectToIniFile(chosenFile);
+            }
 
             Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
         }
