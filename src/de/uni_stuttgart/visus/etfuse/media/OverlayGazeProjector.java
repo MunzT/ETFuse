@@ -32,6 +32,8 @@ public class OverlayGazeProjector {
             new HashMap<HeatMapTimeSource, HashMap<Long, Mat>>();
     private HashMap<HeatMapTimeSource, HashMap<Long, Mat>> transparentHeatMaps =
             new HashMap<HeatMapTimeSource, HashMap<Long, Mat>>();
+    private HashMap<HeatMapTimeSource, HashMap<Long, Mat>> uniColorTansparentHeatMaps =
+            new HashMap<HeatMapTimeSource, HashMap<Long, Mat>>();
     private Boolean heatMapIsBeingGenerated = false;
 
     public OverlayGazeProjector(EyeTrackerRecording recording, VideoSurfacePanel vidFramePanel) {
@@ -53,6 +55,9 @@ public class OverlayGazeProjector {
         transparentHeatMaps.put(HeatMapTimeSource.USERDEFINED, new HashMap<Long, Mat>());
         transparentHeatMaps.put(HeatMapTimeSource.CLICKS, new HashMap<Long, Mat>());
         transparentHeatMaps.put(HeatMapTimeSource.TIMEINTERVALS, new HashMap<Long, Mat>());
+        uniColorTansparentHeatMaps.put(HeatMapTimeSource.USERDEFINED, new HashMap<Long, Mat>());
+        uniColorTansparentHeatMaps.put(HeatMapTimeSource.CLICKS, new HashMap<Long, Mat>());
+        uniColorTansparentHeatMaps.put(HeatMapTimeSource.TIMEINTERVALS, new HashMap<Long, Mat>());
     }
 
     public EyeTrackerRecording getRecording() {
@@ -184,6 +189,21 @@ public class OverlayGazeProjector {
                 Project.currentProject().getPreferences().getHeatMapSource());
     }
 
+    public void setUniColorTransparentHeatMap(Mat heatMap, long id, HeatMapTimeSource type) {
+        this.uniColorTansparentHeatMaps.get(type).put(id, heatMap);
+    }
+
+    public Mat getUniColorTransparentHeatMap(long id, HeatMapTimeSource type) {
+        if (this.uniColorTansparentHeatMaps.containsKey(type))
+            return this.uniColorTansparentHeatMaps.get(type).get(id);
+        return null;
+    }
+
+    public Mat getCurrentUniColorTransparentHeatMap() {
+        return getUniColorTransparentHeatMap(determineCurrentHeatmapId(),
+                Project.currentProject().getPreferences().getHeatMapSource());
+    }
+
     public void setIsHeatMapBeingGenerated(Boolean heatMapIsBeingGenerated) {
         this.heatMapIsBeingGenerated = heatMapIsBeingGenerated;
     }
@@ -199,7 +219,7 @@ public class OverlayGazeProjector {
         }
         else { // depends on mouse click
             long currentTime = this.vidFramePanel.getCurrentTime();
-            ArrayList<Long> clicks = this.vidFramePanel.getClicks();
+            ArrayList<Long> clicks = this.vidFramePanel.getHeatmapEvents();
 
             int mapIndex = 0;
             for (int i = 0; i < clicks.size(); i++)

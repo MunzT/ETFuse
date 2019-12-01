@@ -24,6 +24,7 @@ import de.uni_stuttgart.visus.etfuse.projectio.Project;
 public class HeatMapGenerator extends SwingWorker {
 
     private OverlayGazeProjector proj;
+    private int projId;
     private VideoFrame vidFrame;
     public int progress;
     private long minTime;
@@ -44,10 +45,11 @@ public class HeatMapGenerator extends SwingWorker {
         }
     }
 
-    public HeatMapGenerator(OverlayGazeProjector proj, int heatmapId,
+    public HeatMapGenerator(int projId, int heatmapId,
             HeatMapTimeSource heatmapType, VideoFrame vidFrame) {
 
-        this.proj = proj;
+        this.projId = projId;
+        this.proj = vidFrame.getPanel().getProjectors().get(projId);
         this.heatmapId = heatmapId;
         this.heatmapType = heatmapType;
         this.vidFrame = vidFrame;
@@ -58,20 +60,20 @@ public class HeatMapGenerator extends SwingWorker {
             this.maxTime = vidFrame.getHeatMapRangeHigh();
         }
         else if (heatmapType == HeatMapTimeSource.CLICKS) {
-            ArrayList<Long> clicks = this.vidFrame.getPanel().getClicks();
+            ArrayList<Long> events = this.vidFrame.getPanel().getHeatmapEvents();
 
-            if (heatmapId == 0) {// first click
+            if (heatmapId == 0 && events.size() > 0) {// first click
                 this.minTime = vidFrame.getHostProjector().getRecording().getRawEyeEvents().get(0).timestamp - vidFrame.getHostProjector().getTimeSyncOffset(); // beginning of video
-                this.maxTime = clicks.get(0) * hostVidFps / 1000;
+                this.maxTime = events.get(0) * hostVidFps / 1000;
             }
-            else if (heatmapId == clicks.size()) { // last click
-                this.minTime = clicks.get(clicks.size() - 1)  * hostVidFps / 1000;;
+            else if (heatmapId == events.size() && events.size() > 0) { // last click
+                this.minTime = events.get(events.size() - 1)  * hostVidFps / 1000;;
                 this.maxTime = vidFrame.getHostProjector().getRecording().getRawEyeEvents().get(
                         vidFrame.getHostProjector().getRecording().getRawEyeEvents().size() - 1).timestamp - vidFrame.getHostProjector().getTimeSyncOffset(); // end of video
             }
-            else {
-                this.minTime = clicks.get(heatmapId - 1) * hostVidFps / 1000;
-                this.maxTime = clicks.get(heatmapId) * hostVidFps / 1000;
+            else if (events.size() > 0) {
+                this.minTime = events.get(heatmapId - 1) * hostVidFps / 1000;
+                this.maxTime = events.get(heatmapId) * hostVidFps / 1000;
             }
         }
         else if (heatmapType == HeatMapTimeSource.TIMEINTERVALS) {
@@ -97,31 +99,28 @@ public class HeatMapGenerator extends SwingWorker {
 
             Mat finalStep;
 
-            if (true) {
-                // set everything equally transparent
-                Mat step3 = colorMapHeatMap(step2, prefs.getColorMap());
-                proj.setNormalizedHeatMap(step3, heatmapId, heatmapType);
+            // set everything equally transparent
+            Mat step3 = colorMapHeatMap(step2, prefs.getColorMap());
+            proj.setNormalizedHeatMap(step3, heatmapId, heatmapType);
 
-                finalStep = makeHeatMapTransparentABGR(step3);
-            }
-            else if (false) {
-                // remove black; for Imgproc.COLORMAP_HOT
-                Mat step3 = colorMapHeatMap(step2, prefs.getColorMap());
-                proj.setNormalizedHeatMap(step3, heatmapId, heatmapType);
-
-                finalStep = makeHeatMapTransparentABGR_removeBlack(step3);
-            }
-            else if (false) {
-                // TODO original version
-                Mat step3 = colorMapHeatMap(step2, Imgproc.COLORMAP_HOT);
-                proj.setNormalizedHeatMap(step3, heatmapId, heatmapType);
-
-                step3 = colorMapHeatMap(step2, prefs.getColorMap());
-
-                finalStep = makeHeatMapTransparentABGR_removeBlue(step3);
-            }
+            finalStep = makeHeatMapTransparentABGR(step3);
 
             proj.setTransparentHeatMap(finalStep, heatmapId, heatmapType);
+
+            // remove black; for Imgproc.COLORMAP_HOT
+            Color color = this.projId == 0 ? prefs.getHeatmapColorPlayer1() : prefs.getHeatmapColorPlayer2();
+            Mat step3b = uniColorMapHeatMap(step2, color);
+            finalStep = makeHeatMapTransparentABGR_removeBlack(step3b);
+            proj.setUniColorTransparentHeatMap(finalStep, heatmapId, heatmapType);
+
+            // TODO original version
+            /*Mat step3 = colorMapHeatMap(step2, Imgproc.COLORMAP_HOT, -1);
+            proj.setNormalizedHeatMap(step3, heatmapId, heatmapType);
+
+            step3 = colorMapHeatMap(step2, prefs.getColorMap(), projId);
+
+            finalStep = makeHeatMapTransparentABGR_removeBlue(step3);*/
+
             proj.setIsHeatMapBeingGenerated(false);
             HeatMapGenerator.allActiveGenerators.remove(this);
 
@@ -266,7 +265,7 @@ public class HeatMapGenerator extends SwingWorker {
         return transparent;
     }
 
-    private static Mat makeHeatMapTransparentABGR_removeBlack(Mat heatMap) {
+    public static Mat makeHeatMapTransparentABGR_removeBlack(Mat heatMap) {
 
         Mat transparent = heatMap.clone();
         Imgproc.cvtColor(transparent, transparent, Imgproc.COLOR_BGR2BGRA);
@@ -279,7 +278,7 @@ public class HeatMapGenerator extends SwingWorker {
                 Color.RGBtoHSB((int)(pixel[2]*255), (int)(pixel[1]*255), (int)(pixel[0]*255), hsv);
 
                 // alpha in relation to saturation
-                pixel[0] = hsv[2] / 1.1;
+                pixel[0] = hsv[2] * 0.8;
 
                 // remove value
                 hsv[2] = 1;
@@ -310,6 +309,30 @@ public class HeatMapGenerator extends SwingWorker {
         Mat mapped = heatMap.clone();
         mapped.convertTo(mapped, CvType.CV_8UC3);
         Imgproc.applyColorMap(mapped, mapped, colorMap);
+
+        return mapped;
+    }
+
+    public static Mat uniColorMapHeatMap(Mat heatMap, Color color) {
+
+        Mat mapped = heatMap.clone();
+        mapped.convertTo(mapped, CvType.CV_8UC3);
+
+        Mat userColor = new Mat(256,1,CvType.CV_8UC3);
+
+        for(int r = 0; r < 256; ++r) {
+            for(int c = 0; c < 1; ++c) {
+
+                double[] newColor = new double[3];
+                newColor[0] = r / 255.0 * color.getBlue(); // Blue
+                newColor[1] = r / 255.0 * color.getGreen(); // Green
+                newColor[2] = r / 255.0 * color.getRed(); // Red
+
+                // Copy only BGR
+                userColor.put(r, c, newColor);
+            }
+        }
+        Imgproc.applyColorMap(mapped, mapped, userColor);
 
         return mapped;
     }

@@ -2,6 +2,7 @@ package de.uni_stuttgart.visus.etfuse.misc;
 
 import java.awt.Color;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.opencv.imgproc.Imgproc;
 
@@ -65,6 +66,17 @@ public class Preferences implements Serializable {
 
     // Colormap
     private int colorMap = Imgproc.COLORMAP_INFERNO;
+
+    // Events
+    private Boolean showAdditionalEventTicks = true;
+    private ArrayList<Integer> showPlayerEventTicks = new ArrayList<Integer>();
+    private Boolean useAdditionalEventForMinDistPlot = true;
+    private ArrayList<Integer> playerEventsForMinDistPlot = new ArrayList<Integer>();
+    private Boolean useAdditionalEventForHeatmaps = true;
+    private ArrayList<Integer> playerEventsForHeatmaps = new ArrayList<Integer>();
+
+    private Color heatmapColorPlayer1 = new Color(0, 0, 255);
+    private Color heatmapColorPlayer2 = new Color(255, 0, 0);
 
     public Boolean getEnableHeatMapOverlay() {
         return enableHeatMapOverlay;
@@ -240,4 +252,54 @@ public class Preferences implements Serializable {
     public void setColorMap(int colorMap) {
         this.colorMap = colorMap;
     }
+
+    public Boolean getShowAdditionalEventTicks() {
+        return this.showAdditionalEventTicks;
+    }
+    public void setShowAdditionalEventTicks(Boolean showAdditionalEventTicks) {
+        this.showAdditionalEventTicks = showAdditionalEventTicks;
+    }
+    public ArrayList<Integer> getShowPlayerEventTicks() {
+        return this.showPlayerEventTicks;
+    }
+    public void setShowPlayerEventTicks(ArrayList<Integer> showPlayerEventTicks) {
+        this.showPlayerEventTicks = showPlayerEventTicks;
+    }
+    public Boolean getUseAdditionalEventForMinDistPlot() {
+        return this.useAdditionalEventForMinDistPlot;
+    }
+    public void setUseAdditionalEventForMinDistPlot(Boolean useAdditionalEventForMinDistPlot) {
+        this.useAdditionalEventForMinDistPlot = useAdditionalEventForMinDistPlot;
+    }
+    public ArrayList<Integer> getPlayerEventsForMinDistPlot() {
+        return this.playerEventsForMinDistPlot;
+    }
+    public void setPlayerEventsForMinDistPlot(ArrayList<Integer> playerEventsForMinDistPlot) {
+        this.playerEventsForMinDistPlot = playerEventsForMinDistPlot;
+    }
+    public Boolean getUseAdditionalEventForHeatmaps() {
+        return this.useAdditionalEventForHeatmaps;
+    }
+    public void setUseAdditionalEventForHeatmaps(Boolean useAdditionalEventForHeatmaps) {
+        this.useAdditionalEventForHeatmaps = useAdditionalEventForHeatmaps;
+    }
+    public ArrayList<Integer> getPlayerEventsForHeatmaps() {
+        return this.playerEventsForHeatmaps;
+    }
+    public void setPlayerEventsForHeatmaps(ArrayList<Integer> playerEventsForHeatmaps) {
+        this.playerEventsForHeatmaps = playerEventsForHeatmaps;
+    }
+    public Color getHeatmapColorPlayer1() {
+        return this.heatmapColorPlayer1;
+    }
+    public void setHeatmapColorPlayer1(Color heatmapColorPlayer1) {
+        this.heatmapColorPlayer1 = heatmapColorPlayer1;
+    }
+    public Color getHeatmapColorPlayer2() {
+        return this.heatmapColorPlayer2;
+    }
+    public void setHeatmapColorPlayer2(Color heatmapColorPlayer2) {
+        this.heatmapColorPlayer2 = heatmapColorPlayer2;
+    }
+
 }

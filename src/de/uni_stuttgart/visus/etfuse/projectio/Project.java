@@ -31,6 +31,8 @@ public class Project implements Serializable {
     public String hostDatasetPath = "";
     public Rectangle hostFrame = null;
 
+    public String eventsPath = "";
+
     public ArrayList<String> guestVidPaths = null;
     public ArrayList<String> guestDatasetPaths = null;
     public ArrayList<Rectangle> guestFrames = null;
@@ -79,6 +81,9 @@ public class Project implements Serializable {
                     Rectangle rectValue = getRect(parts[1]);
                     if (rectValue != null)
                         hostFrame = rectValue;
+                }
+                else if (parts[0].equals(ProjectIOStrings.eventsPathString)) {
+                    eventsPath = parts[1];
                 }
                 else if (parts[0].equals(ProjectIOStrings.guestVidPathsString)) {
                     String[] subParts = parts[1].substring(1, parts[1].length() - 1).split(", ");
@@ -252,6 +257,61 @@ public class Project implements Serializable {
                     if (intValue != null)
                         getPreferences().setColorMap(intValue);
                 }
+                else if (parts[0].equals(ProjectIOStrings.showAdditionalEventTicksString)) {
+                    Boolean boolValue = getBool(parts[1]);
+                    if (boolValue != null)
+                        getPreferences().setShowAdditionalEventTicks(boolValue);
+                }
+                else if (parts[0].equals(ProjectIOStrings.showPlayerEventTicksString)) {
+                    String[] subParts = parts[1].substring(1, parts[1].length() - 1).split(", ");
+                    ArrayList<Integer> showPlayerEventTicks = new ArrayList<Integer>();
+                    for (int i = 0; i < subParts.length; i++) {
+                        Integer intValue = getInt(subParts[i]);
+                        if (intValue != null)
+                            showPlayerEventTicks.add(intValue);
+                    }
+                    getPreferences().setShowPlayerEventTicks(showPlayerEventTicks);
+                }
+                else if (parts[0].equals(ProjectIOStrings.useAdditionalEventForMinDistPlotString)) {
+                    Boolean boolValue = getBool(parts[1]);
+                    if (boolValue != null)
+                        getPreferences().setUseAdditionalEventForMinDistPlot(boolValue);
+                }
+                else if (parts[0].equals(ProjectIOStrings.playerEventsForMinDistPlotString)) {
+                    String[] subParts = parts[1].substring(1, parts[1].length() - 1).split(", ");
+                    ArrayList<Integer> playerEventsForMinDistPlot = new ArrayList<Integer>();
+                    for (int i = 0; i < subParts.length; i++) {
+                        Integer intValue = getInt(subParts[i]);
+                        if (intValue != null)
+                            playerEventsForMinDistPlot.add(intValue);
+                    }
+                    getPreferences().setPlayerEventsForMinDistPlot(playerEventsForMinDistPlot);
+                }
+                else if (parts[0].equals(ProjectIOStrings.useAdditionalEventForHeatmapsString)) {
+                    Boolean boolValue = getBool(parts[1]);
+                    if (boolValue != null)
+                        getPreferences().setUseAdditionalEventForHeatmaps(boolValue);
+                }
+                else if (parts[0].equals(ProjectIOStrings.playerEventsForHeatmapsString)) {
+                    String[] subParts = parts[1].substring(1, parts[1].length() - 1).split(", ");
+                    ArrayList<Integer> playerEventsForHeatmaps = new ArrayList<Integer>();
+                    for (int i = 0; i < subParts.length; i++) {
+                        Integer intValue = getInt(subParts[i]);
+                        if (intValue != null)
+                            playerEventsForHeatmaps.add(intValue);
+                    }
+                    getPreferences().setPlayerEventsForHeatmaps(playerEventsForHeatmaps);
+                }
+                else if (parts[0].equals(ProjectIOStrings.heatmapColorPlayer1String)) {
+                    Color colorValue = getColor(parts[1]);
+                    if (colorValue != null)
+                        getPreferences().setHeatmapColorPlayer1(colorValue);
+                }
+                else if (parts[0].equals(ProjectIOStrings.heatmapColorPlayer2String)) {
+                    Color colorValue = getColor(parts[1]);
+                    if (colorValue != null)
+                        getPreferences().setHeatmapColorPlayer2(colorValue);
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -382,6 +442,8 @@ public class Project implements Serializable {
                     + hostDatasetPath + "\n");
             printer.append(ProjectIOStrings.hostFrameString + "="
                     + hostFrame + "\n");
+            printer.append(ProjectIOStrings.eventsPathString + "="
+                    + eventsPath + "\n");
             printer.append(ProjectIOStrings.guestVidPathsString + "="
                     + guestVidPaths + "\n");
             printer.append(ProjectIOStrings.guestDatasetPathsString + "="
@@ -450,6 +512,22 @@ public class Project implements Serializable {
                     + getPreferences().getColorMinDistFarAway() + "\n");
             printer.append(ProjectIOStrings.colorMapString + "="
                     + getPreferences().getColorMap() + "\n");
+            printer.append(ProjectIOStrings.showAdditionalEventTicksString + "="
+                    + getPreferences().getShowAdditionalEventTicks() + "\n");
+            printer.append(ProjectIOStrings.showPlayerEventTicksString + "="
+                + getPreferences().getShowPlayerEventTicks() + "\n");
+            printer.append(ProjectIOStrings.useAdditionalEventForMinDistPlotString + "="
+                + getPreferences().getUseAdditionalEventForMinDistPlot() + "\n");
+            printer.append(ProjectIOStrings.playerEventsForMinDistPlotString + "="
+                + getPreferences().getPlayerEventsForMinDistPlot() + "\n");
+            printer.append(ProjectIOStrings.useAdditionalEventForHeatmapsString + "="
+                + getPreferences().getUseAdditionalEventForHeatmaps() + "\n");
+            printer.append(ProjectIOStrings.playerEventsForHeatmapsString + "="
+                + getPreferences().getPlayerEventsForHeatmaps() + "\n");
+            printer.append(ProjectIOStrings.heatmapColorPlayer1String + "="
+                + getPreferences().getHeatmapColorPlayer1() + "\n");
+            printer.append(ProjectIOStrings.heatmapColorPlayer2String + "="
+                + getPreferences().getHeatmapColorPlayer2() + "\n");
 
             printer.close();
         } catch (IOException e) {

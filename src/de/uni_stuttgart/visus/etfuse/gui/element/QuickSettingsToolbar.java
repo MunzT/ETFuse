@@ -120,7 +120,7 @@ public class QuickSettingsToolbar extends JPanel {
         comboBoxMinDistPlotSource2.setToolTipText("Select second source for the MinDist plot");
         add(comboBoxMinDistPlotSource2, "14, 1, fill, default");
 
-        JLabel lblFarben = new JLabel("Farben:");
+        JLabel lblFarben = new JLabel("Colors:");
         add(lblFarben, "16, 1");
 
         JButton btnInfosZuSpielerfarben = new JButton("Information on player colors");
@@ -214,9 +214,13 @@ public class QuickSettingsToolbar extends JPanel {
         }
 
         if (playerList.size() < 1)
-            playerList.add("Keine Daten geladen");
+            playerList.add("No data loaded");
 
-        comboBoxOverlayHeatMapSource.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
+        ArrayList<String> playerListForHeatmaps =  new ArrayList<>(playerList);
+        if (playerList.size() >= 2)
+            playerListForHeatmaps.add("Player 1 + 2"); // TODO make it more generalized
+
+        comboBoxOverlayHeatMapSource.setModel(new DefaultComboBoxModel(playerListForHeatmaps.toArray(new String[0])));
         comboBoxMinDistPlotSource1.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
         comboBoxMinDistPlotSource2.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
     }

@@ -39,6 +39,7 @@ All libraries/classes are already included in this project to readily use it.
 ## Input Data
 
 As input, our system uses data and video files created with Tobii Pro Lab and/or Tobii Studio.
+Additionally, it is possible to load a file containing custom events. 
 
 ### Eye Tracking Data
 
@@ -78,3 +79,7 @@ You may easily adapt the parser files if your data provides the information in d
 Video data should preferably be without eye tracking data.
 For Tobii Studio, video files can be exported without any fixations/raw data visible on the stimulus (fixation/raw data overlay can be disabled in the overlay settings; we exported videos using the Microsoft Video 1 video codec).
 When Using Tobii Pro Lab, the original .mp4 files of the project located in the folder `Media` have to be used (as it is not possible to disable visibility of gaze information when exporting a video with the software).
+
+### Custom Events
+
+In a separate csv file it is possible to define custom events which can be used as markers on the timeline, for subdividing the distance plot and generating heatmaps. In the first column the frames in the host video of the event have to be specified and the second column must contain the colors that will be used for the marker in the timeline. One line might look like this: `100,#ff0000`

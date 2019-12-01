@@ -17,6 +17,7 @@ import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import de.uni_stuttgart.visus.etfuse.eyetracker.EyeTrackerRecording;
+import de.uni_stuttgart.visus.etfuse.fileimport.EventsImporter;
 import de.uni_stuttgart.visus.etfuse.fileimport.ImportTask;
 import de.uni_stuttgart.visus.etfuse.gui.MainFrame;
 import de.uni_stuttgart.visus.etfuse.gui.VideoFrame;
@@ -218,6 +219,36 @@ public class ProjectIO implements PropertyChangeListener {
             }
         }
 
+        if(proj.eventsPath != null && !proj.eventsPath.isEmpty()) {
+            File eventsFile = new File(proj.eventsPath);
+            if (!eventsFile.isFile()) {
+
+                if (mainFrame == null)
+                    return false;
+
+                JOptionPane.showMessageDialog(mainFrame,
+                        "Could not find events file \"" + proj.eventsPath + "\"!");
+
+                final JFileChooser fc =
+                        new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
+
+                fc.addChoosableFileFilter(new FileNameExtensionFilter("Events file (.csv)", "csv"));
+                fc.setAcceptAllFileFilterUsed(false);
+
+                int returnVal = fc.showOpenDialog(mainFrame);
+
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    final File chosenFile = fc.getSelectedFile();
+
+                    proj.eventsPath = chosenFile.getAbsolutePath();
+
+                    Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
+                }
+                else
+                    return false;
+            }
+        }
+
         return true;
     }
 
@@ -280,6 +311,9 @@ public class ProjectIO implements PropertyChangeListener {
                     (int) proj.hostFrame.getMinY()), new Point((int) proj.hostFrame.getMaxX(),
                             (int) proj.hostFrame.getMaxY()));
 
+        EventsImporter eventsImporter = new EventsImporter(vidFrame);
+        vidFrame.getPanel().setCustomEvents(eventsImporter.load(proj.eventsPath));
+
         prepareProjectStep3();
     }
 
@@ -315,15 +349,15 @@ public class ProjectIO implements PropertyChangeListener {
         guestProj.transformFilteredPointsToTarget(vidFrame.getHostProjector().getRecording());
         guestProj.setTimeSyncShift(proj.guestTimeShiftOffsets.get(curGuest));
 
-        int previousClickNo = vidFrame.getPanel().getClicks().size();
+        int previousClickNo = vidFrame.getPanel().getHeatmapEvents().size();
         vidFrame.getPanel().attachProjector(guestProj);
-        int newClickNo = vidFrame.getPanel().getClicks().size();
+        int newClickNo = vidFrame.getPanel().getHeatmapEvents().size();
 
-        HeatMapGenerator mapGen = new HeatMapGenerator(guestProj, 0, HeatMapTimeSource.USERDEFINED, vidFrame);
+        HeatMapGenerator mapGen = new HeatMapGenerator(vidFrame.getPanel().getProjectors().size() - 1, 0, HeatMapTimeSource.USERDEFINED, vidFrame);
         mapGen.attachVideoFrameForTitleUpdate(vidFrame);
         mapGen.execute();
         for (int i = 0; i <= newClickNo; i++) {
-            mapGen = new HeatMapGenerator(guestProj, i, HeatMapTimeSource.CLICKS, vidFrame);
+            mapGen = new HeatMapGenerator(vidFrame.getPanel().getProjectors().size() - 1, i, HeatMapTimeSource.CLICKS, vidFrame);
             mapGen.attachVideoFrameForTitleUpdate(vidFrame);
             mapGen.execute();
         }
@@ -331,13 +365,13 @@ public class ProjectIO implements PropertyChangeListener {
         if (newClickNo != previousClickNo) {
             // recalculate for host
             for (int i = 0; i < vidFrame.getPanel().getProjectors().size() - 1; i++) {
-                mapGen = new HeatMapGenerator(vidFrame.getPanel().getProjector(i),
+                mapGen = new HeatMapGenerator(i,
                         0, HeatMapTimeSource.USERDEFINED, vidFrame);
                 mapGen.attachVideoFrameForTitleUpdate(vidFrame);
                 mapGen.execute();
 
                 for (int j = 1; j <= newClickNo; j++) {
-                    mapGen = new HeatMapGenerator(vidFrame.getPanel().getProjector(i),
+                    mapGen = new HeatMapGenerator(i,
                             j, HeatMapTimeSource.CLICKS, vidFrame);
                     mapGen.attachVideoFrameForTitleUpdate(vidFrame);
                     mapGen.execute();

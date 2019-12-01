@@ -13,6 +13,7 @@ import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 
@@ -42,7 +43,8 @@ public class VideoSurfacePanel extends JPanel {
     private Boolean paintGazePlot = false;
     private Boolean paintRawDataPlot = false;
     private VideoFrame parentVideoFrame = null;
-    private ArrayList<Long> clicks = new ArrayList<Long>();
+    private ArrayList<Long> heatmapEvents = new ArrayList<Long>();
+    private HashMap<Long, Color> customEvents = new HashMap<Long, Color>(); // contains frames
 
     static public VideoSurfacePanel lastInstanceIfExists() {
 
@@ -77,16 +79,20 @@ public class VideoSurfacePanel extends JPanel {
 
         this.projectors.add(projector);
 
-        clicks = new ArrayList<Long>();
-        for (int i = 0; i < lastInstance.getProjectors().size(); i++) {
-            OverlayGazeProjector proj = lastInstance.getProjectors().get(i);
-            ArrayList<Long> c = proj.getRecording().getClicks();
-            for (int j = 0; j < c.size(); j++) {
-                clicks.add(c.get(j) - proj.getTimeSyncOffset());
-            }
-        }
+        Preferences prefs = Project.currentProject().getPreferences();
+        ArrayList<Integer> temp = prefs.getPlayerEventsForMinDistPlot();
+        temp.add(this.projectors.size() -1);
+        prefs.setPlayerEventsForMinDistPlot(temp);
 
-        Collections.sort(clicks);
+        temp = prefs.getPlayerEventsForHeatmaps();
+        temp.add(this.projectors.size() -1);
+        prefs.setPlayerEventsForHeatmaps(temp);
+
+        temp = prefs.getShowPlayerEventTicks();
+        temp.add(this.projectors.size() -1);
+        prefs.setShowPlayerEventTicks(temp);
+
+        updateHeatmapEvents();
     }
 
     public OverlayGazeProjector getProjector(int index) {
@@ -109,6 +115,11 @@ public class VideoSurfacePanel extends JPanel {
                 / camera.get(Videoio.CAP_PROP_FPS)) * 1000);
     }
 
+    public long getTimeForFrame(int frame) {
+        return (long) Math.floor((frame
+                / camera.get(Videoio.CAP_PROP_FPS)) * 1000);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
 
@@ -119,13 +130,19 @@ public class VideoSurfacePanel extends JPanel {
         int panelWidth = this.getWidth();
         int panelHeight = this.getHeight();
 
+        g2.setBackground(Color.BLACK);
+        g2.clearRect(0, 0, mediaWidth, mediaHeight);
+
         AffineTransform saveAT = g2.getTransform();
         saveAT.scale((double) panelWidth / (double) mediaWidth, (double) panelHeight / (double) mediaHeight);
         g2.setTransform(saveAT);
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        Composite originalComposite = g2.getComposite();
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)0.5));
         g2.drawImage(image, null, 0, 0);
+        g2.setComposite(originalComposite);
 
         Preferences prefs = Project.currentProject().getPreferences();
         Boolean paintHeatMapPrefs = prefs.getEnableHeatMapOverlay();
@@ -284,11 +301,11 @@ public class VideoSurfacePanel extends JPanel {
             for (int i = 0; i < this.projectors.size(); i++) {
                 OverlayGazeProjector proj = this.projectors.get(i);
 
-                HeatMapGenerator mapGen = new HeatMapGenerator(proj, 0, HeatMapTimeSource.USERDEFINED, this.parentVideoFrame);
+                HeatMapGenerator mapGen = new HeatMapGenerator(i, 0, HeatMapTimeSource.USERDEFINED, this.parentVideoFrame);
                 mapGen.attachVideoFrameForTitleUpdate(this.parentVideoFrame);
                 mapGen.execute();
-                for (int j = 0; j <= this.parentVideoFrame.getPanel().getClicks().size(); j++) {
-                    mapGen = new HeatMapGenerator(proj, j, HeatMapTimeSource.CLICKS, this.parentVideoFrame);
+                for (int j = 0; j <= this.parentVideoFrame.getPanel().getHeatmapEvents().size(); j++) {
+                    mapGen = new HeatMapGenerator(i, j, HeatMapTimeSource.CLICKS, this.parentVideoFrame);
                     mapGen.attachVideoFrameForTitleUpdate(this.parentVideoFrame);
                     mapGen.execute();
                 }
@@ -297,17 +314,33 @@ public class VideoSurfacePanel extends JPanel {
             repaintHeatMap = false;
         }
 
-        int heatMapToPaint = Project.currentProject().getPreferences().getHeatMapOverlayPlayer();
+        if (Project.currentProject().getPreferences().getHeatMapOverlayPlayer() < this.projectors.size()) { // one player
+            int heatMapToPaint = Project.currentProject().getPreferences().getHeatMapOverlayPlayer();
 
-        if (this.projectors.size() > heatMapToPaint)
-            this.compositeHeatMap = this.projectors.get(heatMapToPaint).getCurrentTransparentHeatMap();
-        else
-            return;
+            if (this.projectors.size() > heatMapToPaint)
+                this.compositeHeatMap = this.projectors.get(heatMapToPaint).getCurrentTransparentHeatMap();
+            else
+                return;
 
-        if (this.compositeHeatMap != null) {
+            if (this.compositeHeatMap != null) {
 
-            Graphics2D g2 = (Graphics2D) g;
-            g2.drawImage(Utils.Mat2BufferedImage(this.compositeHeatMap), null, 0, 0);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.drawImage(Utils.Mat2BufferedImage(this.compositeHeatMap), null, 0, 0);
+            }
+        }
+        else { // 2 playes
+            for (int heatMapToPaint = 0; heatMapToPaint < 2; heatMapToPaint++) {
+                if (this.projectors.size() > heatMapToPaint)
+                    this.compositeHeatMap = this.projectors.get(heatMapToPaint).getCurrentUniColorTransparentHeatMap();
+                else
+                    return;
+
+                if (this.compositeHeatMap != null) {
+
+                    Graphics2D g2 = (Graphics2D) g;
+                    g2.drawImage(Utils.Mat2BufferedImage(this.compositeHeatMap), null, 0, 0);
+                }
+            }
         }
     }
 
@@ -340,7 +373,36 @@ public class VideoSurfacePanel extends JPanel {
         this.paintHeatMap = paintHeatMap;
     }
 
-    public ArrayList<Long> getClicks() {
-        return clicks;
+    public ArrayList<Long> getHeatmapEvents() {
+        return heatmapEvents;
+    }
+
+    public void updateHeatmapEvents() {
+        Preferences prefs = Project.currentProject().getPreferences();
+        heatmapEvents = new ArrayList<Long>();
+        for (int i = 0; i < prefs.getPlayerEventsForHeatmaps().size(); i++) {
+            if (this.getProjectors().size() > prefs.getPlayerEventsForHeatmaps().get(i)) {
+                OverlayGazeProjector proj = this.getProjectors().get(prefs.getPlayerEventsForHeatmaps().get(i));
+                ArrayList<Long> tempEvents = proj.getRecording().getClicks();
+                for (int j = 0; j < tempEvents.size(); ++j) {
+                    long c =  tempEvents.get(j) - proj.getTimeSyncOffset();
+                    heatmapEvents.add(c);
+                }
+            }
+        }
+        if (prefs.getUseAdditionalEventForHeatmaps()) {
+            heatmapEvents.addAll(this.getCustomEvents().keySet());
+        }
+        Collections.sort(heatmapEvents);
+    }
+
+    public void setCustomEvents(HashMap<Long, Color> events) {
+        this.customEvents = events;
+        updateHeatmapEvents();
+        this.setRepaintHeatMap();
+    }
+
+    public HashMap<Long, Color> getCustomEvents() {
+        return this.customEvents;
     }
 }

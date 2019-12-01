@@ -535,15 +535,15 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
 
             newProjector.setTimeSyncShift(timeShift);
 
-            int previousClickNo = this.parentFrame.getPanel().getClicks().size();
+            int previousClickNo = this.parentFrame.getPanel().getHeatmapEvents().size();
             this.parentFrame.getPanel().attachProjector(newProjector);
-            int newClickNo = this.parentFrame.getPanel().getClicks().size();
+            int newClickNo = this.parentFrame.getPanel().getHeatmapEvents().size();
 
-            HeatMapGenerator mapGen = new HeatMapGenerator(newProjector, 0, HeatMapTimeSource.USERDEFINED, parentFrame);
+            HeatMapGenerator mapGen = new HeatMapGenerator(this.parentFrame.getPanel().getProjectors().size() - 1, 0, HeatMapTimeSource.USERDEFINED, parentFrame);
             mapGen.attachVideoFrameForTitleUpdate(this.parentFrame);
             mapGen.execute();
-            for (int i = 0; i <= parentFrame.getPanel().getClicks().size(); i++) {
-                mapGen = new HeatMapGenerator(newProjector, i, HeatMapTimeSource.CLICKS, parentFrame);
+            for (int i = 0; i <= parentFrame.getPanel().getHeatmapEvents().size(); i++) {
+                mapGen = new HeatMapGenerator(this.parentFrame.getPanel().getProjectors().size() - 1, i, HeatMapTimeSource.CLICKS, parentFrame);
                 mapGen.attachVideoFrameForTitleUpdate(this.parentFrame);
                 mapGen.execute();
             }
@@ -551,7 +551,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
             // recalculate for other projectors just the ones influenced by clicks
             for (int i = 0; i < this.parentFrame.getPanel().getProjectors().size() - 1; i++) {
                 for (int j = 0; j <= newClickNo; j++) {
-                    mapGen = new HeatMapGenerator(this.parentFrame.getPanel().getProjector(i),
+                    mapGen = new HeatMapGenerator(i,
                             j, HeatMapTimeSource.CLICKS, this.parentFrame);
                     mapGen.attachVideoFrameForTitleUpdate(this.parentFrame);
                     mapGen.execute();

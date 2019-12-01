@@ -184,7 +184,7 @@ public class MainFrame extends JFrame {
 
                     Project.currentProject().hostVidPath = chosenFile.getAbsolutePath();
 
-                    Path path = Paths.get(Project.currentProject().hostVidPath );
+                    Path path = Paths.get(Project.currentProject().hostVidPath);
                     Path fileName = path.getFileName();
 
                     VideoFrame vidFrame = new VideoFrame("ETFuse - " + fileName.toString(),

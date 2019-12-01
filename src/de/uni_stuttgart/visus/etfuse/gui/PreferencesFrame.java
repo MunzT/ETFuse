@@ -69,6 +69,17 @@ public class PreferencesFrame extends JDialog {
     private ColorChooserButton colorPickerButtonMinDistPlotFar;
     private ColorChooserButton colorPickerButtonMinDistPlotOutsideBoard;
     private ColorChooserButton colorPickerButtonMinDistPlotOutsideScreen;
+    private ColorChooserButton colorPickerButtonHeatmapPlayer1;
+    private ColorChooserButton colorPickerButtonHeatmapPlayer2;
+    private JCheckBox chckbxAdditionalEventsForMinDistPlot;
+    private JCheckBox chckbxPlayer1EventsForMinDistPlot;
+    private JCheckBox chckbxPlayer2EventsForMinDistPlot;
+    private JCheckBox chckbxAdditionalEventsTicks;
+    private JCheckBox chckbxPlayer1Ticks;
+    private JCheckBox chckbxPlayer2Ticks;
+    private JCheckBox chckbxAdditionalEventsForHeatmap;
+    private JCheckBox chckbxPlayer1EventsForHeatmap;
+    private JCheckBox chckbxPlayer2EventsForHeatmap;
 
     Map<Integer, Integer> colorMapMapping;
     Map<Integer, Integer> colorMapIndexMapping;
@@ -175,8 +186,12 @@ public class PreferencesFrame extends JDialog {
         if (playerList.size() < 1)
             playerList.add("No data loaded");
 
+        ArrayList<String> playerListForHeatmaps =  new ArrayList<>(playerList);
+        if (playerList.size() >= 2)
+            playerListForHeatmaps.add("Player 1 + 2"); // TODO make it more generalized
+
         comboBoxOverlayHeatMapSource = new JComboBox();
-        comboBoxOverlayHeatMapSource.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
+        comboBoxOverlayHeatMapSource.setModel(new DefaultComboBoxModel(playerListForHeatmaps.toArray(new String[0])));
         heatMapPrefsPanel.add(comboBoxOverlayHeatMapSource, "4, 4, fill, default");
 
         JPanel panelMinDistPrefs = new JPanel();
@@ -212,19 +227,46 @@ public class PreferencesFrame extends JDialog {
                 FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,
                 FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,}));
 
         JLabel minDistTemporalSubdivision = new JLabel("Temporal subdivision:");
         minDistPrefsPanel.add(minDistTemporalSubdivision, "2, 2, right, default");
 
-        String[] minDistTemporalSubdivisionList = { "Minimum areas", "Mouse clicks", "Intervals" };
+        String[] minDistTemporalSubdivisionList = { "Minimum areas", "Mouse clicks/events", "Intervals" };
 
         comboBoxMinDistTemporalSubdivision = new JComboBox();
         comboBoxMinDistTemporalSubdivision.setModel(new DefaultComboBoxModel(minDistTemporalSubdivisionList));
         minDistPrefsPanel.add(comboBoxMinDistTemporalSubdivision, "4, 2, fill, default");
 
+        JLabel lblEventsForMinDistPlot = new JLabel("Event types (if mouse clicks/events is selected):");
+        minDistPrefsPanel.add(lblEventsForMinDistPlot, "2, 4, right, default");
+
+        chckbxAdditionalEventsForMinDistPlot = new JCheckBox("Additional Events");
+        chckbxAdditionalEventsForMinDistPlot.setBorder(null);
+        minDistPrefsPanel.add(chckbxAdditionalEventsForMinDistPlot, "4, 4, fill, top");
+
+        chckbxPlayer1EventsForMinDistPlot = new JCheckBox("Player 1");
+        chckbxPlayer1EventsForMinDistPlot.setBorder(null);
+        minDistPrefsPanel.add(chckbxPlayer1EventsForMinDistPlot, "4, 6, fill, top");
+
+        chckbxPlayer2EventsForMinDistPlot = new JCheckBox("Player 2");
+        chckbxPlayer2EventsForMinDistPlot.setBorder(null);
+        minDistPrefsPanel.add(chckbxPlayer2EventsForMinDistPlot, "4, 8, fill, top");
+
         JLabel lblTimelineIntervalSize = new JLabel("Subdivision interval size (if Intervals is selected):");
-        minDistPrefsPanel.add(lblTimelineIntervalSize, "2, 4, right, default");
+        minDistPrefsPanel.add(lblTimelineIntervalSize, "2, 10, right, default");
 
         spinnerSubdivisionIntervalSize = new JSpinner();
         spinnerSubdivisionIntervalSize.setModel(new SpinnerNumberModel(1000, 0, 1000000, 1));
@@ -233,29 +275,44 @@ public class PreferencesFrame extends JDialog {
             JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) editor3;
             spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
         }
-        minDistPrefsPanel.add(spinnerSubdivisionIntervalSize, "4, 4, fill, default");
+        minDistPrefsPanel.add(spinnerSubdivisionIntervalSize, "4, 10, fill, default");
 
         JLabel label = new JLabel("Minimum distance (in px; default: 200):");
-        minDistPrefsPanel.add(label, "2, 6, right, default");
+        minDistPrefsPanel.add(label, "2, 12, right, default");
 
         txtMinDistPlotDist = new JTextField();
         txtMinDistPlotDist.setHorizontalAlignment(SwingConstants.LEFT);
         txtMinDistPlotDist.setColumns(10);
-        minDistPrefsPanel.add(txtMinDistPlotDist, "4, 6, fill, default");
+        minDistPrefsPanel.add(txtMinDistPlotDist, "4, 12, fill, default");
 
         JLabel lblQuelldatensatz_1 = new JLabel("Source data set 1:");
-        minDistPrefsPanel.add(lblQuelldatensatz_1, "2, 8, right, default");
+        minDistPrefsPanel.add(lblQuelldatensatz_1, "2, 14, right, default");
 
         comboBoxMinDistPlotSource1 = new JComboBox();
         comboBoxMinDistPlotSource1.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
-        minDistPrefsPanel.add(comboBoxMinDistPlotSource1, "4, 8, fill, default");
+        minDistPrefsPanel.add(comboBoxMinDistPlotSource1, "4, 14, fill, default");
 
         JLabel lblQuelldatensatz_2 = new JLabel("Source data set 2:");
-        minDistPrefsPanel.add(lblQuelldatensatz_2, "2, 10, right, default");
+        minDistPrefsPanel.add(lblQuelldatensatz_2, "2, 16, right, default");
 
         comboBoxMinDistPlotSource2 = new JComboBox();
         comboBoxMinDistPlotSource2.setModel(new DefaultComboBoxModel(playerList.toArray(new String[0])));
-        minDistPrefsPanel.add(comboBoxMinDistPlotSource2, "4, 10, fill, default");
+        minDistPrefsPanel.add(comboBoxMinDistPlotSource2, "4, 16, fill, default");
+
+        JLabel lblTicks = new JLabel("Ticks:");
+        minDistPrefsPanel.add(lblTicks, "2, 18, right, default");
+
+        chckbxAdditionalEventsTicks = new JCheckBox("Additional Events");
+        chckbxAdditionalEventsTicks.setBorder(null);
+        minDistPrefsPanel.add(chckbxAdditionalEventsTicks, "4, 18, fill, top");
+
+        chckbxPlayer1Ticks = new JCheckBox("Player 1");
+        chckbxPlayer1Ticks.setBorder(null);
+        minDistPrefsPanel.add(chckbxPlayer1Ticks, "4, 20, fill, top");
+
+        chckbxPlayer2Ticks = new JCheckBox("Player 2");
+        chckbxPlayer2Ticks.setBorder(null);
+        minDistPrefsPanel.add(chckbxPlayer2Ticks, "4, 22, fill, top");
 
         JPanel panelGazeFilterPrefs = new JPanel();
         tabbedPane.addTab("Gaze Filter", null, panelGazeFilterPrefs, null);
@@ -333,41 +390,62 @@ public class PreferencesFrame extends JDialog {
                 FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,
                 FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,}));
 
         JLabel heatmapSource = new JLabel("Heatmap source:");
         heatMapGeneratorPrefsPanel.add(heatmapSource, "2, 2, right, default");
 
-        String[] heatmapSourceList = { "Userdefined region", "Mouse clicks" };
+        String[] heatmapSourceList = { "Userdefined region", "Mouse clicks/events" };
 
         comboBoxHeatmapSource = new JComboBox();
         comboBoxHeatmapSource.setModel(new DefaultComboBoxModel(heatmapSourceList));
         heatMapGeneratorPrefsPanel.add(comboBoxHeatmapSource, "4, 2, fill, default");
 
+        JLabel lblEventsForHeatmap = new JLabel("Event types (if mouse clicks/events is selected):");
+        heatMapGeneratorPrefsPanel.add(lblEventsForMinDistPlot, "2, 4, right, default");
+
+        chckbxAdditionalEventsForHeatmap = new JCheckBox("Additional Events");
+        chckbxAdditionalEventsForHeatmap.setBorder(null);
+        heatMapGeneratorPrefsPanel.add(chckbxAdditionalEventsForHeatmap, "4, 4, fill, top");
+
+        chckbxPlayer1EventsForHeatmap = new JCheckBox("Player 1");
+        chckbxPlayer1EventsForHeatmap.setBorder(null);
+        heatMapGeneratorPrefsPanel.add(chckbxPlayer1EventsForHeatmap, "4, 6, fill, top");
+
+        chckbxPlayer2EventsForHeatmap = new JCheckBox("Player 2");
+        chckbxPlayer2EventsForHeatmap.setBorder(null);
+        heatMapGeneratorPrefsPanel.add(chckbxPlayer2EventsForHeatmap, "4, 8, fill, top");
+
         chckbxHeatMapGeneratorSkipPercentage = new JCheckBox("Skip percentage of events");
         chckbxHeatMapGeneratorSkipPercentage.setBorder(null);
-        heatMapGeneratorPrefsPanel.add(chckbxHeatMapGeneratorSkipPercentage, "2, 4");
+        heatMapGeneratorPrefsPanel.add(chckbxHeatMapGeneratorSkipPercentage, "2, 10");
 
         JLabel lblDieseOptionBeschleunigt = new JLabel("(Faster generation of large datasets. Decreases accuracy.)");
-        heatMapGeneratorPrefsPanel.add(lblDieseOptionBeschleunigt, "4, 4, left, default");
+        heatMapGeneratorPrefsPanel.add(lblDieseOptionBeschleunigt, "4, 10, left, default");
 
         JLabel lblProzentsatzin = new JLabel("Percentage (in %; default: 0.05):");
-        heatMapGeneratorPrefsPanel.add(lblProzentsatzin, "2, 6, right, default");
+        heatMapGeneratorPrefsPanel.add(lblProzentsatzin, "2, 12, right, default");
 
         txtHeatMapGeneratorSkipPercentage = new JTextField();
-        heatMapGeneratorPrefsPanel.add(txtHeatMapGeneratorSkipPercentage, "4, 6, fill, default");
+        heatMapGeneratorPrefsPanel.add(txtHeatMapGeneratorSkipPercentage, "4, 12, fill, default");
         txtHeatMapGeneratorSkipPercentage.setColumns(10);
 
         JLabel lblHitzeradiusinPx = new JLabel("Heat radius (in px; default: 80):");
-        heatMapGeneratorPrefsPanel.add(lblHitzeradiusinPx, "2, 8, right, default");
+        heatMapGeneratorPrefsPanel.add(lblHitzeradiusinPx, "2, 14, right, default");
 
         txtHeatMapGeneratorHeatRadius = new JTextField();
-        heatMapGeneratorPrefsPanel.add(txtHeatMapGeneratorHeatRadius, "4, 8, fill, default");
+        heatMapGeneratorPrefsPanel.add(txtHeatMapGeneratorHeatRadius, "4, 14, fill, default");
         txtHeatMapGeneratorHeatRadius.setColumns(10);
 
         chckbxHeatMapGeneratorGenFromFrequencyInstead = new JCheckBox("Aggregate by frequency instead of duration");
         chckbxHeatMapGeneratorGenFromFrequencyInstead.setBorder(null);
-        heatMapGeneratorPrefsPanel.add(chckbxHeatMapGeneratorGenFromFrequencyInstead, "2, 10");
+        heatMapGeneratorPrefsPanel.add(chckbxHeatMapGeneratorGenFromFrequencyInstead, "2, 16");
 
         JPanel panelTempSyncPrefs = new JPanel();
         tabbedPane.addTab("Data Set Synchronisation", null, panelTempSyncPrefs, null);
@@ -538,9 +616,13 @@ public class PreferencesFrame extends JDialog {
                 FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,
                 FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,}));
 
-        JLabel heatmapColors = new JLabel("Color:");
+        JLabel heatmapColors = new JLabel("Color map (for one player):");
         heatmapColorPrefsPanel.add(heatmapColors, "2, 2, right, default");
 
         int[] colorMaps = {
@@ -598,7 +680,7 @@ public class PreferencesFrame extends JDialog {
         comboBoxHeatmapColors.setModel(new DefaultComboBoxModel(colorMapsStrings));
         heatmapColorPrefsPanel.add(comboBoxHeatmapColors, "4, 2, fill, default");
 
-        JLabel heatmapTransparencyLabel = new JLabel("Heatmap transparency:");
+        JLabel heatmapTransparencyLabel = new JLabel("Heatmap transparency (for one player):");
         heatmapColorPrefsPanel.add(heatmapTransparencyLabel, "2, 4, right, default");
 
         spinnerHeatmapTransparency = new JSpinner();
@@ -609,6 +691,18 @@ public class PreferencesFrame extends JDialog {
             spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
         }
         heatmapColorPrefsPanel.add(spinnerHeatmapTransparency, "4, 4, fill, default");
+
+        JLabel heatmapPlayer1ColorLabel = new JLabel("Player 1 (multiple heatmaps):");
+        heatmapColorPrefsPanel.add(heatmapPlayer1ColorLabel, "2, 6, right, default");
+
+        colorPickerButtonHeatmapPlayer1 = new ColorChooserButton();
+        heatmapColorPrefsPanel.add(colorPickerButtonHeatmapPlayer1, "4, 6, fill, default");
+
+        JLabel heatmapPlayer2ColorLabel = new JLabel("Player 2 (multiple heatmaps):");
+        heatmapColorPrefsPanel.add(heatmapPlayer2ColorLabel, "2, 8, right, default");
+
+        colorPickerButtonHeatmapPlayer2 = new ColorChooserButton();
+        heatmapColorPrefsPanel.add(colorPickerButtonHeatmapPlayer2, "4, 8, fill, default");
 
         JPanel buttonPanel = new JPanel();
         FlowLayout flowLayout = (FlowLayout) buttonPanel.getLayout();
@@ -688,6 +782,19 @@ public class PreferencesFrame extends JDialog {
 
         comboBoxHeatmapColors.setSelectedIndex(Math.min(comboBoxHeatmapColors.getItemCount() - 1,
                 colorMapIndexMapping.get(prefs.getColorMap())));
+
+        colorPickerButtonHeatmapPlayer1.setBackground(prefs.getHeatmapColorPlayer1());
+        colorPickerButtonHeatmapPlayer2.setBackground(prefs.getHeatmapColorPlayer2());
+
+        chckbxAdditionalEventsForMinDistPlot.setSelected(prefs.getUseAdditionalEventForMinDistPlot());
+        chckbxPlayer1EventsForMinDistPlot.setSelected(prefs.getPlayerEventsForMinDistPlot().contains(0));
+        chckbxPlayer2EventsForMinDistPlot.setSelected(prefs.getPlayerEventsForMinDistPlot().contains(1));
+        chckbxAdditionalEventsTicks.setSelected(prefs.getShowAdditionalEventTicks());
+        chckbxPlayer1Ticks.setSelected(prefs.getShowPlayerEventTicks().contains(0));
+        chckbxPlayer2Ticks.setSelected(prefs.getShowPlayerEventTicks().contains(1));
+        chckbxAdditionalEventsForHeatmap.setSelected(prefs.getUseAdditionalEventForHeatmaps());
+        chckbxPlayer1EventsForHeatmap.setSelected(prefs.getPlayerEventsForHeatmaps().contains(0));
+        chckbxPlayer2EventsForHeatmap.setSelected(prefs.getPlayerEventsForHeatmaps().contains(1));
     }
 
     private void writeElementsToPrefs() {
@@ -710,7 +817,7 @@ public class PreferencesFrame extends JDialog {
         prefs.setEnableHeatMapOverlay(chckbxEnableHeatMapPlot.isSelected());
         prefs.setEnableRawDataOverlay(chckbxEnableRawDataPlot.isSelected());
         prefs.setEnableFixationOverlay(chckbxEnableFixationPlot.isSelected());
-        if (comboBoxMinDistTemporalSubdivision .getSelectedIndex() >= 0)
+        if (comboBoxMinDistTemporalSubdivision.getSelectedIndex() >= 0)
             prefs.setMinDistSubdivision(Preferences.MinDistSubdivision.values()[
                 comboBoxMinDistTemporalSubdivision.getSelectedIndex()]);
         prefs.setMinDistSubdivisionInterval((int) spinnerSubdivisionIntervalSize.getValue());
@@ -734,6 +841,29 @@ public class PreferencesFrame extends JDialog {
         prefs.setColorMinDistOutsideBoard(colorPickerButtonMinDistPlotOutsideBoard.getBackground());
         prefs.setColorMinDistOutsideDisplay(colorPickerButtonMinDistPlotOutsideScreen.getBackground());
 
+        prefs.setShowAdditionalEventTicks(chckbxAdditionalEventsTicks.isSelected());
+        prefs.setUseAdditionalEventForMinDistPlot(chckbxAdditionalEventsForMinDistPlot.isSelected());
+
+        ArrayList<Integer> playersForTicks = new ArrayList<Integer>();
+        if (chckbxPlayer1Ticks.isSelected())
+            playersForTicks.add(0);
+        if (chckbxPlayer2Ticks.isSelected())
+            playersForTicks.add(1);
+
+        ArrayList<Integer> playersForMinDistPlots = new ArrayList<Integer>();
+        if (chckbxPlayer1EventsForMinDistPlot.isSelected())
+            playersForMinDistPlots.add(0);
+        if (chckbxPlayer2EventsForMinDistPlot.isSelected())
+            playersForMinDistPlots.add(1);
+
+        ArrayList<Integer> playersForHeatmaps = new ArrayList<Integer>();
+        if (chckbxPlayer1EventsForHeatmap.isSelected())
+            playersForHeatmaps.add(0);
+        if (chckbxPlayer2EventsForHeatmap.isSelected())
+            playersForHeatmaps.add(1);
+
+        prefs.setShowPlayerEventTicks(playersForTicks);
+        prefs.setPlayerEventsForMinDistPlot(playersForMinDistPlots);
 
         int prevColormapId = prefs.getColorMap();
         int prevTransparency = prefs.getHeatmapTransparency();
@@ -741,6 +871,10 @@ public class PreferencesFrame extends JDialog {
         float prevHeatMapGenSkipPercentage = prefs.getHeatMapGenSkipPercentage();
         int prevHeatMapGenHeatRadius = prefs.getHeatMapGenHeatRadius();
         boolean prevHeatMapGenGenFromFrequencyInstead = prefs.getHeatMapGenGenFromFrequencyInstead();
+        Color prevHeatmapColorPlayer1 = prefs.getHeatmapColorPlayer1();
+        Color prevHeatmapColorPlayer2 = prefs.getHeatmapColorPlayer2();
+        Boolean prevUseAdditionalEventForHeatmaps = prefs.getUseAdditionalEventForHeatmaps();
+        ArrayList<Integer> prevPlayersForHeatmaps = prefs.getPlayerEventsForHeatmaps();
 
         if (comboBoxHeatmapColors.getSelectedIndex() >= 0)
             prefs.setColorMap(colorMapMapping.get(comboBoxHeatmapColors.getSelectedIndex()));
@@ -751,12 +885,25 @@ public class PreferencesFrame extends JDialog {
         if (!txtHeatMapGeneratorHeatRadius.getText().isEmpty())
             prefs.setHeatMapGenHeatRadius(Integer.parseInt(txtHeatMapGeneratorHeatRadius.getText()));
         prefs.setHeatMapGenGenFromFrequencyInstead(chckbxHeatMapGeneratorGenFromFrequencyInstead.isSelected());
+        prefs.setHeatmapColorPlayer1(colorPickerButtonHeatmapPlayer1.getBackground());
+        prefs.setHeatmapColorPlayer2(colorPickerButtonHeatmapPlayer2.getBackground());
+        prefs.setUseAdditionalEventForHeatmaps(chckbxAdditionalEventsForHeatmap.isSelected());
+        prefs.setPlayerEventsForHeatmaps(playersForHeatmaps);
+
+        if (prevUseAdditionalEventForHeatmaps != prefs.getUseAdditionalEventForHeatmaps()
+                || !playersForHeatmaps.equals(prevPlayersForHeatmaps)) {
+            vidFrame.getPanel().updateHeatmapEvents();
+        }
 
         if (prevColormapId != prefs.getColorMap() || prevTransparency != prefs.getHeatmapTransparency()
                 || prevHeatMapGenSkipEvents != prefs.getHeatMapGenSkipEvents()
                 || prevHeatMapGenSkipPercentage != prefs.getHeatMapGenSkipPercentage()
                 || prevHeatMapGenHeatRadius != prefs.getHeatMapGenHeatRadius()
-                || prevHeatMapGenGenFromFrequencyInstead != prefs.getHeatMapGenGenFromFrequencyInstead()) {
+                || prevHeatMapGenGenFromFrequencyInstead != prefs.getHeatMapGenGenFromFrequencyInstead()
+                || prevHeatmapColorPlayer1 != prefs.getHeatmapColorPlayer1()
+                || prevHeatmapColorPlayer2 != prefs.getHeatmapColorPlayer2()
+                || prevUseAdditionalEventForHeatmaps != prefs.getUseAdditionalEventForHeatmaps()
+                || !playersForHeatmaps.equals(prevPlayersForHeatmaps)) {
             vidFrame.getPanel().setRepaintHeatMap();
         }
 

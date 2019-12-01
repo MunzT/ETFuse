@@ -41,6 +41,7 @@ import com.jidesoft.swing.RangeSlider;
 
 import de.uni_stuttgart.visus.etfuse.eyetracker.EyeTrackerRecording;
 import de.uni_stuttgart.visus.etfuse.fileimport.DataImporter;
+import de.uni_stuttgart.visus.etfuse.fileimport.EventsImporter;
 import de.uni_stuttgart.visus.etfuse.gui.element.QuickSettingsToolbar;
 import de.uni_stuttgart.visus.etfuse.gui.element.RecordingSlider;
 import de.uni_stuttgart.visus.etfuse.gui.surface.VideoSurfacePanel;
@@ -65,9 +66,9 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
     private JMenuBar menuBar;
     private JMenu menuImport, menuPlayback, menuRecordingOptions, menuCompareHeatMaps, menuPreferences;
-    private JMenuItem menuItemSaveProject, menuItemTrackerData, menuItemQuarterSpeed, menuItemHalfSpeed,
-    menuItemNormalSpeed, menuItemDoubleSpeed, menuItemQuadrupleSpeed,
-    menuItemAddGuest;
+    private JMenuItem menuItemSaveProject, menuItemEventData, menuItemTrackerData,
+        menuItemQuarterSpeed, menuItemHalfSpeed, menuItemNormalSpeed, menuItemDoubleSpeed,
+        menuItemQuadrupleSpeed, menuItemAddGuest;
 
     private JPanel playbackPanel;
     private JButton playPauseButton;
@@ -144,6 +145,26 @@ public class VideoFrame extends JFrame implements ChangeListener {
         this.menuItemTrackerData.getAccessibleContext().setAccessibleDescription("Import eye tracking data for the host recording");
         this.menuItemTrackerData.addActionListener(importListener);
         this.menuImport.add(this.menuItemTrackerData);
+
+        this.menuItemEventData = new JMenuItem("Add events...", KeyEvent.VK_T);
+        this.menuItemEventData.getAccessibleContext().setAccessibleDescription("Add events for frames and show them as timeline.");
+        this.menuItemEventData.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (hostProjector == null || hostProjector.getRecording() == null) {
+
+                    JOptionPane.showMessageDialog(null, "Please load host eye tracking data first!");
+                    return;
+                }
+
+                EventsImporter eventsImporter = new EventsImporter(VideoFrame.this);
+                VideoFrame.this.getPanel().setCustomEvents(eventsImporter.loadEvents());
+                VideoFrame.this.progressSlider.repaint();
+            }
+        });
+        this.menuImport.add(this.menuItemEventData);
 
         this.menuItemSaveProject = new JMenuItem("Save project as...", KeyEvent.VK_S);
         this.menuItemSaveProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
@@ -387,7 +408,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                String input = JOptionPane.showInputDialog("jump to frame:");
+                String input = JOptionPane.showInputDialog("Jump to frame:", progressSlider.getValue());
                 Integer integ = 0;
 
                 try {
@@ -426,9 +447,9 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
                     HeatMapGenerator.killAllActiveGenerators();
 
-                    for (OverlayGazeProjector proj : VideoFrame.this.getPanel().getProjectors()) {
+                    for (int i = 0; i < VideoFrame.this.getPanel().getProjectors().size(); i++) {
                         // just for the first heatmap which i used for the user defined time range
-                        HeatMapGenerator mapGen = new HeatMapGenerator(proj, 0, HeatMapTimeSource.USERDEFINED, VideoFrame.this);
+                        HeatMapGenerator mapGen = new HeatMapGenerator(i, 0, HeatMapTimeSource.USERDEFINED, VideoFrame.this);
                         mapGen.attachVideoFrameForTitleUpdate(VideoFrame.this);
                         mapGen.execute();
                     }
@@ -508,11 +529,11 @@ public class VideoFrame extends JFrame implements ChangeListener {
         this.hostProjector = new OverlayGazeProjector(rec, this.getPanel());
         this.panel.attachProjector(this.hostProjector);
 
-        HeatMapGenerator mapGen = new HeatMapGenerator(this.hostProjector, 0, HeatMapTimeSource.USERDEFINED, this);
+        HeatMapGenerator mapGen = new HeatMapGenerator(this.panel.getProjectors().size() - 1, 0, HeatMapTimeSource.USERDEFINED, this);
         mapGen.attachVideoFrameForTitleUpdate(this);
         mapGen.execute();
-        for (int i = 0; i <= this.getPanel().getClicks().size(); i++) {
-            mapGen = new HeatMapGenerator(this.hostProjector, i, HeatMapTimeSource.CLICKS, this);
+        for (int i = 0; i <= this.getPanel().getHeatmapEvents().size(); i++) {
+            mapGen = new HeatMapGenerator(this.panel.getProjectors().size() - 1, i, HeatMapTimeSource.CLICKS, this);
             mapGen.attachVideoFrameForTitleUpdate(this);
             mapGen.execute();
         }

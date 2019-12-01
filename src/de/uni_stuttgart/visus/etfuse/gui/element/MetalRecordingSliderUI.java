@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JSlider;
 import javax.swing.UIManager;
@@ -26,6 +27,8 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
 
     ArrayList<Long> clickPositions1;
     ArrayList<Long> clickPositions2;
+    ArrayList<Long> eventPositions;
+    ArrayList<Color> eventColors;
 
     enum GazeDistanceState
     {
@@ -84,26 +87,57 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
             GazeDistanceState currentState = GazeDistanceState.OUTSIDESCREEN;
 
             // timestamp position on slider for both players
-            for (int i = 0; i < 2; i++) {
-                OverlayGazeProjector proj = this.vidFrame.getPanel().getProjectors().get(i);
+            clickPositions1 = new ArrayList<Long>();
+            clickPositions2 = new ArrayList<Long>();
+            for (int i = 0; i < prefs.getPlayerEventsForMinDistPlot().size(); i++) {
+                if (prefs.getShowPlayerEventTicks().contains(i)) {
+                    OverlayGazeProjector proj = this.vidFrame.getPanel().getProjectors().get(i);
 
-                ArrayList<Long> tempClicks = proj.getRecording().getClicks();
-                ArrayList<Long> clickPositions = new ArrayList<Long>();
-                for (int j = 0; j < tempClicks.size(); ++j) {
-                    long c =  Math.round(((((float)(tempClicks.get(j)
-                            - proj.getTimeSyncOffset() - startTS) * trackRect.width
-                            / (endTS - startTS)) + trackRect.x)));
-                    clickPositions.add(c);
+                    ArrayList<Long> tempClicks = proj.getRecording().getClicks();
+                    ArrayList<Long> clickPositions = new ArrayList<Long>();
+                    for (int j = 0; j < tempClicks.size(); ++j) {
+                        long c =  Math.round(((((float)(tempClicks.get(j)
+                                - proj.getTimeSyncOffset() - startTS) * trackRect.width
+                                / (endTS - startTS)) + trackRect.x)));
+                        clickPositions.add(c);
+                    }
+
+                    if (i == 0)
+                        clickPositions1 = clickPositions;
+                    else
+                        clickPositions2 = clickPositions;
                 }
+            }
 
-                if (i == 0)
-                    clickPositions1 = clickPositions;
-                else
-                    clickPositions2 = clickPositions;
+            OverlayGazeProjector hostProj = this.vidFrame.getPanel().getProjectors().get(0);
+
+            eventPositions = new ArrayList<Long>();
+            eventColors = new ArrayList<Color>();
+
+            if (prefs.getShowAdditionalEventTicks()) {
+                for (Long key : this.vidFrame.getPanel().getCustomEvents().keySet()) {
+                    long c =  Math.round(((((float)(key
+                            - hostProj.getTimeSyncOffset() - startTS) * trackRect.width
+                            / (endTS - startTS)) + trackRect.x)));
+                    eventPositions.add(c);
+                    eventColors.add(this.vidFrame.getPanel().getCustomEvents().get(key));
+                }
             }
 
             // all timestamps for clicks
-            ArrayList<Long> clicksTS  = this.vidFrame.getPanel().getClicks();
+            ArrayList<Long> clicksTS = new ArrayList<Long>();
+            for (int i = 0; i < prefs.getPlayerEventsForMinDistPlot().size(); i++) {
+                OverlayGazeProjector proj = this.vidFrame.getPanel().getProjectors().get(prefs.getPlayerEventsForMinDistPlot().get(i));
+                ArrayList<Long> tempClicks = proj.getRecording().getClicks();
+                for (int j = 0; j < tempClicks.size(); ++j) {
+                    long c =  tempClicks.get(j) - proj.getTimeSyncOffset();
+                    clicksTS.add(c);
+                }
+            }
+            if (prefs.getUseAdditionalEventForMinDistPlot()) {
+                clicksTS.addAll(this.vidFrame.getPanel().getCustomEvents().keySet());
+            }
+            Collections.sort(clicksTS);
 
             // for click method
             int currentClickId = -1;
@@ -163,8 +197,8 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                 }
                 else if (prefs.getMinDistSubdivision() == Preferences.MinDistSubdivision.CLICKS) {
 
-                    if (currentClickId != -1 && (currentClickId >= clicksTS.size()
-                            || progressEndTS < clicksTS.get(currentClickId))) {
+                    if (clicksTS.size() <= 0 || (currentClickId != -1 && (currentClickId >= clicksTS.size()
+                            || progressEndTS < clicksTS.get(currentClickId)))) {
                         // no nothing and draw same as before
                     }
                     else {
@@ -345,6 +379,11 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
             g.setColor(changeColorBrightness(Project.currentProject().
                     getPreferences().getColorPlayer2()));
             g.drawLine( x, TICK_BUFFER - 5, x, TICK_BUFFER + (safeLength - 1) * 1/8 - 2);
+        }
+
+        if (eventPositions.contains((long)x)) {
+            g.setColor(eventColors.get(eventPositions.indexOf((long)x)));
+            g.drawLine( x, TICK_BUFFER - 5, x, TICK_BUFFER + (safeLength - 1) * 1/8 - 4);
         }
     }
     Color changeColorBrightness(Color c) {

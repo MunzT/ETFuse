@@ -1,14 +1,18 @@
 package de.uni_stuttgart.visus.etfuse.gui;
 
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -37,7 +41,6 @@ import de.uni_stuttgart.visus.etfuse.gui.surface.VideoSurfacePanel;
 import de.uni_stuttgart.visus.etfuse.media.HeatMapGenerator;
 import de.uni_stuttgart.visus.etfuse.media.OverlayGazeProjector;
 import de.uni_stuttgart.visus.etfuse.misc.Utils;
-import de.uni_stuttgart.visus.etfuse.projectio.Project;
 
 public class HeatMapComparisonFrame extends JFrame {
 
@@ -560,7 +563,7 @@ public class HeatMapComparisonFrame extends JFrame {
                 Point p2 = proj.getRecording().getFramePoint2();
                 Rect roiR = new Rect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
 
-                hms3 = hmi3.submat(roiR);
+                hmi3 = hmi3.submat(roiR);
             }
 
             singleHeatMapPanel.setHeatMap(hmi3);
