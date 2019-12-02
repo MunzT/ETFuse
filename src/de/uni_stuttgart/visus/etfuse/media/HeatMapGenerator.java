@@ -88,6 +88,10 @@ public class HeatMapGenerator extends SwingWorker {
 
         Mat heatMap = proj.getNormalizedHeatMap(heatmapId, heatmapType);
 
+        if (vidFrame.getSkipHeatmapGeneration()) {
+            return heatMap;
+        }
+
         if (true) {//(!proj.isHeatMapBeingGenerated()) { // TODO
             proj.setIsHeatMapBeingGenerated(true);
             HeatMapGenerator.allActiveGenerators.add(this);

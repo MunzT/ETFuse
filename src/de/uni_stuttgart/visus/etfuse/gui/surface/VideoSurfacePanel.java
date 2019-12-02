@@ -345,7 +345,6 @@ public class VideoSurfacePanel extends JPanel {
     }
 
     public void setRepaintHeatMap() {
-
         repaintHeatMap = true;
     }
 

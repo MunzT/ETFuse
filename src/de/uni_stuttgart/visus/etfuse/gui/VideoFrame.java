@@ -80,6 +80,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
     private String idleTitle;
     private HashMap<String, Integer> activityProgress;
+    private boolean skipHeatmapGeneration = false;
 
     private static final long serialVersionUID = 3372205698822928813L;
 
@@ -162,6 +163,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
                 EventsImporter eventsImporter = new EventsImporter(VideoFrame.this);
                 VideoFrame.this.getPanel().setCustomEvents(eventsImporter.loadEvents());
                 VideoFrame.this.progressSlider.repaint();
+                VideoFrame.this.getPanel().setRepaintHeatMap();
             }
         });
         this.menuImport.add(this.menuItemEventData);
@@ -640,5 +642,13 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
         this.qsPanel.updateSelectableIndicesFromDatasets();
         this.qsPanel.updateSelectedIndicesFromPreferences();
+    }
+
+    public boolean getSkipHeatmapGeneration() {
+        return this. skipHeatmapGeneration;
+    }
+
+    public void setSkipHeatmapGeneration(boolean skipHeatmapGeneration) {
+        this.skipHeatmapGeneration  = skipHeatmapGeneration;
     }
 }

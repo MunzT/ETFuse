@@ -271,6 +271,8 @@ public class ProjectIO implements PropertyChangeListener {
         vidFrame = new VideoFrame("ETFuse - " + fileName.toString(), proj.hostVidPath);
         vidFrame.setLocationRelativeTo(null);
 
+        vidFrame.setSkipHeatmapGeneration(true);
+
         File hostDatasetFile = new File(proj.hostDatasetPath);
 
         ImportTask importTask = new ImportTask(hostDatasetFile);
@@ -394,6 +396,9 @@ public class ProjectIO implements PropertyChangeListener {
             mainFrame.setVisible(false);
             mainFrame.dispose();
         }
+
+        vidFrame.setSkipHeatmapGeneration(false);
+        vidFrame.getPanel().setRepaintHeatMap();
     }
 
     public void saveProject() {
