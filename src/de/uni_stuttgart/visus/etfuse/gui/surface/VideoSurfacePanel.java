@@ -123,6 +123,7 @@ public class VideoSurfacePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
 
+        Preferences prefs = Project.currentProject().getPreferences();
         Graphics2D g2 = (Graphics2D) g;
 
         int mediaWidth = (int) this.camera.get(Videoio.CAP_PROP_FRAME_WIDTH);
@@ -140,11 +141,11 @@ public class VideoSurfacePanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         Composite originalComposite = g2.getComposite();
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float)0.5));
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                (float)(prefs.getVideoTransparency() / 100.0)));
         g2.drawImage(image, null, 0, 0);
         g2.setComposite(originalComposite);
 
-        Preferences prefs = Project.currentProject().getPreferences();
         Boolean paintHeatMapPrefs = prefs.getEnableHeatMapOverlay();
         Boolean paintGazePlotPrefs = prefs.getEnableFixationOverlay();
         Boolean paintRawDataPlotPrefs = prefs.getEnableRawDataOverlay();

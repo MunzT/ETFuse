@@ -235,7 +235,7 @@ public class HeatMapGenerator extends SwingWorker {
                 pixel[1] = pixel[0];
 
                 // alpha
-                pixel[0] = Project.currentProject().getPreferences().getHeatmapTransparency();
+                pixel[0] = Project.currentProject().getPreferences().getHeatmapTransparency() * 255.0 / 100.0;
 
                 transparent.put(y, x, pixel);
             }

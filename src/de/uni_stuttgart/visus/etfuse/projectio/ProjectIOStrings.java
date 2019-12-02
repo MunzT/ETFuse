@@ -38,6 +38,7 @@ public class ProjectIOStrings {
 
     public static String heatMapSourceString = "heatMapSource";
     public static String heatmapTransparencyString = "heatmapTransparency";
+    public static String videoTransparencyString = "videoTransparency";
 
     public static String histogramGridSizeString = "histogramGridSize";
     public static String histogramCorrelationThresholdString = "histogramCorrelationThreshold";

@@ -204,6 +204,11 @@ public class Project implements Serializable {
                     if (intValue != null)
                         getPreferences().setHeatmapTransparency(intValue);
                 }
+                else if (parts[0].equals(ProjectIOStrings.videoTransparencyString)) {
+                    Integer intValue = getInt(parts[1]);
+                    if (intValue != null)
+                        getPreferences().setVideoTransparency(intValue);
+                }
                 else if (parts[0].equals(ProjectIOStrings.histogramGridSizeString)) {
                     Integer intValue = getInt(parts[1]);
                     if (intValue != null)
@@ -490,6 +495,8 @@ public class Project implements Serializable {
                     + getPreferences().getHeatMapSource() + "\n");
             printer.append(ProjectIOStrings.heatmapTransparencyString + "="
                     + getPreferences().getHeatmapTransparency() + "\n");
+            printer.append(ProjectIOStrings.videoTransparencyString + "="
+                    + getPreferences().getVideoTransparency() + "\n");
             printer.append(ProjectIOStrings.histogramGridSizeString + "="
                     + getPreferences().getHistogramGridSize() + "\n");
             printer.append(ProjectIOStrings.histogramCorrelationThresholdString + "="

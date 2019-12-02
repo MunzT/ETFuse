@@ -63,6 +63,7 @@ public class PreferencesFrame extends JDialog {
     private JSpinner spinnerHistogramGridSize;
     private JComboBox comboBoxHeatmapColors;
     private JSpinner spinnerHeatmapTransparency;
+    private JSpinner spinnerVideoTransparency;
     private ColorChooserButton colorPickerButtonFixationsPlayer1;
     private ColorChooserButton colorPickerButtonFixationsPlayer2;
     private ColorChooserButton colorPickerButtonMinDistPlotClose;
@@ -620,10 +621,24 @@ public class PreferencesFrame extends JDialog {
                 FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,
                 FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,}));
 
+        JLabel videoTransparencyLabel = new JLabel("Video transparency:");
+        heatmapColorPrefsPanel.add(videoTransparencyLabel, "2, 2, right, default");
+
+        spinnerVideoTransparency = new JSpinner();
+        spinnerVideoTransparency.setModel(new SpinnerNumberModel(50, 0, 100, 1));
+        JComponent editor4 = spinnerVideoTransparency.getEditor();
+        if (editor4 instanceof JSpinner.DefaultEditor) {
+            JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) editor4;
+            spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
+        }
+        heatmapColorPrefsPanel.add(spinnerVideoTransparency, "4, 2, fill, default");
+
         JLabel heatmapColors = new JLabel("Color map (for one player):");
-        heatmapColorPrefsPanel.add(heatmapColors, "2, 2, right, default");
+        heatmapColorPrefsPanel.add(heatmapColors, "2, 4, right, default");
 
         int[] colorMaps = {
                 Imgproc.COLORMAP_AUTUMN,
@@ -678,31 +693,31 @@ public class PreferencesFrame extends JDialog {
 
         comboBoxHeatmapColors = new JComboBox();
         comboBoxHeatmapColors.setModel(new DefaultComboBoxModel(colorMapsStrings));
-        heatmapColorPrefsPanel.add(comboBoxHeatmapColors, "4, 2, fill, default");
+        heatmapColorPrefsPanel.add(comboBoxHeatmapColors, "4, 4, fill, default");
 
         JLabel heatmapTransparencyLabel = new JLabel("Heatmap transparency (for one player):");
-        heatmapColorPrefsPanel.add(heatmapTransparencyLabel, "2, 4, right, default");
+        heatmapColorPrefsPanel.add(heatmapTransparencyLabel, "2, 6, right, default");
 
         spinnerHeatmapTransparency = new JSpinner();
-        spinnerHeatmapTransparency.setModel(new SpinnerNumberModel(128, 0, 256, 1));
+        spinnerHeatmapTransparency.setModel(new SpinnerNumberModel(50, 0, 100, 1));
         JComponent editor2 = spinnerHeatmapTransparency.getEditor();
         if (editor2 instanceof JSpinner.DefaultEditor) {
             JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) editor2;
             spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
         }
-        heatmapColorPrefsPanel.add(spinnerHeatmapTransparency, "4, 4, fill, default");
+        heatmapColorPrefsPanel.add(spinnerHeatmapTransparency, "4, 6, fill, default");
 
         JLabel heatmapPlayer1ColorLabel = new JLabel("Player 1 (multiple heatmaps):");
-        heatmapColorPrefsPanel.add(heatmapPlayer1ColorLabel, "2, 6, right, default");
+        heatmapColorPrefsPanel.add(heatmapPlayer1ColorLabel, "2, 8, right, default");
 
         colorPickerButtonHeatmapPlayer1 = new ColorChooserButton();
-        heatmapColorPrefsPanel.add(colorPickerButtonHeatmapPlayer1, "4, 6, fill, default");
+        heatmapColorPrefsPanel.add(colorPickerButtonHeatmapPlayer1, "4, 8, fill, default");
 
         JLabel heatmapPlayer2ColorLabel = new JLabel("Player 2 (multiple heatmaps):");
-        heatmapColorPrefsPanel.add(heatmapPlayer2ColorLabel, "2, 8, right, default");
+        heatmapColorPrefsPanel.add(heatmapPlayer2ColorLabel, "2, 10, right, default");
 
         colorPickerButtonHeatmapPlayer2 = new ColorChooserButton();
-        heatmapColorPrefsPanel.add(colorPickerButtonHeatmapPlayer2, "4, 8, fill, default");
+        heatmapColorPrefsPanel.add(colorPickerButtonHeatmapPlayer2, "4, 10, fill, default");
 
         JPanel buttonPanel = new JPanel();
         FlowLayout flowLayout = (FlowLayout) buttonPanel.getLayout();
@@ -779,6 +794,7 @@ public class PreferencesFrame extends JDialog {
         colorPickerButtonMinDistPlotOutsideBoard.setBackground(prefs.getColorMinDistOutsideBoard());
         colorPickerButtonMinDistPlotOutsideScreen.setBackground(prefs.getColorMinDistOutsideDisplay());
         spinnerHeatmapTransparency.setValue(prefs.getHeatmapTransparency());
+        spinnerVideoTransparency.setValue(prefs.getVideoTransparency());
 
         comboBoxHeatmapColors.setSelectedIndex(Math.min(comboBoxHeatmapColors.getItemCount() - 1,
                 colorMapIndexMapping.get(prefs.getColorMap())));
@@ -879,6 +895,7 @@ public class PreferencesFrame extends JDialog {
         if (comboBoxHeatmapColors.getSelectedIndex() >= 0)
             prefs.setColorMap(colorMapMapping.get(comboBoxHeatmapColors.getSelectedIndex()));
         prefs.setHeatmapTransparency((int) spinnerHeatmapTransparency.getValue());
+        prefs.setVideoTransparency((int) spinnerVideoTransparency.getValue());
         prefs.setHeatMapGenSkipEvents(chckbxHeatMapGeneratorSkipPercentage.isSelected());
         if (!txtHeatMapGeneratorSkipPercentage.getText().isEmpty())
             prefs.setHeatMapGenSkipPercentage(Float.parseFloat(txtHeatMapGeneratorSkipPercentage.getText()));

@@ -44,7 +44,8 @@ public class Preferences implements Serializable {
        USERDEFINED, CLICKS, TIMEINTERVALS; // TODO TIMEINTERVALS not used yet
     }
     private HeatMapTimeSource heatMapSource = HeatMapTimeSource.CLICKS;
-    private int heatmapTransparency = 128;
+    private int heatmapTransparency = 50;
+    private int videoTransparency = 50;
 
     // Temp Sync
     private int histogramGridSize = 16;
@@ -185,6 +186,12 @@ public class Preferences implements Serializable {
     }
     public int getHeatmapTransparency() {
         return this.heatmapTransparency;
+    }
+    public void setVideoTransparency(int videoTransparency) {
+        this.videoTransparency = videoTransparency;
+    }
+    public int getVideoTransparency() {
+        return this.videoTransparency;
     }
     public int getHistogramGridSize() {
         return histogramGridSize;
