@@ -16,6 +16,7 @@ We provide a jar file, which can be used as follows:<br/>
 There is an example data set available in the `exampleData` directory along with a short description of how to load this data set. Two people were playing the board game Go online against each other and data was recorded with a Tobii Pro Spectrum 1200 and a Tobii T60XL.
 
 To load a new data set you have to select *New Project* on the welcome screen. Then, you will be asked to provide a video file from the data set (this video file will be the one shown in the application). Next, under *File > Load host eye tracking data* you will be able to specify the file path to the corresponding eye tracking data file. Using the menu entry *Show Guest Recording* a wizard will be opend and guide you to load the eye tracking data of the second participant, and to specify the positions on the screens which should be used for position mapping between two participants (we supply a preset for our data set). For temporal synchronization, different algorithms can be chosen, one of them specifically designed for our type of data sets. More information on the different options are available in the help of the wizard.
+You can load an optional additional file containing event time stamps using `File > Add events...`. These events will be shown on the timeline and may be used for heatmap generation and distance plot subdivision.
 
 Now, you are ready to explore the eye tracking data of both participants simultaneously using different visualizations.
 
@@ -82,4 +83,4 @@ When Using Tobii Pro Lab, the original .mp4 files of the project located in the 
 
 ### Custom Events
 
-In a separate csv file it is possible to define custom events which can be used as markers on the timeline, for subdividing the distance plot and generating heatmaps. In the first column the frames in the host video of the event have to be specified and the second column must contain the colors that will be used for the marker in the timeline. One line might look like this: `100,#ff0000`
+In a separate csv file it is possible to define custom events which can be used as markers on the timeline, for subdividing the distance plot and for generating heatmaps. In the first column the frame numbers from the host video have to be specified and the second column must contain the colors that will be used for the marker in the timeline. One line might look like this: `100,#ff0000`
