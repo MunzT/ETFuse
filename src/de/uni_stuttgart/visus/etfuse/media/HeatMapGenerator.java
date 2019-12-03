@@ -103,18 +103,18 @@ public class HeatMapGenerator extends SwingWorker {
 
             Mat finalStep;
 
-            // set everything equally transparent
+            // apply color map and
             Mat step3 = colorMapHeatMap(step2, prefs.getColorMap());
             proj.setNormalizedHeatMap(step3, heatmapId, heatmapType);
 
+            // set everything equally transparent
             finalStep = makeHeatMapTransparentABGR(step3);
-
             proj.setTransparentHeatMap(finalStep, heatmapId, heatmapType);
 
-            // remove black; for Imgproc.COLORMAP_HOT
+            // colormap with just one color
             Color color = this.projId == 0 ? prefs.getHeatmapColorPlayer1() : prefs.getHeatmapColorPlayer2();
-            Mat step3b = uniColorMapHeatMap(step2, color);
-            finalStep = makeHeatMapTransparentABGR_removeBlack(step3b);
+            finalStep = prepareUniColorMapHeatMap(step2);
+            finalStep = makeHeatMapTransparentUniColorABGR(finalStep, color);
             proj.setUniColorTransparentHeatMap(finalStep, heatmapId, heatmapType);
 
             // TODO original version
@@ -269,7 +269,7 @@ public class HeatMapGenerator extends SwingWorker {
         return transparent;
     }
 
-    public static Mat makeHeatMapTransparentABGR_removeBlack(Mat heatMap) {
+    public static Mat makeHeatMapTransparentUniColorABGR(Mat heatMap, Color color) {
 
         Mat transparent = heatMap.clone();
         Imgproc.cvtColor(transparent, transparent, Imgproc.COLOR_BGR2BGRA);
@@ -278,20 +278,10 @@ public class HeatMapGenerator extends SwingWorker {
             for (int y = 0; y < transparent.rows(); y++) {
                 double[] pixel = transparent.get(y, x);
 
-                float[] hsv = new float[3];
-                Color.RGBtoHSB((int)(pixel[2]*255), (int)(pixel[1]*255), (int)(pixel[0]*255), hsv);
-
-                // alpha in relation to saturation
-                pixel[0] = hsv[2] * 0.8;
-
-                // remove value
-                hsv[2] = 1;
-
-                Color c = new Color(Color.HSBtoRGB(hsv[0], hsv[1], hsv[2]));
-
-                pixel[3] = c.getRed();
-                pixel[2] = c.getGreen();
-                pixel[1] = c.getBlue();
+                // alpha pixel[0]
+                pixel[3] = color.getRed();
+                pixel[2] = color.getGreen();
+                pixel[1] = color.getBlue();
 
                 transparent.put(y, x, pixel);
             }
@@ -317,9 +307,10 @@ public class HeatMapGenerator extends SwingWorker {
         return mapped;
     }
 
-    public static Mat uniColorMapHeatMap(Mat heatMap, Color color) {
+    public static Mat prepareUniColorMapHeatMap(Mat heatMap) {
 
         Mat mapped = heatMap.clone();
+
         mapped.convertTo(mapped, CvType.CV_8UC3);
 
         Mat userColor = new Mat(256,1,CvType.CV_8UC3);
@@ -328,11 +319,10 @@ public class HeatMapGenerator extends SwingWorker {
             for(int c = 0; c < 1; ++c) {
 
                 double[] newColor = new double[3];
-                newColor[0] = r / 255.0 * color.getBlue(); // Blue
-                newColor[1] = r / 255.0 * color.getGreen(); // Green
-                newColor[2] = r / 255.0 * color.getRed(); // Red
+                newColor[0] = r / 1.5;
+                newColor[1] = r / 1.5;
+                newColor[2] = r / 1.5;
 
-                // Copy only BGR
                 userColor.put(r, c, newColor);
             }
         }
