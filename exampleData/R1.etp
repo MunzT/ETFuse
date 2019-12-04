@@ -1,0 +1,46 @@
+hostVidPath=D:\exampleData\Tobii_Spectrum1200_R1.mp4
+hostDatasetPath=D:\exampleData\Tobii_Spectrum1200_R1.tsv
+hostFrame=java.awt.Rectangle[x=2,y=67,width=1010,height=1010]
+eventsPaths=D:\exampleData\Spectrum1200_startAndEnd_R1.csv
+guestVidPaths=[D:\exampleData\Tobii_T60XL_R1.mp4]
+guestDatasetPaths=[D:\exampleData\Tobii_T60XL_R1.tsv]
+guestFrames=[java.awt.Rectangle[x=2,y=66,width=1091,height=1091]]
+guestTimeShiftOffsets=[-53256]
+enableHeatMapOverlay=true
+heatMapOverlayPlayer=2
+enableFixationOverlay=true
+fixationOverlayTimeSpan=500
+enableRawDataOverlay=true
+minDistPlotPlayer1=0
+minDistPlotPlayer2=1
+minDistPlotMinDist=200
+minDistSubdivision=CLICKS
+minDistSubdivisionStringerval=1000
+filterVelocityThreshold=20
+filterDistanceThreshold=35
+heatMapGenSkipEvents=false
+heatMapGenSkipPercentage=0.05
+heatMapGenHeatRadius=80
+heatMapGenGenFromFrequencyInstead=false
+heatMapSource=CLICKS
+heatmapTransparency=50
+videoTransparency=50
+histogramGridSize=16
+histogramCorrelationThreshold=40
+histogramDeviatingCellsThreshold=1
+prevFileDirectory=D:\exampleData\R1.etp
+ColorPlayer1=java.awt.Color[r=0,g=0,b=0]
+ColorPlayer2=java.awt.Color[r=240,g=240,b=240]
+ColorMinDistOutsideDisplay=java.awt.Color[r=218,g=218,b=218]
+ColorMinDistOutsideBoard=java.awt.Color[r=166,g=166,b=166]
+ColorMinDistClose=java.awt.Color[r=255,g=195,b=0]
+ColorMinDistFarAway=java.awt.Color[r=255,g=255,b=167]
+ColorMap=14
+showAdditionalEventTicks=true
+showPlayerEventTicks=[0, 1]
+useAdditionalEventForMinDistPlot=true
+playerEventsForMinDistPlot=[0, 1]
+useAdditionalEventForHeatmaps=true
+playerEventsForHeatmaps=[0, 1]
+heatmapColorPlayer1=java.awt.Color[r=153,g=0,b=204]
+heatmapColorPlayer2=java.awt.Color[r=204,g=255,b=0]

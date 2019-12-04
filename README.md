@@ -44,7 +44,7 @@ Additionally, it is possible to load a file containing custom events.
 
 ### Eye Tracking Data
 
-The eye tracking data has to be saved as .tsv files and require the data export of all data.
+The eye tracking data has to be saved as .tsv files and require the data export of all data (optionally, such a file can be compressed with gzip (.tar.gz)).
 
 For *Tobii Studio*, the following columns are used by our system:<br/>
 * 0 (Timestamp)
