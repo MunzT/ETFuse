@@ -366,24 +366,24 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
 
 
     @Override
-    protected void paintMajorTickForHorizSlider( Graphics g, Rectangle tickBounds, int x ) {
-        g.drawLine( x, TICK_BUFFER + (safeLength - 1) * 1/8, x, TICK_BUFFER + (safeLength - 1) );
+    protected void paintMajorTickForHorizSlider(Graphics g, Rectangle tickBounds, int x ) {
+        g.drawLine(x, TICK_BUFFER + (safeLength - 1) * 1/8, x, TICK_BUFFER + (safeLength - 1) );
 
         if (clickPositions1.contains((long)x)) {
             g.setColor(changeColorBrightness(Project.currentProject().
                     getPreferences().getColorPlayer1()));
-            g.drawLine( x, TICK_BUFFER - 5, x, TICK_BUFFER + (safeLength - 1) * 1/8 - 2);
+            g.drawLine(x, TICK_BUFFER - 5, x, TICK_BUFFER + (safeLength - 1) * 1/8 - 2);
         }
 
         if (clickPositions2.contains((long)x)) {
             g.setColor(changeColorBrightness(Project.currentProject().
                     getPreferences().getColorPlayer2()));
-            g.drawLine( x, TICK_BUFFER - 5, x, TICK_BUFFER + (safeLength - 1) * 1/8 - 2);
+            g.drawLine(x, TICK_BUFFER - 5, x, TICK_BUFFER + (safeLength - 1) * 1/8 - 2);
         }
 
         if (eventPositions.contains((long)x)) {
             g.setColor(eventColors.get(eventPositions.indexOf((long)x)));
-            g.drawLine( x, TICK_BUFFER - 5, x, TICK_BUFFER + (safeLength - 1) * 1/8 - 4);
+            g.drawLine(x, TICK_BUFFER - 5, x, TICK_BUFFER + (safeLength - 1) * 1/8 - 4);
         }
     }
     Color changeColorBrightness(Color c) {

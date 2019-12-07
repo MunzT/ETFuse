@@ -121,7 +121,7 @@ public class SyncWizardFrame extends JDialog implements PropertyChangeListener, 
                 final JFileChooser fc =
                         new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
-                fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV file", "tsv"));
+                fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV file (tsv, tsv.gz)", "tsv", "gz"));
                 fc.setAcceptAllFileFilterUsed(false);
 
                 //In response to a button click:

@@ -625,20 +625,9 @@ public class PreferencesFrame extends JDialog {
                 FormSpecs.DEFAULT_ROWSPEC,
                 FormSpecs.RELATED_GAP_ROWSPEC,}));
 
-        JLabel videoTransparencyLabel = new JLabel("Video transparency:");
-        heatmapColorPrefsPanel.add(videoTransparencyLabel, "2, 2, right, default");
-
-        spinnerVideoTransparency = new JSpinner();
-        spinnerVideoTransparency.setModel(new SpinnerNumberModel(50, 0, 100, 1));
-        JComponent editor4 = spinnerVideoTransparency.getEditor();
-        if (editor4 instanceof JSpinner.DefaultEditor) {
-            JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) editor4;
-            spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
-        }
-        heatmapColorPrefsPanel.add(spinnerVideoTransparency, "4, 2, fill, default");
 
         JLabel heatmapColors = new JLabel("Color map (for one player):");
-        heatmapColorPrefsPanel.add(heatmapColors, "2, 4, right, default");
+        heatmapColorPrefsPanel.add(heatmapColors, "2, 2, right, default");
 
         int[] colorMaps = {
                 Imgproc.COLORMAP_AUTUMN,
@@ -693,10 +682,10 @@ public class PreferencesFrame extends JDialog {
 
         comboBoxHeatmapColors = new JComboBox();
         comboBoxHeatmapColors.setModel(new DefaultComboBoxModel(colorMapsStrings));
-        heatmapColorPrefsPanel.add(comboBoxHeatmapColors, "4, 4, fill, default");
+        heatmapColorPrefsPanel.add(comboBoxHeatmapColors, "4, 2, fill, default");
 
         JLabel heatmapTransparencyLabel = new JLabel("Heatmap transparency (for one player):");
-        heatmapColorPrefsPanel.add(heatmapTransparencyLabel, "2, 6, right, default");
+        heatmapColorPrefsPanel.add(heatmapTransparencyLabel, "2, 4, right, default");
 
         spinnerHeatmapTransparency = new JSpinner();
         spinnerHeatmapTransparency.setModel(new SpinnerNumberModel(50, 0, 100, 1));
@@ -705,19 +694,32 @@ public class PreferencesFrame extends JDialog {
             JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) editor2;
             spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
         }
-        heatmapColorPrefsPanel.add(spinnerHeatmapTransparency, "4, 6, fill, default");
+        heatmapColorPrefsPanel.add(spinnerHeatmapTransparency, "4, 4, fill, default");
 
         JLabel heatmapPlayer1ColorLabel = new JLabel("Player 1 (multiple heatmaps):");
-        heatmapColorPrefsPanel.add(heatmapPlayer1ColorLabel, "2, 8, right, default");
+        heatmapColorPrefsPanel.add(heatmapPlayer1ColorLabel, "2, 6, right, default");
 
         colorPickerButtonHeatmapPlayer1 = new ColorChooserButton();
-        heatmapColorPrefsPanel.add(colorPickerButtonHeatmapPlayer1, "4, 8, fill, default");
+        heatmapColorPrefsPanel.add(colorPickerButtonHeatmapPlayer1, "4, 6, fill, default");
 
         JLabel heatmapPlayer2ColorLabel = new JLabel("Player 2 (multiple heatmaps):");
-        heatmapColorPrefsPanel.add(heatmapPlayer2ColorLabel, "2, 10, right, default");
+        heatmapColorPrefsPanel.add(heatmapPlayer2ColorLabel, "2, 8, right, default");
 
         colorPickerButtonHeatmapPlayer2 = new ColorChooserButton();
-        heatmapColorPrefsPanel.add(colorPickerButtonHeatmapPlayer2, "4, 10, fill, default");
+        heatmapColorPrefsPanel.add(colorPickerButtonHeatmapPlayer2, "4, 8, fill, default");
+
+        JLabel videoTransparencyLabel = new JLabel("Video transparency (multiple heatmaps):");
+        heatmapColorPrefsPanel.add(videoTransparencyLabel, "2, 10, right, default");
+
+        spinnerVideoTransparency = new JSpinner();
+        spinnerVideoTransparency.setModel(new SpinnerNumberModel(50, 0, 100, 1));
+        JComponent editor4 = spinnerVideoTransparency.getEditor();
+        if (editor4 instanceof JSpinner.DefaultEditor) {
+            JSpinner.DefaultEditor spinnerEditor = (JSpinner.DefaultEditor) editor4;
+            spinnerEditor.getTextField().setHorizontalAlignment(JTextField.LEFT);
+        }
+        heatmapColorPrefsPanel.add(spinnerVideoTransparency, "4, 10, fill, default");
+
 
         JPanel buttonPanel = new JPanel();
         FlowLayout flowLayout = (FlowLayout) buttonPanel.getLayout();

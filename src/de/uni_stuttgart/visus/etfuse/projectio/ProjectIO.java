@@ -136,7 +136,7 @@ public class ProjectIO implements PropertyChangeListener {
             final JFileChooser fc =
                     new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
-            fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV file", "tsv"));
+            fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV file (tsv, tsv.gz)", "tsv", "gz"));
             fc.setAcceptAllFileFilterUsed(false);
 
             int returnVal = fc.showOpenDialog(mainFrame);
@@ -202,7 +202,7 @@ public class ProjectIO implements PropertyChangeListener {
                 final JFileChooser fc =
                         new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
-                fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV file", "tsv"));
+                fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV file (tsv, tsv.gz)", "tsv", "gz"));
                 fc.setAcceptAllFileFilterUsed(false);
 
                 int returnVal = fc.showOpenDialog(mainFrame);
@@ -271,7 +271,7 @@ public class ProjectIO implements PropertyChangeListener {
         vidFrame = new VideoFrame("ETFuse - " + fileName.toString(), proj.hostVidPath);
         vidFrame.setLocationRelativeTo(null);
 
-        vidFrame.setSkipHeatmapGeneration(true);
+        vidFrame.setSkipWhileLoadingProject(true);
 
         File hostDatasetFile = new File(proj.hostDatasetPath);
 
@@ -397,7 +397,7 @@ public class ProjectIO implements PropertyChangeListener {
             mainFrame.dispose();
         }
 
-        vidFrame.setSkipHeatmapGeneration(false);
+        vidFrame.setSkipWhileLoadingProject(false);
         vidFrame.getPanel().setRepaintHeatMap();
     }
 

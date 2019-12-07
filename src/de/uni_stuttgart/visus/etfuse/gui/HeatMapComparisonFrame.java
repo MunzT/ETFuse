@@ -584,8 +584,6 @@ public class HeatMapComparisonFrame extends JFrame {
                 hm = pane.getProjector(heatMapRightList.getSelectedIndex()).getCurrentNormalizedHeatMap();
             }
 
-            hm = HeatMapGenerator.colorMapHeatMap(hm, Project.currentProject().getPreferences().getColorMap());
-
             if (chckbxNurSpielfeldbereich.isSelected()) {
 
                 OverlayGazeProjector proj = pane.getProjector(0);

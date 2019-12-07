@@ -80,7 +80,7 @@ public class VideoFrame extends JFrame implements ChangeListener {
 
     private String idleTitle;
     private HashMap<String, Integer> activityProgress;
-    private boolean skipHeatmapGeneration = false;
+    private boolean skipWhileLoadingProject = false;
 
     private static final long serialVersionUID = 3372205698822928813L;
 
@@ -644,11 +644,11 @@ public class VideoFrame extends JFrame implements ChangeListener {
         this.qsPanel.updateSelectedIndicesFromPreferences();
     }
 
-    public boolean getSkipHeatmapGeneration() {
-        return this. skipHeatmapGeneration;
+    public boolean getSkipWhileLoadingProject() {
+        return this. skipWhileLoadingProject;
     }
 
-    public void setSkipHeatmapGeneration(boolean skipHeatmapGeneration) {
-        this.skipHeatmapGeneration  = skipHeatmapGeneration;
+    public void setSkipWhileLoadingProject(boolean skipHeatmapGeneration) {
+        this.skipWhileLoadingProject  = skipHeatmapGeneration;
     }
 }

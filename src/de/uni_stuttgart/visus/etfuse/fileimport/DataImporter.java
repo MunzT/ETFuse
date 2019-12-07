@@ -38,7 +38,7 @@ public class DataImporter implements ActionListener, PropertyChangeListener {
         final JFileChooser fc =
                 new JFileChooser(Project.currentProject().getPreferences().getFileDirectory());
 
-        fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV-Datei", "tsv"));
+        fc.addChoosableFileFilter(new FileNameExtensionFilter("TSV-Datei (tsv, tsv.gz)", "tsv", "gz"));
         fc.setAcceptAllFileFilterUsed(false);
 
         //In response to a button click:

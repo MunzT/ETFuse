@@ -80,19 +80,22 @@ public class VideoSurfacePanel extends JPanel {
         this.projectors.add(projector);
 
         Preferences prefs = Project.currentProject().getPreferences();
-        ArrayList<Integer> temp = prefs.getPlayerEventsForMinDistPlot();
-        temp.add(this.projectors.size() -1);
-        prefs.setPlayerEventsForMinDistPlot(temp);
 
-        temp = prefs.getPlayerEventsForHeatmaps();
-        temp.add(this.projectors.size() -1);
-        prefs.setPlayerEventsForHeatmaps(temp);
+        if (!parentVideoFrame.getSkipWhileLoadingProject()) {
+            ArrayList<Integer> temp = prefs.getPlayerEventsForMinDistPlot();
+            temp.add(this.projectors.size() -1);
+            prefs.setPlayerEventsForMinDistPlot(temp);
 
-        temp = prefs.getShowPlayerEventTicks();
-        temp.add(this.projectors.size() -1);
-        prefs.setShowPlayerEventTicks(temp);
+            temp = prefs.getPlayerEventsForHeatmaps();
+            temp.add(this.projectors.size() -1);
+            prefs.setPlayerEventsForHeatmaps(temp);
 
-        updateHeatmapEvents();
+            temp = prefs.getShowPlayerEventTicks();
+            temp.add(this.projectors.size() -1);
+            prefs.setShowPlayerEventTicks(temp);
+
+            updateHeatmapEvents();
+        }
     }
 
     public OverlayGazeProjector getProjector(int index) {
@@ -141,8 +144,11 @@ public class VideoSurfacePanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         Composite originalComposite = g2.getComposite();
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-                (float)(prefs.getVideoTransparency() / 100.0)));
+        if (!paintHeatMap || Project.currentProject().getPreferences().getHeatMapOverlayPlayer()
+                >= this.projectors.size()) { // heatmap for multiple players
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                    (float)(prefs.getVideoTransparency() / 100.0)));
+        }
         g2.drawImage(image, null, 0, 0);
         g2.setComposite(originalComposite);
 
