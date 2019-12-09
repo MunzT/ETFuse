@@ -24,13 +24,13 @@ heatMapGenHeatRadius=80
 heatMapGenGenFromFrequencyInstead=false
 heatMapSource=CLICKS
 heatmapTransparency=50
-videoTransparency=40
+videoTransparency=50
 histogramGridSize=16
 histogramCorrelationThreshold=40
 histogramDeviatingCellsThreshold=1
 prevFileDirectory=D:\exampleData\R1.etp
 ColorPlayer1=java.awt.Color[r=0,g=0,b=0]
-ColorPlayer2=java.awt.Color[r=240,g=240,b=240]
+ColorPlayer2=java.awt.Color[r=255,g=255,b=255]
 ColorMinDistOutsideDisplay=java.awt.Color[r=218,g=218,b=218]
 ColorMinDistOutsideBoard=java.awt.Color[r=166,g=166,b=166]
 ColorMinDistClose=java.awt.Color[r=255,g=195,b=0]
@@ -42,5 +42,5 @@ useAdditionalEventForMinDistPlot=true
 playerEventsForMinDistPlot=[0, 1]
 useAdditionalEventForHeatmaps=true
 playerEventsForHeatmaps=[0, 1]
-heatmapColorPlayer1=java.awt.Color[r=0,g=51,b=204]
 heatmapColorPlayer2=java.awt.Color[r=153,g=0,b=153]
+heatmapColorPlayer1=java.awt.Color[r=0,g=51,b=204]

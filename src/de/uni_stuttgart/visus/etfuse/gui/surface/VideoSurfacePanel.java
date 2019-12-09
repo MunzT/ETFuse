@@ -134,7 +134,7 @@ public class VideoSurfacePanel extends JPanel {
         int panelWidth = this.getWidth();
         int panelHeight = this.getHeight();
 
-        g2.setBackground(Color.BLACK);
+        g2.setBackground(Color.WHITE); //g2.setBackground(Color.BLACK);
         g2.clearRect(0, 0, mediaWidth, mediaHeight);
 
         AffineTransform saveAT = g2.getTransform();
@@ -144,11 +144,11 @@ public class VideoSurfacePanel extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         Composite originalComposite = g2.getComposite();
-        if (!paintHeatMap || Project.currentProject().getPreferences().getHeatMapOverlayPlayer()
-                >= this.projectors.size()) { // heatmap for multiple players
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-                    (float)(1.0 - prefs.getVideoTransparency() / 100.0)));
-        }
+        //if (!paintHeatMap || Project.currentProject().getPreferences().getHeatMapOverlayPlayer()
+        //        >= this.projectors.size()) { // heatmap for multiple players
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                (float)(1.0 - prefs.getVideoTransparency() / 100.0)));
+        //}
         g2.drawImage(image, null, 0, 0);
         g2.setComposite(originalComposite);
 

@@ -319,9 +319,9 @@ public class HeatMapGenerator extends SwingWorker {
             for(int c = 0; c < 1; ++c) {
 
                 double[] newColor = new double[3];
-                newColor[0] = r / 1.2;
-                newColor[1] = r / 1.2;
-                newColor[2] = r / 1.2;
+                newColor[0] = r;
+                newColor[1] = r;
+                newColor[2] = r;
 
                 userColor.put(r, c, newColor);
             }
