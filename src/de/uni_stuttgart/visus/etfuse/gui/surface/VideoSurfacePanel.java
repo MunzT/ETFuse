@@ -147,7 +147,7 @@ public class VideoSurfacePanel extends JPanel {
         if (!paintHeatMap || Project.currentProject().getPreferences().getHeatMapOverlayPlayer()
                 >= this.projectors.size()) { // heatmap for multiple players
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-                    (float)(prefs.getVideoTransparency() / 100.0)));
+                    (float)(1.0 - prefs.getVideoTransparency() / 100.0)));
         }
         g2.drawImage(image, null, 0, 0);
         g2.setComposite(originalComposite);

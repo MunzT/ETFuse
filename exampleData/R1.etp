@@ -24,7 +24,7 @@ heatMapGenHeatRadius=80
 heatMapGenGenFromFrequencyInstead=false
 heatMapSource=CLICKS
 heatmapTransparency=50
-videoTransparency=50
+videoTransparency=40
 histogramGridSize=16
 histogramCorrelationThreshold=40
 histogramDeviatingCellsThreshold=1
@@ -42,5 +42,5 @@ useAdditionalEventForMinDistPlot=true
 playerEventsForMinDistPlot=[0, 1]
 useAdditionalEventForHeatmaps=true
 playerEventsForHeatmaps=[0, 1]
-heatmapColorPlayer1=java.awt.Color[r=153,g=0,b=204]
-heatmapColorPlayer2=java.awt.Color[r=204,g=255,b=0]
+heatmapColorPlayer1=java.awt.Color[r=0,g=51,b=204]
+heatmapColorPlayer2=java.awt.Color[r=153,g=0,b=153]
