@@ -358,25 +358,28 @@ public class ProjectIO implements PropertyChangeListener {
         HeatMapGenerator mapGen = new HeatMapGenerator(vidFrame.getPanel().getProjectors().size() - 1, 0, HeatMapTimeSource.USERDEFINED, vidFrame);
         mapGen.attachVideoFrameForTitleUpdate(vidFrame);
         mapGen.execute();
-        for (int i = 0; i <= newClickNo; i++) {
-            mapGen = new HeatMapGenerator(vidFrame.getPanel().getProjectors().size() - 1, i, HeatMapTimeSource.CLICKS, vidFrame);
-            mapGen.attachVideoFrameForTitleUpdate(vidFrame);
-            mapGen.execute();
-        }
 
-        if (newClickNo != previousClickNo) {
-            // recalculate for host
-            for (int i = 0; i < vidFrame.getPanel().getProjectors().size() - 1; i++) {
-                mapGen = new HeatMapGenerator(i,
-                        0, HeatMapTimeSource.USERDEFINED, vidFrame);
+        if (!vidFrame.getSkipWhileLoadingProject()) {
+            for (int i = 0; i <= newClickNo; i++) {
+                mapGen = new HeatMapGenerator(vidFrame.getPanel().getProjectors().size() - 1, i, HeatMapTimeSource.CLICKS, vidFrame);
                 mapGen.attachVideoFrameForTitleUpdate(vidFrame);
                 mapGen.execute();
+            }
 
-                for (int j = 1; j <= newClickNo; j++) {
+            if (newClickNo != previousClickNo) {
+                // recalculate for host
+                for (int i = 0; i < vidFrame.getPanel().getProjectors().size() - 1; i++) {
                     mapGen = new HeatMapGenerator(i,
-                            j, HeatMapTimeSource.CLICKS, vidFrame);
+                            0, HeatMapTimeSource.USERDEFINED, vidFrame);
                     mapGen.attachVideoFrameForTitleUpdate(vidFrame);
                     mapGen.execute();
+
+                    for (int j = 1; j <= newClickNo; j++) {
+                        mapGen = new HeatMapGenerator(i,
+                                j, HeatMapTimeSource.CLICKS, vidFrame);
+                        mapGen.attachVideoFrameForTitleUpdate(vidFrame);
+                        mapGen.execute();
+                    }
                 }
             }
         }
@@ -398,6 +401,7 @@ public class ProjectIO implements PropertyChangeListener {
         }
 
         vidFrame.setSkipWhileLoadingProject(false);
+        vidFrame.getPanel().updateHeatmapEvents();
         vidFrame.getPanel().setRepaintHeatMap();
     }
 
