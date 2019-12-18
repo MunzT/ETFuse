@@ -2,8 +2,12 @@
 
 ## Starting the Application
 
+Make sure that Java is installed on your machine; our system requires at least Java SE 11.
+
 Start the application:<br/>
 `java.exe -jar ETFuse.jar`
+
+Instead, it may be possible to use double click to start the application.
 
 ## Host Data
 
