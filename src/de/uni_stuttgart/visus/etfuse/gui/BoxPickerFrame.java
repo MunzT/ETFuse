@@ -103,7 +103,7 @@ public class BoxPickerFrame extends JDialog implements ChangeListener, MouseList
         layout.putConstraint(SpringLayout.EAST, this.progressSlider, -5,
                 SpringLayout.EAST, this.playbackPanel);
 
-        this.add(this.playbackPanel, BorderLayout.PAGE_END);
+        this.add(this.playbackPanel, BorderLayout.PAGE_START);
 
         this.playbackPanel.setPreferredSize(new Dimension(this.panel.getPreferredSize().width, 25));
 

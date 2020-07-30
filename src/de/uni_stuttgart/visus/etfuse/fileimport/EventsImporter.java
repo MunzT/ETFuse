@@ -35,6 +35,7 @@ public class EventsImporter {
             final File chosenFile = fc.getSelectedFile();
 
             Project.currentProject().eventsPath = chosenFile.getAbsolutePath();
+            Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
             return load(chosenFile.getAbsolutePath());
         }
         return null;

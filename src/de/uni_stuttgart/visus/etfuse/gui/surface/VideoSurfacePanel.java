@@ -81,18 +81,25 @@ public class VideoSurfacePanel extends JPanel {
 
         Preferences prefs = Project.currentProject().getPreferences();
 
-        if (!parentVideoFrame.getSkipWhileLoadingProject()) {
+        if (parentVideoFrame == null || !parentVideoFrame.getSkipWhileLoadingProject()) {
             ArrayList<Integer> temp = prefs.getPlayerEventsForMinDistPlot();
-            temp.add(this.projectors.size() -1);
-            prefs.setPlayerEventsForMinDistPlot(temp);
+            int newId = this.projectors.size() -1;
+            if (!prefs.getPlayerEventsForMinDistPlot().contains(newId)) {
+	            temp.add(newId);
+	            prefs.setPlayerEventsForMinDistPlot(temp);
+            }
 
-            temp = prefs.getPlayerEventsForHeatmaps();
-            temp.add(this.projectors.size() -1);
-            prefs.setPlayerEventsForHeatmaps(temp);
+            if (!prefs.getPlayerEventsForHeatmaps().contains(newId)) {
+	            temp = prefs.getPlayerEventsForHeatmaps();
+	            temp.add(newId);
+	            prefs.setPlayerEventsForHeatmaps(temp);
+        	}
 
-            temp = prefs.getShowPlayerEventTicks();
-            temp.add(this.projectors.size() -1);
-            prefs.setShowPlayerEventTicks(temp);
+            if (!prefs.getShowPlayerEventTicks().contains(newId)) {
+	            temp = prefs.getShowPlayerEventTicks();
+	            temp.add(newId);
+	            prefs.setShowPlayerEventTicks(temp);
+    		}
 
             updateHeatmapEvents();
         }

@@ -53,6 +53,7 @@ public class DataImporter implements ActionListener, PropertyChangeListener {
             final File chosenFile = fc.getSelectedFile();
 
             Project.currentProject().hostDatasetPath = chosenFile.getAbsolutePath();
+            Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
             this.importTask = new ImportTask(chosenFile);
             this.importTask.addPropertyChangeListener(this);
             this.importTask.execute();

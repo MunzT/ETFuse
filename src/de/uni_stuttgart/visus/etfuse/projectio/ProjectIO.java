@@ -56,6 +56,8 @@ public class ProjectIO implements PropertyChangeListener {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
 
             final File chosenFile = fc.getSelectedFile();
+            
+            Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
 
             if (chosenFile.getAbsolutePath().endsWith(".etproj")) {
                 Project.loadProjectFromFile(chosenFile);
@@ -73,8 +75,6 @@ public class ProjectIO implements PropertyChangeListener {
             }
 
             prepareProjectStep1();
-
-            Project.currentProject().getPreferences().setFileDirectory(chosenFile.getAbsolutePath());
         }
         else
             if (mainFrame != null)

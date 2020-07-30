@@ -372,6 +372,7 @@ public class RecTempSynchronizer {
                     found = true;
 
                     System.out.println("<RecTempSynchronizer> Host places piece.");
+                    System.out.println(firstStampWithStone);
 
                     break;
                 }
@@ -446,6 +447,7 @@ public class RecTempSynchronizer {
                         roughGuess *= -1;
 
                         System.out.println("<RecTempSynchronizer> Guest places piece.");
+                        System.out.println(firstStampWithStone);
 
                         break;
                     }
@@ -462,9 +464,19 @@ public class RecTempSynchronizer {
         }
 
         long timeStamp = (int) (firstStampWithStone.frame / activePlayer.get(Videoio.CV_CAP_PROP_FPS) * 1000);
+        System.out.println("timeStamp");
+        System.out.println(timeStamp);
 
-        int startingFrameGuess = (int) ((timeStamp + roughGuess) / 1000 * passivePlayer.get(Videoio.CV_CAP_PROP_FPS)) - 10;
-        int endingFrameGuess = startingFrameGuess + 20;
+        int rangeStart = 10;
+        int intRangeEnd = 20;
+
+        int startingFrameGuess = (int) ((timeStamp + roughGuess) / 1000 * passivePlayer.get(Videoio.CV_CAP_PROP_FPS)) - rangeStart;
+        int endingFrameGuess = startingFrameGuess + intRangeEnd;
+        
+        System.out.println("start"); // checks in the area from -10 to +20 frames; may be too small
+        System.out.println(startingFrameGuess);
+        System.out.println("end");
+        System.out.println(endingFrameGuess);
 
         passivePlayer.set(Videoio.CV_CAP_PROP_POS_FRAMES, startingFrameGuess);
 
@@ -536,7 +548,9 @@ public class RecTempSynchronizer {
 
         int activeTS = (int) (firstStampWithStone.frame / activePlayer.get(Videoio.CV_CAP_PROP_FPS) * 1000);
         int passiveTS = (int) (firstFrameWithStonePassive / passivePlayer.get(Videoio.CV_CAP_PROP_FPS) * 1000);
-
+        /*System.out.println(activeTS);
+        System.out.println(passiveTS);
+        System.out.println(timeShift);*/
         timeShift = passiveTS - activeTS;
 
         if (activePlayer.equals(guestCam)) { // zurückdrehen
@@ -544,13 +558,22 @@ public class RecTempSynchronizer {
             timeShift *= -1;
         }
 
-        System.out.println("<RecTempSynchronizer> Shift: " + timeShift + ", Guess war: " + roughGuess);
+        System.out.println("<RecTempSynchronizer> Shift: " + timeShift + ", Guess was: " + roughGuess);
 
         return timeShift;
     }
 
     public static long computeTimestampOffset(EyeTrackerRecording host, EyeTrackerRecording guest) {
 
+    	/*System.out.println("--computeTimestampOffset--");
+    	System.out.println("host.recordingStartTS");
+    	System.out.println(host.recordingStartTS);
+    	System.out.println("guest.recordingStartTS");
+    	System.out.println(guest.recordingStartTS);
+    	System.out.println("shift");
+    	System.out.println(host.recordingStartTS - guest.recordingStartTS);
+    	System.out.println((host.recordingStartTS - guest.recordingStartTS) / 30);
+    	System.out.println((host.recordingStartTS - guest.recordingStartTS) % 30 );*/
         return host.recordingStartTS - guest.recordingStartTS;
     }
 
@@ -558,6 +581,14 @@ public class RecTempSynchronizer {
             VideoCapture hostCam, VideoCapture guestCam, Point stoneCoord) {
 
         long timeShift = computeTimestampOffset(host, guest);
+        
+    	/*System.out.println((long) Math.floor((host.recordingStartTS / 1000.0) * hostCam.get(Videoio.CV_CAP_PROP_FPS)));
+    	System.out.println(hostCam.get(Videoio.CV_CAP_PROP_FPS));
+    	System.out.println(timeShift);
+    	System.out.println((long) Math.floor((timeShift / 1000.0) * hostCam.get(Videoio.CV_CAP_PROP_FPS)));
+    	System.out.println((long) Math.floor((guest.recordingStartTS / 1000.0) * guestCam.get(Videoio.CV_CAP_PROP_FPS)));
+    	System.out.println(guestCam.get(Videoio.CV_CAP_PROP_FPS));
+    	System.out.println((long) Math.floor((timeShift / 1000.0) * guestCam.get(Videoio.CV_CAP_PROP_FPS)));*/
 
         if (guestCam == null)
             return timeShift;
@@ -571,7 +602,16 @@ public class RecTempSynchronizer {
             VideoCapture hostCam, VideoCapture guestCam, int orientationFrame) {
 
         long timeShift = computeTimestampOffset(host, guest);
+        
+    	/*System.out.println((long) Math.floor(((host.recordingStartTS + timeShift) / 1000.0) * hostCam.get(Videoio.CV_CAP_PROP_FPS)));
+    	System.out.println(hostCam.get(Videoio.CV_CAP_PROP_FPS));
+    	System.out.println(timeShift);
+    	System.out.println((long) Math.floor((timeShift / 1000.0) * hostCam.get(Videoio.CV_CAP_PROP_FPS)));
+    	System.out.println((long) Math.floor(((guest.recordingStartTS + timeShift) / 1000.0) * guestCam.get(Videoio.CV_CAP_PROP_FPS)));
+    	System.out.println(guestCam.get(Videoio.CV_CAP_PROP_FPS));
+    	System.out.println((long) Math.floor((timeShift / 1000.0) * guestCam.get(Videoio.CV_CAP_PROP_FPS)));*/
 
+    	
         if (guestCam == null)
             return timeShift;
 

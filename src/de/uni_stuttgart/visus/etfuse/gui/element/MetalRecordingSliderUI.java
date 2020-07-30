@@ -19,8 +19,8 @@ import de.uni_stuttgart.visus.etfuse.projectio.Project;
 
 public class MetalRecordingSliderUI extends MetalSliderUI {
 
-    private OverlayGazeProjector hostProj = null;
-    private OverlayGazeProjector guestProj = null;
+    private OverlayGazeProjector hostProjForMinDist = null;
+    private OverlayGazeProjector guestProjForMinDist = null;
     private VideoFrame vidFrame = null;
     private int minDistance = 0;
     private int safeLength = 0;
@@ -45,8 +45,8 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
             OverlayGazeProjector hostProjector, OverlayGazeProjector guestProjector, int minDistance) {
 
         this.vidFrame = vidFrame;
-        this.hostProj = hostProjector;
-        this.guestProj = guestProjector;
+        this.hostProjForMinDist = hostProjector;
+        this.guestProjForMinDist = guestProjector;
         this.minDistance = minDistance;
     }
 
@@ -67,11 +67,11 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
         Point hostFramePoint1 = vidFrame.getHostProjector().getRecording().getFramePoint1();
         Point hostFramePoint2 = vidFrame.getHostProjector().getRecording().getFramePoint2();
 
-        if (hostProj == null || guestProj == null ||
-            hostProj.getRecording().getFilteredEyeEvents().size() < 1 ||
-            guestProj.getRecording().getFilteredEyeEvents().size() < 1 ||
-            hostProj.getRecording().getRawEyeEvents().size() < 1 ||
-            guestProj.getRecording().getRawEyeEvents().size() < 1 ||
+        if (hostProjForMinDist == null || guestProjForMinDist == null ||
+            hostProjForMinDist.getRecording().getFilteredEyeEvents().size() < 1 ||
+            guestProjForMinDist.getRecording().getFilteredEyeEvents().size() < 1 ||
+            hostProjForMinDist.getRecording().getRawEyeEvents().size() < 1 ||
+            guestProjForMinDist.getRecording().getRawEyeEvents().size() < 1 ||
             hostFramePoint1 == null || hostFramePoint2 == null)
             return;
 
@@ -89,7 +89,7 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
             // timestamp position on slider for both players
             clickPositions1 = new ArrayList<Long>();
             clickPositions2 = new ArrayList<Long>();
-            for (int i = 0; i < prefs.getPlayerEventsForMinDistPlot().size(); i++) {
+            for (int i = 0; i < this.vidFrame.getPanel().getProjectors().size(); i++) {
                 if (prefs.getShowPlayerEventTicks().contains(i)) {
                     OverlayGazeProjector proj = this.vidFrame.getPanel().getProjectors().get(i);
 
@@ -109,7 +109,7 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                 }
             }
 
-            OverlayGazeProjector hostProj = this.vidFrame.getPanel().getProjectors().get(0);
+            OverlayGazeProjector hostProj = this.vidFrame.getHostProjector();
 
             eventPositions = new ArrayList<Long>();
             eventColors = new ArrayList<Color>();
@@ -180,10 +180,10 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                 if (prefs.getMinDistSubdivision() == Preferences.MinDistSubdivision.MINAREAS) {
 
                     hostEvents =
-                            hostProj.eventsBetweenShiftedTimestamps(progressStartTS,
+                            hostProjForMinDist.eventsBetweenShiftedTimestamps(progressStartTS,
                                     progressEndTS, true, false);
                     guestEvents =
-                            guestProj.eventsBetweenShiftedTimestamps(progressStartTS,
+                            guestProjForMinDist.eventsBetweenShiftedTimestamps(progressStartTS,
                                     progressEndTS, true, false);
 
                     if (hostEvents == null || hostEvents.size() < 1
@@ -192,7 +192,7 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                     else {
 
                         currentState = getDistanceStateForAsynchroneData(hostEvents, guestEvents,
-                                hostProj, guestProj);
+                        		hostProjForMinDist, guestProjForMinDist);
                     }
                 }
                 else if (prefs.getMinDistSubdivision() == Preferences.MinDistSubdivision.CLICKS) {
@@ -216,8 +216,8 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                             endTime = clicksTS.get(currentClickId);
                         }
 
-                        hostEvents = hostProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
-                        guestEvents = guestProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
+                        hostEvents = hostProjForMinDist.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
+                        guestEvents = guestProjForMinDist.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
 
                         if (hostEvents == null || hostEvents.size() < 1
                                 || guestEvents == null || guestEvents.size() < 1) {
@@ -225,7 +225,7 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                         }
                         else {
                             currentState = getDistanceStateForAsynchroneData(hostEvents, guestEvents,
-                                    hostProj, guestProj);
+                            		hostProjForMinDist, guestProjForMinDist);
                         }
                     }
                 }
@@ -236,8 +236,8 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                         startTime = startTS + currentInterval * prefs.getMinDistSubdivisionInterval();
                         endTime = startTS + (currentInterval + 1) * prefs.getMinDistSubdivisionInterval() - 1;
 
-                        hostEvents = hostProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
-                        guestEvents = guestProj.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
+                        hostEvents = hostProjForMinDist.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
+                        guestEvents = guestProjForMinDist.eventsBetweenShiftedTimestamps(startTime, endTime, true, false);
 
                         recalcultaeTimeRange = false;
                     }
@@ -248,7 +248,7 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                     }
                     else {
                         currentState = getDistanceStateForAsynchroneData(hostEvents, guestEvents,
-                                hostProj, guestProj);
+                        		hostProjForMinDist, guestProjForMinDist);
                     }
 
                     if (progressEndTS > endTime + (progressEndTS - progressStartTS) / 2) {
@@ -325,7 +325,7 @@ public class MetalRecordingSliderUI extends MetalSliderUI {
                 // TODO: nicht immer mit allen gast-events vergleichen
                 if ((guestEvent.timestamp - tempGuestProj.getTimeSyncOffset())
                         < tsHost - (nextHostEvent == null ? 0 :
-                            (nextHostEvent.timestamp - hostEvent.timestamp) / 2)) {
+                            (nextHostEvent.timestamp - hostEvent.timestamp) / 2)) { // TODO?
                     break;
                 }
 
