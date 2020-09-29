@@ -7,36 +7,24 @@ For instance, the system can be used to explore the eye movement of two people p
 
 ## Getting Started
 
-Our System is implemented in Java using Java SE 11.<br/>
+Our system is implemented in Java using Java SE 11.<br/>
 We implemented and deployed our system with eclipse 4.13.0
 
-We provide a jar file, which can be used as follows:<br/>
+Along with the latest release, we provide a jar file, which can be used as follows:<br/>
 `java.exe -jar ETFuse.jar`
 
-Instead, it may be possible to use double click to start the application.
+Instead, it may be possible to use a double click to start the application.
 
-There is an example data set available in the `exampleData` directory along with a short description of how to load this data set. Two people were playing the board game Go online against each other and data was recorded with a Tobii Pro Spectrum 1200 and a Tobii T60XL.
+An example data set is available in the `exampleData` directory along with a [description](exampleData/tutorial.md) of how to load this data set. Two people played the board game Go online against each other, and data was recorded with a Tobii Pro Spectrum 1200 and a Tobii T60XL.
 
-To load a new data set you have to select *New Project* on the welcome screen. Then, you will be asked to provide a video file from the data set (this video file will be the one shown in the application). Next, under *File > Load host eye tracking data* you will be able to specify the file path to the corresponding eye tracking data file. Using the menu entry *Show Guest Recording* a wizard will be opend and guide you to load the eye tracking data of the second participant, and to specify the positions on the screens which should be used for position mapping between two participants (we supply a preset for our data set). For temporal synchronization, different algorithms can be chosen, one of them specifically designed for our type of data sets. More information on the different options are available in the help of the wizard.
-You can load an optional additional file containing event time stamps using `File > Add events...`. These events will be shown on the timeline and may be used for heatmap generation and distance plot subdivision.
+To load a new data set, you have to select *New Project* on the welcome screen. You will then be asked to provide a video file from the data set (this video file will be the one shown in the application). Next, under *File > Load host eye tracking data*, you will be able to specify the file path to the corresponding eye tracking data file. Using the menu entry *Show Guest Recording*, a wizard will be opened and guide you by loading the second participant's eye tracking data and specifying the coordinates on the screens for position mapping between two participants (we supply a preset for our data set). For temporal synchronization, different algorithms can be chosen, one of them specifically designed for our type of data sets. More information on the different options are available using the help of the wizard.
+You can load an optional additional file containing event time stamps using `File > Add events...`. These events will be shown on the timeline and can be used for heatmap generation and distance plot subdivision.
 
 Now, you are ready to explore the eye tracking data of both participants simultaneously using different visualizations.
 
-Please note that in the first few seconds after loading data for a new project or loading a saved project the heat maps are generated in a background process. While it is possible to already use the application to explore the data set, heat maps might not be ready yet.
+Please note that the heat maps are generated in a background process in the first few seconds after loading data for a new project or loading a saved project. While it is possible to use the application to explore the data set, heat maps might not be ready yet.
 
 Once you loaded a data set, you can save a project, which can be reloaded later.
-
-## Dependencies
-
-Our system uses following libraries/classes:
-
-* [OpenCV](https://docs.opencv.org/3.4.7/d1/dfb/intro.html)
-* [JIDE-OSS](https://github.com/jidesoft/jide-oss)
-* [JGoodies Common and Forms](http://www.jgoodies.com/downloads/libraries/)
-* FFmpeg as part of OpenCV
-* [LAB class from C3 (Categorical Color Components)](https://github.com/StanfordHCI/c3/blob/master/java/src/edu/stanford/vis/color/LAB.java)
-
-All libraries/classes are already included in this project to readily use it.
 
 
 ## Input Data
@@ -80,9 +68,50 @@ You may easily adapt the parser files if your data provides the information in d
 ### Videos
 
 Video data should preferably be without eye tracking data.
-For Tobii Studio, video files can be exported without any fixations/raw data visible on the stimulus (fixation/raw data overlay can be disabled in the overlay settings; we exported videos using the Microsoft Video 1 video codec).
-When Using Tobii Pro Lab, the original .mp4 files of the project located in the folder `Media` have to be used (as it is not possible to disable visibility of gaze information when exporting a video with the software).
+For Tobii Studio, video files can be exported without any fixations/raw data visible on the stimulus (fixation/raw data overlay can be disabled in the overlay settings; we exported videos using the Microsoft Video 1 codec).
+When Using Tobii Pro Lab, the original .mp4 files of the project located in the folder `Media` can be used (it is not possible to disable the visibility of gaze information when exporting a video with the software).
 
 ### Custom Events
 
-In a separate csv file it is possible to define custom events which can be used as markers on the timeline, for subdividing the distance plot and for generating heatmaps. In the first column the frame numbers from the host video have to be specified and the second column must contain the colors that will be used for the marker in the timeline. One line might look like this: `100,#ff0000`
+In a separate csv file, it is possible to define custom events, which can be used as markers on the timeline, for subdividing the distance plot and generating heatmaps. In the first column, the frame numbers from the host video have to be specified, and the second column must contain the colors used for the marker in the timeline. One line might look like this: `100,#ff0000`
+
+
+## Additional Material
+
+The `materials` directory contains a demo video of our system and some more information about Go.
+
+
+## Dependencies
+
+Our system uses the following libraries/classes:
+
+* [OpenCV](https://docs.opencv.org/3.4.7/d1/dfb/intro.html)
+* FFmpeg as part of OpenCV
+* [JIDE-OSS](https://github.com/jidesoft/jide-oss)
+* [JGoodies Common and Forms](http://www.jgoodies.com/downloads/libraries/)
+* [LAB class from C3 (Categorical Color Components)](https://github.com/StanfordHCI/c3/blob/master/java/src/edu/stanford/vis/color/LAB.java)
+
+All libraries/classes are already included in this project to use it readily.
+
+
+## License
+
+Our project is licensed under the [MIT License](LICENSE.md).
+
+Our system includes third-party open-source libraries and classes (see above), which are licensed under their own respective open-source [licenses](THIRD-PARTY-LICENSES.md).
+
+
+## Citation
+
+When referencing our work, please cite the paper *Comparative Visual Gaze Analysis for Virtual Board Games*.
+
+T. Munz, N. Schäfer, T. Blascheck, K. Kurzhals, E. Zhang, and D. Weiskopf. Comparative Visual Gaze Analysis for Virtual Board Games. Proceedings of the 13th International Symposium on Visual Information Communication and Interaction (VINCI 2020), to appear. 2020.
+
+```
+@article{vinci2020boardGames,
+  author    = {Munz, Tanja and Schäfer, Noel and Blascheck, Tanja and Kurzhals, Kuno and Zhang, Eugene and Weiskopf, Daniel},
+  title     = {Comparative Visual Gaze Analysis for Virtual Board Games},
+  journal   = {The 13th International Symposium on Visual Information Communication and Interaction (VINCI 2020), to appear},
+  year      = {2020}
+}
+```
