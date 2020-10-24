@@ -105,13 +105,14 @@ Our system includes third-party open-source libraries and classes (see above), w
 
 When referencing our work, please cite the paper *Comparative Visual Gaze Analysis for Virtual Board Games*.
 
-T. Munz, N. Schäfer, T. Blascheck, K. Kurzhals, E. Zhang, and D. Weiskopf. Comparative Visual Gaze Analysis for Virtual Board Games. Proceedings of the 13th International Symposium on Visual Information Communication and Interaction (VINCI 2020), to appear. 2020.
+T. Munz, N. Schäfer, T. Blascheck, K. Kurzhals, E. Zhang, and D. Weiskopf. Comparative Visual Gaze Analysis for Virtual Board Games. Proceedings of the 13th International Symposium on Visual Information Communication and Interaction (VINCI 2020). 2020. DOI: 10.1145/3430036.3430038. 
 
 ```
 @article{vinci2020boardGames,
   author    = {Munz, Tanja and Schäfer, Noel and Blascheck, Tanja and Kurzhals, Kuno and Zhang, Eugene and Weiskopf, Daniel},
   title     = {Comparative Visual Gaze Analysis for Virtual Board Games},
-  journal   = {The 13th International Symposium on Visual Information Communication and Interaction (VINCI 2020), to appear},
-  year      = {2020}
+  journal   = {The 13th International Symposium on Visual Information Communication and Interaction (VINCI 2020)},
+  year      = {2020},
+  doi       = {10.1145/3430036.3430038}
 }
 ```
